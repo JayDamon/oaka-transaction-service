@@ -14,14 +14,35 @@
     <version>0.0.1-SNAPSHOT</version>
     <name>oaka</name>
     <description>Oaka XIII is a traveling merchant who sells items and equipment to the player. He
-        is Yuna&#39;s devout supporter.
+        is Yunas devout supporter.
     </description>
 
     <properties>
-        <java.version>1.8</java.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <java.version>10</java.version>
     </properties>
 
+    <repositories>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+    </repositories>
+
     <dependencies>
+        <dependency>
+            <groupId>com.github.JayDamon</groupId>
+            <artifactId>auron</artifactId>
+            <!--<version>1.0.0</version>-->
+            <version>dc1c12aa6bed59cf75100c2f40035621b84c7f55</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.JayDamon</groupId>
+            <artifactId>rin</artifactId>
+            <!--<version>1.0.0</version>-->
+            <version>4de38fc3feb333b3fdb411fed52b0a4c9ea384b6</version>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
