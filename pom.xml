@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.1.1.RELEASE</version>
+        <version>2.1.6.RELEASE</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.protean.moneymaker</groupId>
@@ -21,6 +21,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>10</java.version>
+        <junit-jupiter.version>5.5.1</junit-jupiter.version>
+        <mockito.version>3.0.0</mockito.version>
     </properties>
 
     <repositories>
@@ -31,17 +33,24 @@
     </repositories>
 
     <dependencies>
+<!--        <dependency>-->
+<!--            <groupId>com.github.JayDamon</groupId>-->
+<!--            <artifactId>auron</artifactId>-->
+<!--            &lt;!&ndash;<version>1.0.0</version>&ndash;&gt;-->
+<!--            <version>35ee81e561759111261ec2fb6d2e346bad7062fc</version>-->
+<!--        </dependency>-->
         <dependency>
-            <groupId>com.github.JayDamon</groupId>
+            <groupId>com.protean.security</groupId>
             <artifactId>auron</artifactId>
-            <!--<version>1.0.0</version>-->
-            <version>dc1c12aa6bed59cf75100c2f40035621b84c7f55</version>
+            <version>0.0.1-jd-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>com.github.JayDamon</groupId>
+<!--            <groupId>com.github.JayDamon</groupId>-->
+            <groupId>com.protean.moneymaker</groupId>
             <artifactId>rin</artifactId>
+            <version>0.0.1-jd-SNAPSHOT</version>
             <!--<version>1.0.0</version>-->
-            <version>4de38fc3feb333b3fdb411fed52b0a4c9ea384b6</version>
+<!--            <version>09e510f09c3ab109a17757b6776a5daca2a9dfab</version>-->
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -69,6 +78,59 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>junit</groupId>
+                    <artifactId>junit</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.hamcrest</groupId>
+                    <artifactId>hamcrest-core</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.hamcrest</groupId>
+                    <artifactId>hamcrest-library</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.mockito</groupId>
+                    <artifactId>mockito-core</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.fasterxml.jackson.datatype</groupId>-->
+<!--            <artifactId>jackson-datatype-joda</artifactId>-->
+<!--            <version>2.9.9</version>-->
+<!--        </dependency>-->
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest</artifactId>
+            <version>2.1</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>${mockito.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-junit-jupiter</artifactId>
+            <version>${mockito.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>${junit-jupiter.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>${junit-jupiter.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

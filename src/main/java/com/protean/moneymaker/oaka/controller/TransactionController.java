@@ -1,15 +1,15 @@
 package com.protean.moneymaker.oaka.controller;
 
 import com.protean.moneymaker.oaka.service.TransactionRetrievalService;
-import com.protean.security.auron.response.StandardResponse;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import static org.springframework.http.ResponseEntity.ok;
+
 @RestController
-@RequestMapping("v1/transactions")
+@RequestMapping("/v1/transactions")
 public class TransactionController {
 
     private TransactionRetrievalService transactionRetrievalService;
@@ -18,10 +18,16 @@ public class TransactionController {
         this.transactionRetrievalService = transactionRetrievalService;
     }
 
-    @GetMapping(value = "/transaction")
+    @GetMapping(value = "")
     public ResponseEntity<?> getAllTransactions() {
-        // TODO need to create a transaction dto
-        return new ResponseEntity<>(new StandardResponse<>(HttpStatus.OK, transactionRetrievalService.getAllTransactions()), HttpStatus.OK);
+        // TODO probably want to paginate this
+        System.out.println("Transactions being requeested");
+        return ok(transactionRetrievalService.getAllTransactionDtos());
 
     }
+
+//    @GetMapping(value = "/transactionfilter")
+//    public ResponseEntity<?> getAllTransactionFilters() {
+//
+//    }
 }

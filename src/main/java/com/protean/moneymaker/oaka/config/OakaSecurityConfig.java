@@ -53,7 +53,7 @@ public class OakaSecurityConfig extends AuronSecurityConfig {
                         "/**/*.css",
                         "/**/*.js").permitAll()
                 .antMatchers("/h2-console/*").permitAll()
-                .anyRequest().authenticated();
+                .anyRequest().permitAll(); // TODO restrict this
 
         // Add our custom JWT security filter
         http.addFilterBefore(jwtAuthenticationFilter(jwtTokenProvider, userDetailsService()), UsernamePasswordAuthenticationFilter.class);
