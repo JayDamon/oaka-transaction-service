@@ -1,14 +1,11 @@
 package com.protean.moneymaker.oaka.integration.controller;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.protean.moneymaker.rin.dto.BudgetCategoryDto;
 import com.protean.moneymaker.rin.dto.BudgetDto;
-import com.protean.moneymaker.rin.model.Budget;
 import com.protean.moneymaker.rin.model.BudgetCategory;
 import com.protean.moneymaker.rin.repository.BudgetCategoryRepository;
-import com.protean.moneymaker.rin.repository.BudgetRepository;
 import com.protean.moneymaker.rin.service.BudgetService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,6 +19,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -32,6 +30,7 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -51,16 +50,26 @@ class BudgetControllerIntegrationTest {
 
     private ObjectMapper objectMapper = new ObjectMapper();
     private Set<BudgetDto> basicBudgetDtos = new HashSet<>();
+    private BudgetDto basicBudgetDto;
+    private BudgetDto completeBudgetDto;
 
     @BeforeEach
     void setUp() {
+        objectMapper.findAndRegisterModules();
+
         BudgetCategoryDto categoryDto = new BudgetCategoryDto(6, "flexible", "spending");
-        BudgetDto basicBudgetDto = new BudgetDto();
+        basicBudgetDto = new BudgetDto();
         basicBudgetDto.setName("TestName");
         basicBudgetDto.setBudgetCategory(categoryDto);
-//        basicBudgetDto.setEndDate(ZonedDateTime.now());
-//        basicBudgetDto.setStartDate(ZonedDateTime.now());
+        basicBudgetDto.setEndDate(ZonedDateTime.now());
+        basicBudgetDto.setStartDate(ZonedDateTime.now());
         basicBudgetDtos.add(basicBudgetDto);
+
+        BudgetCategoryDto budgetCategoryDto = new BudgetCategoryDto();
+        budgetCategoryDto.setId(1);
+
+        completeBudgetDto = new BudgetDto(32L, "newName", budgetCategoryDto, ZonedDateTime.now(), ZonedDateTime.now().plusDays(1),
+                1, null, BigDecimal.valueOf(100), true);
     }
 
     @Test
@@ -123,6 +132,89 @@ class BudgetControllerIntegrationTest {
     void createNewBudgets_GivenNoBudgetProvided_ThenReturnBadRequest() throws Exception {
         mockMvc.perform(
                 post(BASE_URI))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void updateBudget_GivenValidBudgetProvided_ThenReturnUpdatedBudget() throws Exception {
+
+        mockMvc.perform(
+                patch(BASE_URI + "/{id}", "32")
+                    .content(objectMapper.writeValueAsString(completeBudgetDto))
+                    .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id", is(equalTo(32))))
+                .andExpect(jsonPath("$.name", is(equalTo("newName"))))
+                .andExpect(jsonPath("$.budgetCategory.id", is(equalTo(1))))
+                .andExpect(jsonPath("$.budgetCategory.type", is(equalTo("fixed"))))
+                .andExpect(jsonPath("$.budgetCategory.name", is(equalTo("income"))))
+                .andExpect(jsonPath("$.budgetCategory.budgetItems").exists())
+                .andExpect(jsonPath("$.startDate").exists())
+                .andExpect(jsonPath("$.endDate").exists())
+                .andExpect(jsonPath("$.frequencyTypeId", is(equalTo(1))))
+                .andExpect(jsonPath("$.frequencyType", is(equalTo("Weekly"))))
+                .andExpect(jsonPath("$.amount", is(equalTo(100))))
+                .andExpect(jsonPath("$.inUse", is(true)));
+    }
+
+    @Test
+    void updateBudget_GivenOnlySomeFieldsChanged_ThenReturnUpdatedBudgetWithNullFieldsUnchanced() throws Exception {
+
+        basicBudgetDto.setId(32L);
+
+        mockMvc.perform(
+                patch(BASE_URI + "/{id}", "32")
+                        .content(objectMapper.writeValueAsString(basicBudgetDto))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id", is(equalTo(32))))
+                .andExpect(jsonPath("$.name", is(equalTo("TestName"))))
+                .andExpect(jsonPath("$.budgetCategory.id", is(equalTo(6))))
+                .andExpect(jsonPath("$.budgetCategory.type", is(equalTo("flexible"))))
+                .andExpect(jsonPath("$.budgetCategory.name", is(equalTo("spending"))))
+                .andExpect(jsonPath("$.budgetCategory.budgetItems").exists())
+                .andExpect(jsonPath("$.startDate").exists())
+                .andExpect(jsonPath("$.endDate").exists())
+                .andExpect(jsonPath("$.frequencyTypeId", is(equalTo(2))))
+                .andExpect(jsonPath("$.frequencyType", is(equalTo("Monthly"))))
+                .andExpect(jsonPath("$.amount", is(equalTo(50.0))))
+                .andExpect(jsonPath("$.inUse", is(false)));
+    }
+
+    @Test
+    void updateBudget_GivenBudgetJsonIdAndPathIdDontMatch_TheReturnBadRequest() throws Exception {
+
+        mockMvc.perform(
+                patch(BASE_URI + "/{id}", "1")
+                        .content(objectMapper.writeValueAsString(completeBudgetDto))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void updateBudget_GivenBudgetIdNotInBody_TheReturnBadRequest() throws Exception {
+
+        completeBudgetDto.setId(null);
+
+        mockMvc.perform(
+                patch(BASE_URI + "/{id}", "1")
+                        .content(objectMapper.writeValueAsString(completeBudgetDto))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void updateBudget_GivenPathIdLessThanOne_TheReturnBadRequest() throws Exception {
+
+        mockMvc.perform(
+                patch(BASE_URI + "/{id}", "0")
+                        .content(objectMapper.writeValueAsString(completeBudgetDto))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isBadRequest());
     }
