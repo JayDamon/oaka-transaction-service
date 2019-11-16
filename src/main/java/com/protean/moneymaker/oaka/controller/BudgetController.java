@@ -5,17 +5,22 @@ import com.protean.moneymaker.rin.model.Budget;
 import com.protean.moneymaker.rin.service.BudgetService;
 import com.protean.moneymaker.rin.util.BudgetUtil;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.constraints.Min;
 import java.util.HashSet;
 import java.util.Set;
 
 import static org.springframework.http.ResponseEntity.ok;
 
+@Validated
 @RestController
 @RequestMapping("/v1/budgets")
 public class BudgetController {
@@ -45,4 +50,22 @@ public class BudgetController {
 
         return ok(budgets);
     }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<?> updateBudget(
+            @PathVariable(name = "id") @Min(1) long id, @RequestBody BudgetDto budgetDto) {
+
+        if (budgetDto.getId() == null) {
+            throw new IllegalArgumentException("Budget id must be provided in the body.");
+        }
+        if (id != budgetDto.getId()) {
+            throw new IllegalArgumentException("Path id and body id were not equal.");
+        }
+
+        Budget budget = budgetService.updateBudget(budgetDto);
+
+        return ok(BudgetUtil.convertBudgetToDto(budget));
+
+    }
+
 }

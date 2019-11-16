@@ -22,7 +22,7 @@ public class BudgetTypeController {
     }
 
     @RequestMapping("")
-    private ResponseEntity<?> getAllBudgetCategoriesByType() {
+    public ResponseEntity<?> getAllBudgetCategoriesByType() {
 
         Set<BudgetTypeDto> budgetTypeDtos = budgetService.getAllBudgetCategoriesByType();
 
