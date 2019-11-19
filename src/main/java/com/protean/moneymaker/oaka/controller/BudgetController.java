@@ -1,20 +1,16 @@
 package com.protean.moneymaker.oaka.controller;
 
 import com.protean.moneymaker.rin.dto.BudgetDto;
+import com.protean.moneymaker.rin.dto.BudgetSummary;
 import com.protean.moneymaker.rin.model.Budget;
 import com.protean.moneymaker.rin.service.BudgetService;
 import com.protean.moneymaker.rin.util.BudgetUtil;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.Min;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -66,6 +62,16 @@ public class BudgetController {
 
         return ok(BudgetUtil.convertBudgetToDto(budget));
 
+    }
+
+    @GetMapping("/summary")
+    public ResponseEntity<?> getBudgetSummary(
+            @RequestParam(name = "year") int year,
+            @RequestParam(name = "month") int month) {
+
+        Set<BudgetSummary> budgetSummary = budgetService.getBudgetSummary(new int[]{year}, new int[]{month});
+
+        return ok(budgetSummary);
     }
 
 }

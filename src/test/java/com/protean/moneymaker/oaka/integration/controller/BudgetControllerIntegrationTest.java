@@ -219,4 +219,59 @@ class BudgetControllerIntegrationTest {
                 .andExpect(status().isBadRequest());
     }
 
+    @Test
+    void getBudgetSummary_GivenBudgetsExist_ThenReturnBudgetSummary() throws Exception {
+
+        mockMvc.perform(
+                get(BASE_URI + "/summary")
+                        .param("year", "2018")
+                        .param("month", "1"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("&.[*]", hasSize(4)))
+                .andExpect(jsonPath("&.[*].category", hasSize(4)))
+                .andExpect(jsonPath("&.[*].month", hasSize(4)))
+                .andExpect(jsonPath("&.[*].monthText", hasSize(4)))
+                .andExpect(jsonPath("&.[*].year", hasSize(4)))
+                .andExpect(jsonPath("&.[*].planned", hasSize(4)))
+                .andExpect(jsonPath("&.[*].actual", hasSize(4)))
+                .andExpect(jsonPath("&.[*].expected", hasSize(4)));
+
+    }
+
+    @Test
+    void getBudgetSummary_GivenNoBudgetsExist_ThenReturnBudgetSummary() throws Exception {
+
+        mockMvc.perform(
+                get(BASE_URI + "/summary")
+                        .param("year", "2018")
+                        .param("month", "1"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("&.[*]", hasSize(0)));
+
+    }
+
+    @Test
+    void getBudgetSummary_GivenYearProvidedWithNoMonth_ThenReturnBadRequest() throws Exception {
+
+        mockMvc.perform(
+                get(BASE_URI + "/summary")
+                        .param("year", "2018"))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+
+    }
+
+    @Test
+    void getBudgetSummary_GivenMonthProvidedWithNoYear_ThenReturnBadRequest() throws Exception {
+
+        mockMvc.perform(
+                get(BASE_URI + "/summary")
+                        .param("month", "1"))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+
+    }
+
 }

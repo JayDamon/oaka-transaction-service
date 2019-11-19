@@ -10,7 +10,7 @@ import javax.sql.DataSource;
 import javax.transaction.Transactional;
 
 @Component
-@Profile("test")
+@Profile({"test", "local"})
 public class DataLoad implements ApplicationListener<ContextRefreshedEvent> {
 
     private DataSource dataSource;
@@ -23,7 +23,6 @@ public class DataLoad implements ApplicationListener<ContextRefreshedEvent> {
     @Transactional
     public void onApplicationEvent(ContextRefreshedEvent event) {
         AuronDataLoad.loadTestUserData(dataSource);
-
     }
 
 //    public static void loadInitialStartData(DataSource dataSource) {
