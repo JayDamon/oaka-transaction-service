@@ -68,7 +68,7 @@ class BudgetControllerIntegrationTest {
         BudgetCategoryDto budgetCategoryDto = new BudgetCategoryDto();
         budgetCategoryDto.setId(1);
 
-        completeBudgetDto = new BudgetDto(32L, "newName", budgetCategoryDto, ZonedDateTime.now(), ZonedDateTime.now().plusDays(1),
+        completeBudgetDto = new BudgetDto(20L, "newName", budgetCategoryDto, ZonedDateTime.now(), ZonedDateTime.now().plusDays(1),
                 1, null, BigDecimal.valueOf(100), true);
     }
 
@@ -140,12 +140,12 @@ class BudgetControllerIntegrationTest {
     void updateBudget_GivenValidBudgetProvided_ThenReturnUpdatedBudget() throws Exception {
 
         mockMvc.perform(
-                patch(BASE_URI + "/{id}", "32")
+                patch(BASE_URI + "/{id}", "20")
                     .content(objectMapper.writeValueAsString(completeBudgetDto))
                     .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id", is(equalTo(32))))
+                .andExpect(jsonPath("$.id", is(equalTo(20))))
                 .andExpect(jsonPath("$.name", is(equalTo("newName"))))
                 .andExpect(jsonPath("$.budgetCategory.id", is(equalTo(1))))
                 .andExpect(jsonPath("$.budgetCategory.type", is(equalTo("fixed"))))
@@ -162,15 +162,15 @@ class BudgetControllerIntegrationTest {
     @Test
     void updateBudget_GivenOnlySomeFieldsChanged_ThenReturnUpdatedBudgetWithNullFieldsUnchanced() throws Exception {
 
-        basicBudgetDto.setId(32L);
+        basicBudgetDto.setId(20L);
 
         mockMvc.perform(
-                patch(BASE_URI + "/{id}", "32")
+                patch(BASE_URI + "/{id}", "20")
                         .content(objectMapper.writeValueAsString(basicBudgetDto))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id", is(equalTo(32))))
+                .andExpect(jsonPath("$.id", is(equalTo(20))))
                 .andExpect(jsonPath("$.name", is(equalTo("TestName"))))
                 .andExpect(jsonPath("$.budgetCategory.id", is(equalTo(6))))
                 .andExpect(jsonPath("$.budgetCategory.type", is(equalTo("flexible"))))
@@ -180,8 +180,8 @@ class BudgetControllerIntegrationTest {
                 .andExpect(jsonPath("$.endDate").exists())
                 .andExpect(jsonPath("$.frequencyTypeId", is(equalTo(2))))
                 .andExpect(jsonPath("$.frequencyType", is(equalTo("Monthly"))))
-                .andExpect(jsonPath("$.amount", is(equalTo(50.0))))
-                .andExpect(jsonPath("$.inUse", is(false)));
+                .andExpect(jsonPath("$.amount", is(equalTo(3000.0))))
+                .andExpect(jsonPath("$.inUse", is(true)));
     }
 
     @Test
@@ -224,18 +224,18 @@ class BudgetControllerIntegrationTest {
 
         mockMvc.perform(
                 get(BASE_URI + "/summary")
-                        .param("year", "2018")
+                        .param("year", "2017")
                         .param("month", "1"))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("&.[*]", hasSize(4)))
-                .andExpect(jsonPath("&.[*].category", hasSize(4)))
-                .andExpect(jsonPath("&.[*].month", hasSize(4)))
-                .andExpect(jsonPath("&.[*].monthText", hasSize(4)))
-                .andExpect(jsonPath("&.[*].year", hasSize(4)))
-                .andExpect(jsonPath("&.[*].planned", hasSize(4)))
-                .andExpect(jsonPath("&.[*].actual", hasSize(4)))
-                .andExpect(jsonPath("&.[*].expected", hasSize(4)));
+                .andExpect(jsonPath("$.[*]", hasSize(4)))
+                .andExpect(jsonPath("$.[*].category", hasSize(4)))
+                .andExpect(jsonPath("$.[*].month", hasSize(4)))
+                .andExpect(jsonPath("$.[*].monthText", hasSize(4)))
+                .andExpect(jsonPath("$.[*].year", hasSize(4)))
+                .andExpect(jsonPath("$.[*].planned", hasSize(4)))
+                .andExpect(jsonPath("$.[*].actual", hasSize(4)))
+                .andExpect(jsonPath("$.[*].expected", hasSize(4)));
 
     }
 
@@ -244,11 +244,11 @@ class BudgetControllerIntegrationTest {
 
         mockMvc.perform(
                 get(BASE_URI + "/summary")
-                        .param("year", "2018")
+                        .param("year", "2016")
                         .param("month", "1"))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("&.[*]", hasSize(0)));
+                .andExpect(jsonPath("$.[*]", hasSize(0)));
 
     }
 

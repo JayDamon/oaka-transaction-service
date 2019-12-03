@@ -21,13 +21,8 @@ public class TransactionController {
     @GetMapping(value = "")
     public ResponseEntity<?> getAllTransactions() {
         // TODO probably want to paginate this
-        System.out.println("Transactions being requeested");
         return ok(transactionRetrievalService.getAllTransactionDtos());
 
     }
 
-//    @GetMapping(value = "/transactionfilter")
-//    public ResponseEntity<?> getAllTransactionFilters() {
-//
-//    }
 }
