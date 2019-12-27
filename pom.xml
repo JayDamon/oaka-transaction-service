@@ -31,23 +31,22 @@
     </repositories>
 
     <dependencies>
+        <dependency>
+            <groupId>com.github.JayDamon</groupId>
+            <artifactId>auron</artifactId>
+            <version>v0.0.1</version>
+        </dependency>
 <!--        <dependency>-->
-<!--            <groupId>com.github.JayDamon</groupId>-->
+<!--            <groupId>com.protean.security</groupId>-->
 <!--            <artifactId>auron</artifactId>-->
-<!--            &lt;!&ndash;<version>1.0.0</version>&ndash;&gt;-->
-<!--            <version>35ee81e561759111261ec2fb6d2e346bad7062fc</version>-->
+<!--            <version>0.0.1-jd-SNAPSHOT</version>-->
 <!--        </dependency>-->
         <dependency>
-            <groupId>com.protean.security</groupId>
-            <artifactId>auron</artifactId>
-            <version>0.0.1-jd-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-<!--            <groupId>com.github.JayDamon</groupId>-->
-            <groupId>com.protean.moneymaker</groupId>
+            <groupId>com.github.JayDamon</groupId>
+<!--            <groupId>com.protean.moneymaker</groupId>-->
             <artifactId>rin</artifactId>
-            <version>0.0.1-jd-SNAPSHOT</version>
-            <!--<version>1.0.0</version>-->
+<!--            <version>0.0.1-jd-SNAPSHOT</version>-->
+            <version>v0.0.1</version>
 <!--            <version>09e510f09c3ab109a17757b6776a5daca2a9dfab</version>-->
         </dependency>
         <dependency>
