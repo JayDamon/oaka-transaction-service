@@ -21,7 +21,7 @@ import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
 
 @SpringBootTest
-@ActiveProfiles("test")
+@ActiveProfiles({"test"})
 class TransactionRetrievalServiceImplTest {
 
     @Autowired private TransactionService transactionService;

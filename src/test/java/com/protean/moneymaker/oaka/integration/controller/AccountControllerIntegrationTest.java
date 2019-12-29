@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.protean.moneymaker.rin.dto.AccountClassificationDto;
 import com.protean.moneymaker.rin.dto.AccountDto;
 import com.protean.moneymaker.rin.dto.AccountTypeDto;
-import com.protean.moneymaker.rin.model.Account;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

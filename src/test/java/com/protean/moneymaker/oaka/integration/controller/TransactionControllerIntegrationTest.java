@@ -19,12 +19,14 @@ class TransactionControllerIntegrationTest {
 
     @Autowired private MockMvc mockMvc;
 
+    private static final String BASE_URI = "/v1/transactions";
+
     @Test
     void getAllTransactions() throws Exception {
 
         // FIXME need to update so it does not include all the extra unecessary stuff
         this.mockMvc.perform(
-                get("/v1/transactions"))
+                get(BASE_URI))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").exists())
@@ -75,6 +77,20 @@ class TransactionControllerIntegrationTest {
 //                .andExpect(jsonPath("$[0].recurringTransaction.endDate").exists())
 //                .andExpect(jsonPath("$[0].recurringTransaction.amount").exists())
                 ;
+    }
+
+    @Test
+    void getTransactionCategories_GivenCategoriesExist_ThenReturnAllCategories() throws Exception {
+
+        mockMvc.perform(
+                get(BASE_URI + "/categories"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].id").exists())
+                .andExpect(jsonPath("$[0].name").exists())
+                .andExpect(jsonPath("$[0].subCategory").exists())
+                .andExpect(jsonPath("$[0].subCategory.id").exists())
+                .andExpect(jsonPath("$[0].subCategory.name").exists());
 
     }
 }

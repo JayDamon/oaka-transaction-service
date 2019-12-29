@@ -12,6 +12,4 @@ public interface TransactionRetrievalService {
 
     Set<TransactionDto> getAllTransactionDtos();
 
-
-
 }
