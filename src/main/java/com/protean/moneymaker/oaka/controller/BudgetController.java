@@ -5,6 +5,9 @@ import com.protean.moneymaker.rin.dto.TransactionBudgetSummary;
 import com.protean.moneymaker.rin.model.Budget;
 import com.protean.moneymaker.rin.service.BudgetService;
 import com.protean.moneymaker.rin.util.BudgetUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.constraints.Min;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import static org.springframework.http.ResponseEntity.ok;
@@ -47,6 +51,8 @@ public class BudgetController {
 
     @PostMapping("")
     public ResponseEntity<?> createNewBudgets(@RequestBody Set<BudgetDto> newBudgets) {
+
+        System.out.println("endpoint hit");
 
         Set<BudgetDto> budgets = budgetService.createNewBudgets(newBudgets);
 
