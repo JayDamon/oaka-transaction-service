@@ -1,6 +1,5 @@
 package com.protean.moneymaker.oaka.bootstrap;
 
-import com.protean.security.auron.AuronDataLoad;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.event.ContextRefreshedEvent;

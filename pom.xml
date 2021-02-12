@@ -4,7 +4,14 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.protean.moneymaker</groupId>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.4.2</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
+
+    <groupId>com.factotum</groupId>
     <artifactId>oaka</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>oaka</name>
@@ -13,11 +20,7 @@
     </description>
 
     <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <java.version>13</java.version>
-        <maven.compiler.target>13</maven.compiler.target>
-        <maven.compiler.source>13</maven.compiler.source>
+        <java.version>15</java.version>
     </properties>
 
     <repositories>
@@ -27,12 +30,7 @@
         </repository>
     </repositories>
 
-    <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.2.5.RELEASE</version>
-        <relativePath/> <!-- lookup parent from repository -->
-    </parent>
+
 
     <dependencies>
 
@@ -49,26 +47,8 @@
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
-
-        <!--    `        <dependency>-->
-        <!--                <groupId>com.github.JayDamon</groupId>-->
-        <!--                <artifactId>auron</artifactId>-->
-        <!--                <version>v0.0.1</version>-->
-        <!--            </dependency>-->
-        <!--            <dependency>-->
-        <!--                <groupId>com.github.JayDamon</groupId>-->
-        <!--                <artifactId>rin</artifactId>-->
-        <!--    &lt;!&ndash;            <version>v0.0.1</version>&ndash;&gt;-->
-        <!--                <version>1f7ab2328e1945a4bae8d5fbda567d54c07ff639</version>-->
-        <!--            </dependency>-->
-
         <dependency>
-            <groupId>com.protean.security</groupId>
-            <artifactId>auron</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>com.protean.moneymaker</groupId>
+            <groupId>com.factotum</groupId>
             <artifactId>rin</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
