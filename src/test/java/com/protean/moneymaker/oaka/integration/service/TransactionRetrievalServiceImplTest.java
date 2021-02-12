@@ -1,5 +1,6 @@
 package com.protean.moneymaker.oaka.integration.service;
 
+import com.protean.moneymaker.oaka.integration.IntegrationTest;
 import com.protean.moneymaker.oaka.service.TransactionRetrievalService;
 import com.protean.moneymaker.oaka.service.TransactionRetrievalServiceImpl;
 import com.protean.moneymaker.rin.dto.TransactionDto;
@@ -20,8 +21,7 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
 
-@SpringBootTest
-@ActiveProfiles({"test"})
+@IntegrationTest
 class TransactionRetrievalServiceImplTest {
 
     @Autowired private TransactionService transactionService;
@@ -38,7 +38,7 @@ class TransactionRetrievalServiceImplTest {
 
         List<Transaction> transactions = transactionRetrievalService.getAllTransactions();
         assertThat(transactions, is(not(nullValue())));
-        assertThat(transactions, hasSize(837));
+        assertThat(transactions, hasSize(891));
 
     }
 
@@ -47,7 +47,7 @@ class TransactionRetrievalServiceImplTest {
 
         Set<TransactionDto> transactionDtos = transactionRetrievalService.getAllTransactionDtos();
         assertThat(transactionDtos, is(not(nullValue())));
-        assertThat(transactionDtos, hasSize(837));
+        assertThat(transactionDtos, hasSize(891));
 
     }
 }

@@ -2,6 +2,7 @@ package com.protean.moneymaker.oaka.integration.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.protean.moneymaker.oaka.integration.IntegrationTest;
 import com.protean.moneymaker.rin.dto.BudgetCategoryDto;
 import com.protean.moneymaker.rin.dto.BudgetDto;
 import com.protean.moneymaker.rin.model.BudgetCategory;
@@ -36,15 +37,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@Transactional
-@SpringBootTest
-@ActiveProfiles({"test"})
-@AutoConfigureMockMvc
+@IntegrationTest
 class BudgetControllerIntegrationTest {
 
     @Autowired private MockMvc mockMvc;
     @Autowired private BudgetCategoryRepository budgetCategoryRepository;
-    @SpyBean private BudgetService budgetService;
 
     private static final String BASE_URI = "/v1/budgets";
 
@@ -89,19 +86,6 @@ class BudgetControllerIntegrationTest {
                 .andExpect(jsonPath("$[0].frequencyType").exists())
                 .andExpect(jsonPath("$[0].amount").exists())
                 .andExpect(jsonPath("$[0].inUse").exists());
-
-    }
-
-    @Test
-    void getBudgets_GivenBudgetsDoNotExist_ThenReturnEmptyArray() throws Exception {
-
-        when(budgetService.getAllActiveBudgets()).thenReturn(new HashSet<>());
-
-        mockMvc.perform(
-                get(BASE_URI))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$[*]", hasSize(0)));
 
     }
 

@@ -2,6 +2,7 @@ package com.protean.moneymaker.oaka.integration.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.protean.moneymaker.oaka.integration.IntegrationTest;
 import com.protean.moneymaker.rin.dto.BudgetDto;
 import com.protean.moneymaker.rin.dto.ShortAccountDto;
 import com.protean.moneymaker.rin.dto.TransactionDto;
@@ -34,10 +35,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@Transactional
-@SpringBootTest
-@ActiveProfiles("test")
-@AutoConfigureMockMvc
+@IntegrationTest
 class TransactionControllerIntegrationTest {
 
     @Autowired private MockMvc mockMvc;
