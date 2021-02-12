@@ -2,7 +2,6 @@ package com.protean.moneymaker.oaka.controller;
 
 import com.protean.moneymaker.rin.dto.AccountDto;
 import com.protean.moneymaker.rin.model.Account;
-import com.protean.moneymaker.rin.model.AccountClassification;
 import com.protean.moneymaker.rin.model.AccountType;
 import com.protean.moneymaker.rin.service.AccountService;
 import com.protean.moneymaker.rin.util.AccountUtil;
@@ -15,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Collection;
 import java.util.List;
 
 import static org.springframework.http.ResponseEntity.ok;
@@ -23,18 +23,18 @@ import static org.springframework.http.ResponseEntity.ok;
 @RequestMapping("/v1/accounts")
 public class AccountController {
 
-    private AccountService accountService;
+    private final AccountService accountService;
 
     public AccountController(AccountService accountService) {
         this.accountService = accountService;
     }
 
     @GetMapping("")
-    public ResponseEntity<?> getAllAccounts() {
+    public Collection<AccountDto> getAllAccounts() {
 
         List<Account> accounts = accountService.getAllAccounts();
 
-        return ok(AccountUtil.mapEntityCollectionToDtoCollection(accounts));
+        return AccountUtil.mapEntityCollectionToDtoCollection(accounts);
 
     }
 
@@ -72,12 +72,12 @@ public class AccountController {
         return ok(AccountUtil.mapAccountTypesToDtos(accountTypes));
     }
 
-    @GetMapping("/classifications")
-    public ResponseEntity<?> getAccountClassifications() {
-
-        List<AccountClassification> accountTypes = accountService.getAccountClassifications();
-
-        return ok(AccountUtil.mapAccountClassificationsToDtos(accountTypes));
-    }
+//    @GetMapping("/classifications")
+//    public ResponseEntity<?> getAccountClassifications() {
+//
+//        List<AccountClassification> accountTypes = accountService.getAccountClassifications();
+//
+//        return ok(AccountUtil.mapAccountClassificationsToDtos(accountTypes));
+//    }
 
 }

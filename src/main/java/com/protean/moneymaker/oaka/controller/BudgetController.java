@@ -27,7 +27,7 @@ import static org.springframework.http.ResponseEntity.ok;
 @RequestMapping("/v1/budgets")
 public class BudgetController {
 
-    private BudgetService budgetService;
+    private final BudgetService budgetService;
 
     public BudgetController(BudgetService budgetService) {
         this.budgetService = budgetService;

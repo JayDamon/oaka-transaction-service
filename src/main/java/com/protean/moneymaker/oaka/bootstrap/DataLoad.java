@@ -22,7 +22,7 @@ public class DataLoad implements ApplicationListener<ContextRefreshedEvent> {
     @Override
     @Transactional
     public void onApplicationEvent(ContextRefreshedEvent event) {
-        AuronDataLoad.loadTestUserData(dataSource);
+//        AuronDataLoad.loadTestUserData(dataSource);
     }
 
 //    public static void loadInitialStartData(DataSource dataSource) {

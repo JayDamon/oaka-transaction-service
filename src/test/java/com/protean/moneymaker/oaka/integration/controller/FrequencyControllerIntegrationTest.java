@@ -1,5 +1,6 @@
 package com.protean.moneymaker.oaka.integration.controller;
 
+import com.protean.moneymaker.oaka.integration.IntegrationTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -13,9 +14,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest
-@ActiveProfiles({"test"})
-@AutoConfigureMockMvc
+@IntegrationTest
 class FrequencyControllerIntegrationTest {
 
     @Autowired private MockMvc mockMvc;

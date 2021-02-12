@@ -3,12 +3,7 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.2.1.RELEASE</version>
-        <relativePath/> <!-- lookup parent from repository -->
-    </parent>
+
     <groupId>com.protean.moneymaker</groupId>
     <artifactId>oaka</artifactId>
     <version>0.0.1-SNAPSHOT</version>
@@ -21,6 +16,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>13</java.version>
+        <maven.compiler.target>13</maven.compiler.target>
+        <maven.compiler.source>13</maven.compiler.source>
     </properties>
 
     <repositories>
@@ -30,25 +27,15 @@
         </repository>
     </repositories>
 
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.2.5.RELEASE</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
+
     <dependencies>
-        <dependency>
-            <groupId>com.github.JayDamon</groupId>
-            <artifactId>auron</artifactId>
-            <version>v0.0.1</version>
-        </dependency>
-<!--        <dependency>-->
-<!--            <groupId>com.protean.security</groupId>-->
-<!--            <artifactId>auron</artifactId>-->
-<!--            <version>0.0.1-jd-SNAPSHOT</version>-->
-<!--        </dependency>-->
-        <dependency>
-            <groupId>com.github.JayDamon</groupId>
-<!--            <groupId>com.protean.moneymaker</groupId>-->
-            <artifactId>rin</artifactId>
-<!--            <version>0.0.1-jd-SNAPSHOT</version>-->
-            <version>v0.0.1</version>
-<!--            <version>09e510f09c3ab109a17757b6776a5daca2a9dfab</version>-->
-        </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
@@ -60,6 +47,30 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+
+        <!--    `        <dependency>-->
+        <!--                <groupId>com.github.JayDamon</groupId>-->
+        <!--                <artifactId>auron</artifactId>-->
+        <!--                <version>v0.0.1</version>-->
+        <!--            </dependency>-->
+        <!--            <dependency>-->
+        <!--                <groupId>com.github.JayDamon</groupId>-->
+        <!--                <artifactId>rin</artifactId>-->
+        <!--    &lt;!&ndash;            <version>v0.0.1</version>&ndash;&gt;-->
+        <!--                <version>1f7ab2328e1945a4bae8d5fbda567d54c07ff639</version>-->
+        <!--            </dependency>-->
+
+        <dependency>
+            <groupId>com.protean.security</groupId>
+            <artifactId>auron</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.protean.moneymaker</groupId>
+            <artifactId>rin</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
         </dependency>
 
         <dependency>
@@ -86,10 +97,6 @@
         <dependency>
             <groupId>com.fasterxml.jackson.datatype</groupId>
             <artifactId>jackson-datatype-jsr310</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.jayway.jsonpath</groupId>
-            <artifactId>json-path-assert</artifactId>
         </dependency>
     </dependencies>
 

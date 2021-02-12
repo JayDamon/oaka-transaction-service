@@ -2,20 +2,16 @@ package com.protean.moneymaker.oaka.integration.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.protean.moneymaker.oaka.integration.IntegrationTest;
 import com.protean.moneymaker.rin.dto.AccountClassificationDto;
 import com.protean.moneymaker.rin.dto.AccountDto;
 import com.protean.moneymaker.rin.dto.AccountTypeDto;
-import com.protean.moneymaker.rin.model.Account;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 
@@ -32,17 +28,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@Transactional
-@SpringBootTest
-@ActiveProfiles({"test"})
-@AutoConfigureMockMvc
+@IntegrationTest
 class AccountControllerIntegrationTest {
 
     @Autowired private MockMvc mockMvc;
 
     private static final String BASE_URI = "/v1/accounts";
 
-    private static ObjectMapper mapper = new ObjectMapper();
+    private static final ObjectMapper mapper = new ObjectMapper();
 
     private AccountDto accountDto;
 
@@ -54,7 +47,7 @@ class AccountControllerIntegrationTest {
 
         accountDto = new AccountDto(
                 1L, "NewName", accountTypeDto, BigDecimal.valueOf(500.01),
-                BigDecimal.valueOf(200), classificationDto, false, false);
+                BigDecimal.valueOf(200), false, false);
     }
 
     @Test
@@ -71,8 +64,6 @@ class AccountControllerIntegrationTest {
                 .andExpect(jsonPath("$[*].type.shortName", hasSize(6)))
                 .andExpect(jsonPath("$[*].startingBalance", hasSize(6)))
                 .andExpect(jsonPath("$[*].currentBalance", hasSize(6)))
-                .andExpect(jsonPath("$[*].classification.id", hasSize(6)))
-                .andExpect(jsonPath("$[*].classification.name", hasSize(6)))
                 .andExpect(jsonPath("$[*].isPrimary", hasSize(6)))
                 .andExpect(jsonPath("$[*].isInCashFlow", hasSize(6)));
 
@@ -86,8 +77,8 @@ class AccountControllerIntegrationTest {
 
         mockMvc.perform(
                 post(BASE_URI)
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(mapper.writeValueAsString(this.accountDto)))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(this.accountDto)))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id", is(greaterThan(0))))
@@ -96,9 +87,7 @@ class AccountControllerIntegrationTest {
                 .andExpect(jsonPath("$.isPrimary", is(equalTo(this.accountDto.getPrimary()))))
                 .andExpect(jsonPath("$.isInCashFlow", is(equalTo(this.accountDto.getInCashFlow()))))
                 .andExpect(jsonPath("$.type").exists())
-                .andExpect(jsonPath("$.type.id", is(equalTo(this.accountDto.getType().getId()))))
-                .andExpect(jsonPath("$.classification").exists())
-                .andExpect(jsonPath("$.classification.id", is(equalTo(this.accountDto.getClassification().getId()))));
+                .andExpect(jsonPath("$.type.id", is(equalTo(this.accountDto.getType().getId()))));
 
     }
 
@@ -118,10 +107,7 @@ class AccountControllerIntegrationTest {
                 .andExpect(jsonPath("$.isPrimary", is(equalTo(this.accountDto.getPrimary()))))
                 .andExpect(jsonPath("$.isInCashFlow", is(equalTo(this.accountDto.getInCashFlow()))))
                 .andExpect(jsonPath("$.type").exists())
-                .andExpect(jsonPath("$.type.id", is(equalTo(this.accountDto.getType().getId()))))
-                .andExpect(jsonPath("$.classification").exists())
-                .andExpect(jsonPath("$.classification.id", is(equalTo(this.accountDto.getClassification().getId()))));
-
+                .andExpect(jsonPath("$.type.id", is(equalTo(this.accountDto.getType().getId()))));
     }
 
     @Test
@@ -187,29 +173,6 @@ class AccountControllerIntegrationTest {
             assertThat(json, hasJsonPath("$.shortName"));
 
         }
-    }
-
-    @Test
-    void getAccountClassification_GivenClassificationsExist_ThenReturnAllTypes() throws Exception {
-
-        MvcResult result = mockMvc.perform(
-                get(BASE_URI + "/classifications"))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.[*]", hasSize(greaterThan(0))))
-                .andReturn();
-
-        JsonNode allValues = mapper.readTree(result.getResponse().getContentAsString());
-
-        for (JsonNode n : allValues) {
-
-            String json = n.toString();
-
-            assertThat(json, hasJsonPath("$.id"));
-            assertThat(json, hasJsonPath("$.name"));
-
-        }
-
     }
 
 }
