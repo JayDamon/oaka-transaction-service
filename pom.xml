@@ -34,27 +34,6 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
-<!--    <dependencyManagement>-->
-<!--        <dependencies>-->
-<!--            <dependency>-->
-<!--                &lt;!&ndash; Import dependency management from Spring Boot &ndash;&gt;-->
-<!--                <groupId>org.springframework.boot</groupId>-->
-<!--                <artifactId>spring-boot-dependencies</artifactId>-->
-<!--                <version>2.2.5.RELEASE</version>-->
-<!--                <type>pom</type>-->
-<!--                <scope>import</scope>-->
-<!--            </dependency>-->
-
-<!--            <dependency>-->
-<!--                <groupId>org.springframework.cloud</groupId>-->
-<!--                <artifactId>spring-cloud-dependencies</artifactId>-->
-<!--                <version>Greenwich.SR1</version>-->
-<!--                <type>pom</type>-->
-<!--                <scope>import</scope>-->
-<!--            </dependency>-->
-<!--        </dependencies>-->
-<!--    </dependencyManagement>-->
-
     <dependencies>
 
         <dependency>
@@ -71,23 +50,23 @@
         </dependency>
 
 
-<!--        <dependency>-->
-<!--            <groupId>com.github.JayDamon</groupId>-->
-<!--            <artifactId>auron</artifactId>-->
-<!--            <version>v0.0.1</version>-->
-<!--        </dependency>-->
-<!--        <dependency>-->
-<!--            <groupId>com.github.JayDamon</groupId>-->
-<!--            <artifactId>rin</artifactId>-->
-<!--&lt;!&ndash;            <version>v0.0.1</version>&ndash;&gt;-->
-<!--            <version>1f7ab2328e1945a4bae8d5fbda567d54c07ff639</version>-->
-<!--        </dependency>-->
+        <!--    `        <dependency>-->
+        <!--                <groupId>com.github.JayDamon</groupId>-->
+        <!--                <artifactId>auron</artifactId>-->
+        <!--                <version>v0.0.1</version>-->
+        <!--            </dependency>-->
+        <!--            <dependency>-->
+        <!--                <groupId>com.github.JayDamon</groupId>-->
+        <!--                <artifactId>rin</artifactId>-->
+        <!--    &lt;!&ndash;            <version>v0.0.1</version>&ndash;&gt;-->
+        <!--                <version>1f7ab2328e1945a4bae8d5fbda567d54c07ff639</version>-->
+        <!--            </dependency>-->
 
         <dependency>
-        <groupId>com.protean.security</groupId>
-        <artifactId>auron</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
-    </dependency>
+            <groupId>com.protean.security</groupId>
+            <artifactId>auron</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
         <dependency>
             <groupId>com.protean.moneymaker</groupId>
             <artifactId>rin</artifactId>
@@ -126,21 +105,7 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>2.2.5.RELEASE</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>repackage</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
-
-<!--            <plugin>-->
-<!--                <groupId>com.google.cloud.tools</groupId>-->
-<!--                <artifactId>appengine-maven-plugin</artifactId>-->
-<!--                <version>2.2.0</version>-->
-<!--            </plugin>-->
         </plugins>
     </build>
 
