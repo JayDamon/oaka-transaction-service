@@ -1,0 +1,11 @@
+eureka:
+  client:
+    register-with-eureka: false
+    fetch-registry: false
+spring:
+  h2:
+    console:
+      enabled: true
+  jpa:
+    show-sql: true
+debug: true

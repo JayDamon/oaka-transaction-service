@@ -6,8 +6,6 @@ spring:
     hibernate:
       ddl-auto: create-drop
 #    show-sql: true
-server:
-  port: 8082
 #debug: true
 management:
   endpoints:
