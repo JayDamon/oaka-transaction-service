@@ -1,4 +1,4 @@
-package com.protean.moneymaker.oaka.integration;
+package com.protean.moneymaker.oaka;
 
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;

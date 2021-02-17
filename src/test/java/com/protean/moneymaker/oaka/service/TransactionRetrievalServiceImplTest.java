@@ -1,16 +1,11 @@
-package com.protean.moneymaker.oaka.integration.service;
+package com.protean.moneymaker.oaka.service;
 
-import com.protean.moneymaker.oaka.integration.IntegrationTest;
-import com.protean.moneymaker.oaka.service.TransactionRetrievalService;
-import com.protean.moneymaker.oaka.service.TransactionRetrievalServiceImpl;
-import com.protean.moneymaker.rin.dto.TransactionDto;
-import com.protean.moneymaker.rin.model.Transaction;
-import com.protean.moneymaker.rin.service.TransactionService;
+import com.protean.moneymaker.oaka.dto.TransactionDto;
+import com.protean.moneymaker.oaka.IntegrationTest;
+import com.protean.moneymaker.oaka.model.Transaction;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
 import java.util.Set;

@@ -1,7 +1,7 @@
 package com.protean.moneymaker.oaka.service;
 
-import com.protean.moneymaker.rin.dto.TransactionDto;
-import com.protean.moneymaker.rin.model.Transaction;
+import com.protean.moneymaker.oaka.dto.TransactionDto;
+import com.protean.moneymaker.oaka.model.Transaction;
 
 import java.util.List;
 import java.util.Set;

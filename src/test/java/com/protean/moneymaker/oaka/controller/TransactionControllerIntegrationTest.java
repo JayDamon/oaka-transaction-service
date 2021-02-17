@@ -1,27 +1,20 @@
-package com.protean.moneymaker.oaka.integration.controller;
+package com.protean.moneymaker.oaka.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.protean.moneymaker.oaka.integration.IntegrationTest;
-import com.protean.moneymaker.rin.dto.BudgetDto;
-import com.protean.moneymaker.rin.dto.ShortAccountDto;
-import com.protean.moneymaker.rin.dto.TransactionDto;
-import com.protean.moneymaker.rin.model.Transaction;
-import com.protean.moneymaker.rin.repository.TransactionRepository;
+import com.protean.moneymaker.oaka.dto.BudgetDto;
+import com.protean.moneymaker.oaka.dto.ShortAccountDto;
+import com.protean.moneymaker.oaka.dto.TransactionDto;
+import com.protean.moneymaker.oaka.IntegrationTest;
+import com.protean.moneymaker.oaka.repository.TransactionRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.Arrays;
 
