@@ -1,9 +1,8 @@
 package com.protean.moneymaker.oaka.service;
 
-import com.protean.moneymaker.oaka.dto.TransactionDto;
 import com.protean.moneymaker.oaka.IntegrationTest;
+import com.protean.moneymaker.oaka.dto.TransactionDto;
 import com.protean.moneymaker.oaka.model.Transaction;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -21,17 +20,10 @@ class TransactionRetrievalServiceImplTest {
 
     @Autowired private TransactionService transactionService;
 
-    private TransactionRetrievalService transactionRetrievalService;
-
-    @BeforeEach
-    void setUp() {
-        transactionRetrievalService = new TransactionRetrievalServiceImpl(transactionService);
-    }
-
     @Test
     void getAllTransactions_ReturnsTestTransactions() {
 
-        List<Transaction> transactions = transactionRetrievalService.getAllTransactions();
+        List<Transaction> transactions = transactionService.getAllTransactions();
         assertThat(transactions, is(not(nullValue())));
         assertThat(transactions, hasSize(891));
 
@@ -40,7 +32,7 @@ class TransactionRetrievalServiceImplTest {
     @Test
     void getAllTransactionDtos_ReturnsTestTransactionsAsDtos() {
 
-        Set<TransactionDto> transactionDtos = transactionRetrievalService.getAllTransactionDtos();
+        Set<TransactionDto> transactionDtos = transactionService.getAllTransactionDtos();
         assertThat(transactionDtos, is(not(nullValue())));
         assertThat(transactionDtos, hasSize(891));
 

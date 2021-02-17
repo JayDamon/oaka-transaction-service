@@ -21,7 +21,7 @@ import static org.hamcrest.core.IsNot.not;
 public class TransactionCategoryServiceImplIntegrationTest {
 
     @Autowired
-    TransactionCategoryService transactionCategoryService;
+    private TransactionCategoryService transactionCategoryService;
 
     @Test
     public void findAllTransactionCategories_GivenDatabaseLoadedWithValidTestData_ThenReturnListOfTransactionCategories() {

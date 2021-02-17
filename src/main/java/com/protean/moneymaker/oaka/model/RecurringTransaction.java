@@ -6,9 +6,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -46,7 +46,7 @@ public class RecurringTransaction implements Serializable {
     @Column(name = "budget_category_id")
     private Integer budgetSubCategory;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "transaction_category_id")
     private TransactionCategory transactionCategory;
 
@@ -57,11 +57,11 @@ public class RecurringTransaction implements Serializable {
     @Column(name = "frequency")
     private Integer frequency;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "occurrence_id")
     private Occurrence occurrence;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "transaction_type_id")
     private TransactionType transactionType;
 

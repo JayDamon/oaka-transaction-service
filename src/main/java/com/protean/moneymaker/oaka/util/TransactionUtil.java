@@ -14,9 +14,10 @@ import java.util.List;
 
 public class TransactionUtil {
 
-    private static ModelMapper mapper = new ModelMapper();
+    private static final ModelMapper mapper = new ModelMapper();
 
-    private TransactionUtil() {}
+    private TransactionUtil() {
+    }
 
     public static Collection<TransactionCategoryDto> mapEntityListToDtoCollection(Collection<TransactionCategory> categories) {
 
@@ -42,7 +43,7 @@ public class TransactionUtil {
         for (TransactionDto dto : dtos) {
             transactions.add(mapDtoToEntity(dto));
         }
-            return transactions;
+        return transactions;
     }
 
     public static Transaction mapDtoToEntity(TransactionDto dto) {

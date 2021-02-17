@@ -14,6 +14,26 @@ VALUES (1, 'Specific Date'),
        (9, 'Saturday'),
        (10, 'Sunday');
 
+INSERT INTO budget_sub_category (budget_sub_category_id, sub_category_name)
+VALUES (1, 'Income'),
+       (2, 'Housing'),
+       (3, 'Utilities'),
+       (4, 'Credit Card'),
+       (5, 'Health'),
+       (6, 'Banking'),
+       (7, 'Food/Beverage'),
+       (8, 'Gas/Automotive'),
+       (9, 'Household/Supplies'),
+       (10, 'Entertainment'),
+       (11, 'Education'),
+       (12, 'Gifts and Contributions'),
+       (13, 'Personal'),
+       (14, 'Business'),
+       (15, 'Taxes'),
+       (16, 'Miscellaneous'),
+       (17, 'Savings'),
+       (18, 'Generic');
+
 INSERT INTO transaction_category (transaction_category_id, category_name, budget_sub_category_id)
 VALUES (1, 'Paycheck', 1),
        (2, 'Other Income', 1),

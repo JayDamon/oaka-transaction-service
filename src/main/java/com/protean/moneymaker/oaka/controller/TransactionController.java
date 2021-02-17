@@ -1,10 +1,8 @@
 package com.protean.moneymaker.oaka.controller;
 
 import com.protean.moneymaker.oaka.dto.TransactionDto;
-import com.protean.moneymaker.oaka.model.Transaction;
 import com.protean.moneymaker.oaka.model.TransactionCategory;
 import com.protean.moneymaker.oaka.service.TransactionCategoryService;
-import com.protean.moneymaker.oaka.service.TransactionRetrievalService;
 import com.protean.moneymaker.oaka.service.TransactionService;
 import com.protean.moneymaker.oaka.util.TransactionUtil;
 import org.springframework.http.ResponseEntity;
@@ -26,15 +24,12 @@ import static org.springframework.http.ResponseEntity.ok;
 @Validated
 public class TransactionController {
 
-    private final TransactionRetrievalService transactionRetrievalService;
     private final TransactionCategoryService transactionCategoryService;
     private final TransactionService transactionService;
 
     public TransactionController(
-            TransactionRetrievalService transactionRetrievalService,
             TransactionCategoryService transactionCategoryService,
             TransactionService transactionService) {
-        this.transactionRetrievalService = transactionRetrievalService;
         this.transactionCategoryService = transactionCategoryService;
         this.transactionService = transactionService;
     }
@@ -42,7 +37,7 @@ public class TransactionController {
     @GetMapping("")
     public ResponseEntity<?> getAllTransactions() {
         // TODO probably want to paginate this
-        return ok(transactionRetrievalService.getAllTransactionDtos());
+        return ok(transactionService.getAllTransactionDtos());
 
     }
 
