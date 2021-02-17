@@ -57,9 +57,7 @@ public class TransactionController {
     public ResponseEntity<?> saveNewTransactions(
             @RequestBody @Valid Set<TransactionDto> transactions) {
 
-        Set<Transaction> createdTransactions = this.transactionService.saveAllTransactions(transactions);
-
-        return ok(TransactionUtil.mapEntityCollectionToDtos(createdTransactions));
+        return ok(TransactionUtil.mapEntityCollectionToDtos(this.transactionService.saveAllTransactions(transactions)));
     }
 
 }
