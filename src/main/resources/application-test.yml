@@ -1,11 +1,18 @@
 eureka:
   client:
-    register-with-eureka: false
-    fetch-registry: false
+    enabled: false
+#    register-with-eureka: false
+#    fetch-registry: false
 spring:
   h2:
     console:
       enabled: true
   jpa:
     show-sql: true
+  cloud:
+    loadbalancer:
+      ribbon:
+        enabled: false
+    discovery:
+      enabled: false
 debug: true

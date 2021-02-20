@@ -1,0 +1,13 @@
+{
+  "request": {
+    "url": "/v1/accounts/4",
+    "method": "GET"
+  },
+  "response": {
+    "status": 200,
+    "body": "{\"id\":4,\"name\":\"My Visa\"}",
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  }
+}

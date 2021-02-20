@@ -4,5 +4,3 @@ spring:
   jackson:
     serialization:
       write_dates_as_timestamps: false
-server:
-  port: 8082
