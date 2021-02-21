@@ -3,6 +3,7 @@ package com.factotum.oaka.model;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
@@ -42,14 +43,20 @@ public class Transaction implements Serializable {
     @Column(name = "budget_id")
     private Long budgetId;
 
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "transaction_category_id")
     private TransactionCategory transactionCategory;
 
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "transaction_type_id")
     private TransactionType transactionType;
 
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "recurring_transaction_id")
     private RecurringTransaction recurringTransaction;

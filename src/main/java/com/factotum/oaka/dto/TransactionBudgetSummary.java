@@ -40,4 +40,15 @@ public class TransactionBudgetSummary {
     @JsonProperty("expected")
     private boolean expected;
 
+    public TransactionBudgetSummary(
+            String transactionType,
+            Integer month,
+            Integer year,
+            BigDecimal actual) {
+        this.transactionType = transactionType;
+        this.month = month;
+        this.year = year;
+        this.actual = actual;
+    }
+
 }

@@ -40,6 +40,7 @@ public class TransactionCategory implements Serializable {
     private String name;
 
     @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "budget_sub_category_id", nullable = false)
     private BudgetSubCategory budgetSubCategory;

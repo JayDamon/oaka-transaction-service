@@ -30,6 +30,7 @@ public interface TransactionService {
 
     void deleteTransactions(List<Transaction> ids);
 
-    Set<TransactionBudgetSummary> getTransactionBudgetSummaryForAllTransactionTypes(int year, int month, List<BudgetSummary> budgetCategoryTypeId);
+    List<TransactionBudgetSummary> getTransactionBudgetSummaryForAllTransactionTypes(
+            int year, int month, List<BudgetSummary> budgetCategoryTypeId);
 
 }

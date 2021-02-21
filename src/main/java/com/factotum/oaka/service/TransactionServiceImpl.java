@@ -10,14 +10,14 @@ import com.factotum.oaka.model.Transaction;
 import com.factotum.oaka.model.TransactionCategory;
 import com.factotum.oaka.repository.TransactionRepository;
 import com.factotum.oaka.repository.TransactionSubCategoryRepository;
-import com.factotum.oaka.repository.TransactionTypeRepository;
 import com.factotum.oaka.util.TransactionUtil;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -28,16 +28,14 @@ public class TransactionServiceImpl implements TransactionService {
 
     private final TransactionRepository transactionRepository;
     private final TransactionSubCategoryRepository transactionSubCategoryRepository;
-    private final TransactionTypeRepository transactionTypeRepository;
     private final AccountService accountService;
 
-    public TransactionServiceImpl(TransactionRepository transactionRepository,
+    public TransactionServiceImpl(
+            TransactionRepository transactionRepository,
             TransactionSubCategoryRepository transactionSubCategoryRepository,
-            TransactionTypeRepository transactionTypeRepository,
             AccountService accountService) {
         this.transactionRepository = transactionRepository;
         this.transactionSubCategoryRepository = transactionSubCategoryRepository;
-        this.transactionTypeRepository = transactionTypeRepository;
         this.accountService = accountService;
     }
 
@@ -109,9 +107,8 @@ public class TransactionServiceImpl implements TransactionService {
         transactionRepository.deleteAll(transactions);
     }
 
-    // TODO link with rin
     @Override
-    public Set<TransactionBudgetSummary> getTransactionBudgetSummaryForAllTransactionTypes(int year, int month, List<BudgetSummary> budgetSummaries) {
+    public List<TransactionBudgetSummary> getTransactionBudgetSummaryForAllTransactionTypes(int year, int month, List<BudgetSummary> budgetSummaries) {
 
         if (year <= 0) {
             throw new IllegalArgumentException("Year must be greater than zero, but was <" + year + ">");
@@ -119,18 +116,23 @@ public class TransactionServiceImpl implements TransactionService {
         if (month <= 0 || month > 12) {
             throw new IllegalArgumentException("Valid month between 1 and 12 must be provided, but was <" + month + ">");
         }
+        if (budgetSummaries == null) {
+            throw new IllegalArgumentException("Budget summaries must not be null");
+        }
 
-        Set<TransactionBudgetSummary> summaries = new HashSet<>();
+        List<TransactionBudgetSummary> summaries = new ArrayList<>();
 
         for (BudgetSummary budget : budgetSummaries) {
-            // FIXME: need to externalize some of this
-//            TransactionBudgetSummary summary = transactionRepository.getBudgetSummaries(year, month, budget.getCategoryId(), budget.getTransactionTypeId()).orElse(
-//                    new TransactionBudgetSummary(budget.getTransactionType(), budget.getCategory(), month, null, year, budget.getPlanned(), BigDecimal.ZERO, false)
-//            );
-//
-//            if (summary.getPlanned().doubleValue() > 0 || summary.getActual().doubleValue() > 0) {
-//                summaries.add(summary);
-//            }
+            TransactionBudgetSummary summary = transactionRepository.getBudgetSummaries(
+                    year, month, budget.getBudgetIds(), budget.getTransactionTypeId())
+                    .orElse(
+                            new TransactionBudgetSummary(
+                                    budget.getTransactionType(), budget.getCategory(), month, null, year, budget.getPlanned(), BigDecimal.ZERO, false)
+                    );
+
+            if (summary.getPlanned().doubleValue() > 0 || summary.getActual().doubleValue() > 0) {
+                summaries.add(summary);
+            }
 
         }
 

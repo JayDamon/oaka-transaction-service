@@ -40,7 +40,4 @@ public class TransactionDto {
     @JsonProperty("category")
     private TransactionCategoryDto transactionCategory;
 
-    @JsonProperty("recurringTransaction")
-    private RecurringTransactionDto recurringTransaction;
-
 }

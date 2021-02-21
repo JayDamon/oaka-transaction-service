@@ -36,7 +36,7 @@ class TransactionControllerIT {
     @Autowired
     private TransactionRepository transactionRepository;
 
-    private static final String BASE_URI = "/v1/transactions";
+    private static final String URI = "/v1/transactions";
 
     private ObjectMapper objectMapper;
 
@@ -50,7 +50,7 @@ class TransactionControllerIT {
     void getAllTransactions() throws Exception {
 
         this.mockMvc.perform(
-                get(BASE_URI))
+                get(URI))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").exists())
@@ -76,7 +76,7 @@ class TransactionControllerIT {
     void getTransactionCategories_GivenCategoriesExist_ThenReturnAllCategories() throws Exception {
 
         mockMvc.perform(
-                get(BASE_URI + "/categories"))
+                get(URI + "/categories"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").exists())
@@ -111,7 +111,7 @@ class TransactionControllerIT {
         t2.setBudget(budget);
 
         MvcResult ra = mockMvc.perform(
-                post(BASE_URI)
+                post(URI)
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(this.objectMapper.writeValueAsString(Arrays.asList(t1, t2))))
                 .andDo(print())
@@ -133,4 +133,85 @@ class TransactionControllerIT {
         assertThat(itemsToCount, is(equalTo(json.size())));
 
     }
+
+    @Test
+    void getTransactionTotal_GiveTransactionsExistForBudgets_ThenReturnTotalAmount() throws Exception {
+
+        mockMvc.perform(
+                get(URI + "/total")
+                        .param("year", "2017")
+                        .param("month", "1")
+                        .param("transactionTypeId", "2")
+                        .param("budgetIds", "10, 11, 12, 13, 14, 15, 26, 16, 17, 18, 27, 19, 28, 29, 30"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.total").exists())
+                .andExpect(jsonPath("$.transactionType").exists());
+
+    }
+
+    @Test
+    void getTransactionTotal_GiveTransactionsExistForBudgetsTwenty_ThenReturnTotalAmount() throws Exception {
+
+        mockMvc.perform(
+                get(URI + "/total")
+                        .param("year", "2017")
+                        .param("month", "1")
+                        .param("transactionTypeId", "1")
+                        .param("budgetIds", "20"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.total").exists())
+                .andExpect(jsonPath("$.transactionType").exists());
+
+    }
+
+    @Test
+    void getTransactionTotal_GiveTransactionsExistForBudgetsThree_ThenReturnTotalAmount() throws Exception {
+
+        mockMvc.perform(
+                get(URI + "/total")
+                        .param("year", "2017")
+                        .param("month", "1")
+                        .param("transactionTypeId", "2")
+                        .param("budgetIds", "1, 2, 3, 4, 5, 6, 21, 22"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.total").exists())
+                .andExpect(jsonPath("$.transactionType").exists());
+
+    }
+
+    @Test
+    void getTransactionTotal_GiveNoTransactionsExist_ThenReturnTotalAmount() throws Exception {
+
+        mockMvc.perform(
+                get(URI + "/total")
+                        .param("year", "2017")
+                        .param("month", "1")
+                        .param("transactionTypeId", "1")
+                        .param("budgetIds", "23"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.total").exists())
+                .andExpect(jsonPath("$.transactionType").exists());
+
+    }
+
+    @Test
+    void getTransactionTotal_GiveTransactionsExistForBudgetsSix_ThenReturnTotalAmount() throws Exception {
+
+        mockMvc.perform(
+                get(URI + "/total")
+                        .param("year", "2017")
+                        .param("month", "1")
+                        .param("transactionTypeId", "2")
+                        .param("budgetIds", "24, 7, 8, 9, 25"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.total").exists())
+                .andExpect(jsonPath("$.transactionType").exists());
+
+    }
+
 }
