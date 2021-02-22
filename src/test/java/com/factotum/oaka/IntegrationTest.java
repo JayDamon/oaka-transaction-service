@@ -16,7 +16,7 @@ import java.lang.annotation.Target;
 @SpringBootTest
 @ActiveProfiles({"test"})
 @AutoConfigureMockMvc
-@AutoConfigureStubRunner(stubsMode = StubRunnerProperties.StubsMode.LOCAL, ids = "com.factotum:setzer:+:stubs:8900")
+@AutoConfigureStubRunner(stubsMode = StubRunnerProperties.StubsMode.LOCAL, ids = {"com.factotum:setzer:+:stubs:8900", "com.factotum:rin:+:stubs:8902"})
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 public @interface IntegrationTest {

@@ -41,8 +41,6 @@ class TransactionServiceImplT {
                 assertThat(dto.getBudget().getBudgetCategory().getId(), is(not(nullValue())));
                 assertThat(dto.getBudget().getBudgetCategory().getTypeName(), is(not(nullValue())));
                 assertThat(dto.getBudget().getBudgetCategory().getName(), is(not(nullValue())));
-                assertThat(dto.getBudget().getStartDate().getMonth(), is(not(nullValue())));
-                assertThat(dto.getBudget().getEndDate().getMonth(), is(not(nullValue())));
                 assertThat(dto.getBudget().getFrequencyTypeName(), is(not(nullValue())));
                 assertThat(dto.getBudget().getAmount(), is(not(nullValue())));
                 assertThat(dto.getBudget().getInUse(), is(not(nullValue())));

@@ -1,10 +1,13 @@
 package com.factotum.oaka.service;
 
+import com.factotum.oaka.dto.BudgetCategoryDto;
+import com.factotum.oaka.dto.BudgetDto;
 import com.factotum.oaka.dto.BudgetSummary;
 import com.factotum.oaka.dto.ShortAccountDto;
 import com.factotum.oaka.dto.TransactionBudgetSummary;
 import com.factotum.oaka.dto.TransactionDto;
 import com.factotum.oaka.http.AccountService;
+import com.factotum.oaka.http.BudgetService;
 import com.factotum.oaka.model.BudgetSubCategory;
 import com.factotum.oaka.model.Occurrence;
 import com.factotum.oaka.model.RecurringTransaction;
@@ -38,6 +41,7 @@ import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
@@ -50,13 +54,15 @@ class TransactionServiceImplUT {
     private TransactionSubCategoryRepository transactionSubCategoryRepository;
     @Mock
     private AccountService accountService;
+    @Mock
+    private BudgetService budgetService;
 
     private TransactionService transactionService;
 
     @BeforeEach
     void setUp() {
         transactionService = new TransactionServiceImpl(
-                transactionRepository, transactionSubCategoryRepository, accountService);
+                transactionRepository, transactionSubCategoryRepository, accountService, budgetService);
     }
 
     @Test
@@ -74,18 +80,25 @@ class TransactionServiceImplUT {
                 13L, "RecurringTransactionName", 3L, 10, transactionCategory,
                 7, 2, occurrence, transactionType, ZonedDateTime.now(),
                 ZonedDateTime.now().plusHours(25), BigDecimal.valueOf(34.66));
-        recurringTransaction.setId(13L);
-
         ShortAccountDto accountDto = new ShortAccountDto(3L, "Account 1");
 
         Transaction transaction = new Transaction(14L, accountDto.getId(), 8L, transactionCategory,
                 transactionType, recurringTransaction, ZonedDateTime.now(),
                 "TransactionDescriptionOne", BigDecimal.valueOf(44.78));
-        transaction.setId(14L);
 
         when(transactionRepository.findAllByOrderByDateDesc()).thenReturn(new HashSet<>(Collections.singletonList(transaction)));
 
         when(accountService.getAccountById(eq(accountDto.getId()))).thenReturn(accountDto);
+
+        BudgetCategoryDto budgetCategory = new BudgetCategoryDto();
+        budgetCategory.setId(6);
+        budgetCategory.setName("BudgetCategoryName");
+        budgetCategory.setTypeName("BudgetCategoryType");
+        BudgetDto budget = new BudgetDto();
+        budget.setId(8L);
+        budget.setName("BudgetItemNameOne");
+        budget.setBudgetCategory(budgetCategory);
+        when(budgetService.getBudgetById(anyLong())).thenReturn(budget);
 
         // Act
         Set<TransactionDto> transactions = transactionService.getAllTransactionDtos();
@@ -105,11 +118,6 @@ class TransactionServiceImplUT {
             assertThat(dto.getBudget().getBudgetCategory().getId(), is(equalTo(6)));
             assertThat(dto.getBudget().getBudgetCategory().getTypeName(), is(equalTo("BudgetCategoryType")));
             assertThat(dto.getBudget().getBudgetCategory().getName(), is(equalTo("BudgetCategoryName")));
-            assertThat(dto.getBudget().getStartDate().getMonth(), is(equalTo(ZonedDateTime.now().getMonth())));
-            assertThat(dto.getBudget().getEndDate().getMonth(), is(equalTo(ZonedDateTime.now().getMonth())));
-            assertThat(dto.getBudget().getFrequencyTypeName(), is(equalTo("FrequencyTypeOne")));
-            assertThat(dto.getBudget().getAmount(), is(equalTo(BigDecimal.valueOf(55.09))));
-            assertThat(dto.getBudget().getInUse(), is(equalTo(true)));
             assertThat(dto.getTransactionCategory().getId(), is(equalTo(11L)));
             assertThat(dto.getTransactionCategory().getName(), is(equalTo("TransactionCategoryOne")));
             assertThat(dto.getTransactionCategory().getBudgetSubCategory().getId(), is(equalTo(10L)));

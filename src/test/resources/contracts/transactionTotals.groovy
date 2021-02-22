@@ -54,8 +54,7 @@ import org.springframework.cloud.contract.spec.Contract
                     contentType('application/json')
                 }
             }
-        }
-        ,
+        },
         Contract.make {
             request {
                 method 'GET'

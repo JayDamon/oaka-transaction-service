@@ -1,11 +1,13 @@
 package com.factotum.oaka.service;
 
+import com.factotum.oaka.dto.BudgetDto;
 import com.factotum.oaka.dto.BudgetSubCategoryDto;
 import com.factotum.oaka.dto.BudgetSummary;
 import com.factotum.oaka.dto.ShortAccountDto;
 import com.factotum.oaka.dto.TransactionBudgetSummary;
 import com.factotum.oaka.dto.TransactionDto;
 import com.factotum.oaka.http.AccountService;
+import com.factotum.oaka.http.BudgetService;
 import com.factotum.oaka.model.Transaction;
 import com.factotum.oaka.model.TransactionCategory;
 import com.factotum.oaka.repository.TransactionRepository;
@@ -29,14 +31,16 @@ public class TransactionServiceImpl implements TransactionService {
     private final TransactionRepository transactionRepository;
     private final TransactionSubCategoryRepository transactionSubCategoryRepository;
     private final AccountService accountService;
+    private final BudgetService budgetService;
 
     public TransactionServiceImpl(
             TransactionRepository transactionRepository,
             TransactionSubCategoryRepository transactionSubCategoryRepository,
-            AccountService accountService) {
+            AccountService accountService, BudgetService budgetService) {
         this.transactionRepository = transactionRepository;
         this.transactionSubCategoryRepository = transactionSubCategoryRepository;
         this.accountService = accountService;
+        this.budgetService = budgetService;
     }
 
     @Override
@@ -70,6 +74,7 @@ public class TransactionServiceImpl implements TransactionService {
 
         Set<TransactionDto> dtos = new LinkedHashSet<>();
         Map<Long, ShortAccountDto> accountDtoMap = new HashMap<>();
+        Map<Long, BudgetDto> budgetMap = new HashMap<>();
         for (Transaction t : transactions) {
 
             TransactionDto dto = modelMapper.map(t, TransactionDto.class);
@@ -77,6 +82,13 @@ public class TransactionServiceImpl implements TransactionService {
             dto.setAccount(
                     accountDtoMap.computeIfAbsent(t.getAccountId(), accountService::getAccountById)
             );
+
+            System.out.println(t.getBudgetId());
+            if (t.getBudgetId() != null) {
+                dto.setBudget(
+                        budgetMap.computeIfAbsent(t.getBudgetId(), budgetService::getBudgetById)
+                );
+            }
 
             dtos.add(dto);
         }
