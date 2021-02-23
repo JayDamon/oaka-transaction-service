@@ -11,9 +11,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 public class OakaApplication {
 
     public static void main(String[] args) {
-
         SpringApplication.run(OakaApplication.class, args);
-
     }
 
 }

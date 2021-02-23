@@ -1,6 +1,5 @@
 package com.factotum.oaka.service;
 
-import com.factotum.oaka.dto.BudgetSubCategoryDto;
 import com.factotum.oaka.dto.BudgetSummary;
 import com.factotum.oaka.dto.TransactionBudgetSummary;
 import com.factotum.oaka.dto.TransactionDto;
@@ -21,8 +20,6 @@ public interface TransactionService {
     Set<Transaction> getAllTransactionsOrdered();
 
     Set<TransactionDto> getAllTransactionDtos();
-
-    List<BudgetSubCategoryDto> getAllTransactionCategories(); // TODO use transaction category controller
 
     List<TransactionCategory> getAllTransactionSubCategories();
 

@@ -1,7 +1,6 @@
 package com.factotum.oaka.service;
 
 import com.factotum.oaka.dto.BudgetDto;
-import com.factotum.oaka.dto.BudgetSubCategoryDto;
 import com.factotum.oaka.dto.BudgetSummary;
 import com.factotum.oaka.dto.ShortAccountDto;
 import com.factotum.oaka.dto.TransactionBudgetSummary;
@@ -83,7 +82,6 @@ public class TransactionServiceImpl implements TransactionService {
                     accountDtoMap.computeIfAbsent(t.getAccountId(), accountService::getAccountById)
             );
 
-            System.out.println(t.getBudgetId());
             if (t.getBudgetId() != null) {
                 dto.setBudget(
                         budgetMap.computeIfAbsent(t.getBudgetId(), budgetService::getBudgetById)
@@ -93,15 +91,6 @@ public class TransactionServiceImpl implements TransactionService {
             dtos.add(dto);
         }
         return dtos;
-    }
-
-    @Override
-    public List<BudgetSubCategoryDto> getAllTransactionCategories() {
-
-//        List<BudgetSubCategory> categories = new ArrayList<>();
-//        transactionCategoryRepository.findAll().forEach(categories::add);
-
-        return null;
     }
 
     @Override
