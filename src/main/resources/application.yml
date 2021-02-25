@@ -1,0 +1,46 @@
+spring:
+  application:
+    name: oaka
+server:
+  port: 8082
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: h2
+  h2:
+    console:
+      enabled: true
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+#    show-sql: true
+#debug: true
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: mysql
+  jpa:
+    hibernate:
+      ddl-auto: update
+  datasource:
+    url: jdbc:mysql://172.16.0.7:3310/money-maker-test
+    username: mm-app
+    password: SaveMoney
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    data:
+server:
+  port: 8082
