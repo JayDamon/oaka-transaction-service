@@ -1,11 +1,10 @@
 package com.factotum.oaka.service;
 
 import com.factotum.oaka.model.TransactionCategory;
-
-import java.util.List;
+import reactor.core.publisher.Flux;
 
 public interface TransactionCategoryService {
 
-    List<TransactionCategory> findAllTransactionCategories();
+    Flux<TransactionCategory> findAllTransactionCategories();
 
 }

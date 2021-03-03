@@ -1,9 +1,9 @@
 package com.factotum.oaka.repository;
 
-import com.factotum.oaka.model.TransactionCategory;
+import com.factotum.oaka.model.BudgetSubCategory;
 import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface TransactionCategoryRepository extends ReactiveCrudRepository<TransactionCategory, Long> {
+public interface BudgetSubCategoryRepository extends ReactiveCrudRepository<BudgetSubCategory, Long> {
 }

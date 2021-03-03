@@ -15,14 +15,20 @@ import com.factotum.oaka.util.TransactionUtil;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.nullValue;
 
 @Service
 public class TransactionServiceImpl implements TransactionService {
@@ -43,58 +49,66 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public List<Transaction> saveAllTransactions(Set<TransactionDto> transactions) {
+    public Flux<Transaction> saveAllTransactions(Set<TransactionDto> transactions) {
 
         return transactionRepository.saveAll(TransactionUtil.mapDtosToEntities(transactions));
     }
 
     @Override
-    public Transaction saveTransaction(Transaction transaction) {
+    public Mono<Transaction> saveTransaction(Transaction transaction) {
         return transactionRepository.save(transaction);
     }
 
     @Override
-    public List<Transaction> getAllTransactions() {
-
+    public Flux<Transaction> getAllTransactions() {
         return transactionRepository.findAll();
     }
 
     @Override
-    public Set<Transaction> getAllTransactionsOrdered() {
-        return transactionRepository.findAllByOrderByDateDesc();
-    }
-
-    @Override
     @Transactional
-    public Set<TransactionDto> getAllTransactionDtos() {
+    public Flux<TransactionDto> getAllTransactionDtos() {
 
-        Set<Transaction> transactions = getAllTransactionsOrdered();
-        ModelMapper modelMapper = new ModelMapper();
-
-        Set<TransactionDto> dtos = new LinkedHashSet<>();
         Map<Long, ShortAccountDto> accountDtoMap = new HashMap<>();
         Map<Long, BudgetDto> budgetMap = new HashMap<>();
-        for (Transaction t : transactions) {
 
-            TransactionDto dto = modelMapper.map(t, TransactionDto.class);
-
-            dto.setAccount(
-                    accountDtoMap.computeIfAbsent(t.getAccountId(), accountService::getAccountById)
-            );
-
-            if (t.getBudgetId() != null) {
-                dto.setBudget(
-                        budgetMap.computeIfAbsent(t.getBudgetId(), budgetService::getBudgetById)
-                );
-            }
-
-            dtos.add(dto);
-        }
-        return dtos;
+        return transactionRepository.findAllByOrderByDateDesc()
+                .map(t -> new ModelMapper().map(t, TransactionDto.class))
+                .doOnNext(t ->
+                        t.setAccount(
+                                accountDtoMap.computeIfAbsent(
+                                        t.getAccount().getId(),
+                                        accountService::getAccountById))
+                ).doOnNext(t -> {
+                    if (t.getBudget() != null && t.getBudget().getId() != null) {
+                        budgetMap.computeIfAbsent(t.getBudget().getId(), budgetService::getBudgetById);
+                    }
+                });
+//        ModelMapper modelMapper = new ModelMapper();
+//
+//        Set<TransactionDto> dtos = new LinkedHashSet<>();
+//        Map<Long, ShortAccountDto> accountDtoMap = new HashMap<>();
+//        Map<Long, BudgetDto> budgetMap = new HashMap<>();
+//        for (Transaction t : transactions) {
+//
+//            TransactionDto dto = modelMapper.map(t, TransactionDto.class);
+//
+//            dto.setAccount(
+//                    accountDtoMap.computeIfAbsent(t.getAccountId(), accountService::getAccountById)
+//            );
+//
+//            if (t.getBudgetId() != null) {
+//                dto.setBudget(
+//                        budgetMap.computeIfAbsent(t.getBudgetId(), budgetService::getBudgetById)
+//                );
+//            }
+//
+//            dtos.add(dto);
+//        }
+//        return dtos;
     }
 
     @Override
-    public List<TransactionCategory> getAllTransactionSubCategories() {
+    public Flux<TransactionCategory> getAllTransactionSubCategories() {
         return transactionSubCategoryRepository.findAll();
     }
 
@@ -126,11 +140,12 @@ public class TransactionServiceImpl implements TransactionService {
         for (BudgetSummary budget : budgetSummaries) {
             TransactionBudgetSummary summary = transactionRepository.getBudgetSummaries(
                     year, month, budget.getBudgetIds(), budget.getTransactionTypeId())
-                    .orElse(
+                    .defaultIfEmpty(
                             new TransactionBudgetSummary(
                                     budget.getTransactionType(), budget.getCategory(), month, null, year, budget.getPlanned(), BigDecimal.ZERO, false)
-                    );
+                    ).block();
 
+            assertThat(summary, is(not(nullValue())));
             if (summary.getPlanned().doubleValue() > 0 || summary.getActual().doubleValue() > 0) {
                 summaries.add(summary);
             }

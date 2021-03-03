@@ -5,13 +5,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Column;
+import org.springframework.data.relational.core.mapping.Table;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
 import java.io.Serializable;
 
 /**
@@ -22,16 +19,14 @@ import java.io.Serializable;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
-@Table(name = "occurrence")
+@Table("occurrence")
 public class Occurrence implements Serializable {
 
     @Id
-    @Column(name = "occurrence_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column("occurrence_id")
     private Integer id;
 
-    @Column(name = "occurrence")
+    @Column("occurrence")
     private String name;
 
 }

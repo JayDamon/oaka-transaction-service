@@ -5,15 +5,8 @@ import com.factotum.oaka.dto.TransactionDto;
 import com.factotum.oaka.model.Transaction;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.List;
-import java.util.Set;
-
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.not;
-import static org.hamcrest.Matchers.nullValue;
+import reactor.core.publisher.Flux;
+import reactor.test.StepVerifier;
 
 @IntegrationTest
 class TransactionRetrievalServiceImplIT {
@@ -24,18 +17,18 @@ class TransactionRetrievalServiceImplIT {
     @Test
     void getAllTransactions_ReturnsTestTransactions() {
 
-        List<Transaction> transactions = transactionService.getAllTransactions();
-        assertThat(transactions, is(not(nullValue())));
-        assertThat(transactions, hasSize(891));
+        Flux<Transaction> transactions = transactionService.getAllTransactions();
+        StepVerifier.create(transactions.log()).expectNextCount(891).verifyComplete();
 
     }
 
     @Test
     void getAllTransactionDtos_ReturnsTestTransactionsAsDtos() {
 
-        Set<TransactionDto> transactionDtos = transactionService.getAllTransactionDtos();
-        assertThat(transactionDtos, is(not(nullValue())));
-        assertThat(transactionDtos, hasSize(891));
+        Flux<TransactionDto> transactionDtos = transactionService.getAllTransactionDtos();
+        StepVerifier.create(transactionDtos.log()).expectNextCount(891).verifyComplete();
+//        assertThat(transactionDtos, is(not(nullValue())));
+//        assertThat(transactionDtos, hasSize(891));
 
     }
 }

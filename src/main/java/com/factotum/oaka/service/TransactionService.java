@@ -5,23 +5,23 @@ import com.factotum.oaka.dto.TransactionBudgetSummary;
 import com.factotum.oaka.dto.TransactionDto;
 import com.factotum.oaka.model.Transaction;
 import com.factotum.oaka.model.TransactionCategory;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.util.List;
 import java.util.Set;
 
 public interface TransactionService {
 
-    List<Transaction> saveAllTransactions(Set<TransactionDto> transactions);
+    Flux<Transaction> saveAllTransactions(Set<TransactionDto> transactions);
 
-    Transaction saveTransaction(Transaction transaction);
+    Mono<Transaction> saveTransaction(Transaction transaction);
 
-    List<Transaction> getAllTransactions();
+    Flux<Transaction> getAllTransactions();
 
-    Set<Transaction> getAllTransactionsOrdered();
+    Flux<TransactionDto> getAllTransactionDtos();
 
-    Set<TransactionDto> getAllTransactionDtos();
-
-    List<TransactionCategory> getAllTransactionSubCategories();
+    Flux<TransactionCategory> getAllTransactionSubCategories();
 
     void deleteTransaction(Transaction id);
 
