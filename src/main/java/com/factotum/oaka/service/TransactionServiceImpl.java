@@ -145,6 +145,7 @@ public class TransactionServiceImpl implements TransactionService {
                                     budget.getTransactionType(), budget.getCategory(), month, null, year, budget.getPlanned(), BigDecimal.ZERO, false)
                     ).block();
 
+
             assertThat(summary, is(not(nullValue())));
             if (summary.getPlanned().doubleValue() > 0 || summary.getActual().doubleValue() > 0) {
                 summaries.add(summary);

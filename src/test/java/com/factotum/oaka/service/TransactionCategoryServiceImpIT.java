@@ -4,7 +4,6 @@ import com.factotum.oaka.IntegrationTest;
 import com.factotum.oaka.model.TransactionCategory;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Flux;
 import reactor.test.StepVerifier;
 
@@ -14,7 +13,6 @@ public class TransactionCategoryServiceImpIT {
     @Autowired
     private TransactionCategoryService transactionCategoryService;
 
-    @Transactional
     @Test
     public void findAllTransactionCategories_GivenDatabaseLoadedWithValidTestData_ThenReturnListOfTransactionCategories() {
         Flux<TransactionCategory> transactionCategories = transactionCategoryService.findAllTransactionCategories();
