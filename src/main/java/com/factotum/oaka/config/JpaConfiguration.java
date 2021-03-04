@@ -11,7 +11,7 @@ import org.springframework.r2dbc.connection.init.ConnectionFactoryInitializer;
 import org.springframework.r2dbc.connection.init.ResourceDatabasePopulator;
 
 @Configuration
-@EnableR2dbcRepositories(basePackages = {"com.factotum.setzer.repository"})
+@EnableR2dbcRepositories(basePackages = {"com.factotum.oaka.repository"})
 public class JpaConfiguration {
 
 
