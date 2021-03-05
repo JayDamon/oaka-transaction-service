@@ -1,6 +1,6 @@
 package com.factotum.oaka.repository;
 
-import com.factotum.oaka.config.JpaConfiguration;
+import com.factotum.oaka.config.RepositoryConfiguration;
 import com.factotum.oaka.dto.TransactionBudgetSummary;
 import com.factotum.oaka.model.Transaction;
 import org.junit.jupiter.api.Test;
@@ -23,7 +23,7 @@ import static org.hamcrest.Matchers.nullValue;
 
 @DataR2dbcTest
 @ActiveProfiles({"test"})
-@Import(JpaConfiguration.class)
+@Import(RepositoryConfiguration.class)
 class TransactionRepositoryIT {
 
     @Autowired

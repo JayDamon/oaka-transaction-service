@@ -73,12 +73,15 @@ public class TransactionServiceImpl implements TransactionService {
 
         return transactionRepository.findAllByOrderByDateDesc()
                 .map(t -> new ModelMapper().map(t, TransactionDto.class))
+//                .doOnNext(t -> t.setTransactionCategory(
+//                        transactionSubCategoryRepository.findById(t.getTransactionCategory())
+//                ))
                 .doOnNext(t ->
                         t.setAccount(
                                 accountDtoMap.computeIfAbsent(
                                         t.getAccount().getId(),
-                                        accountService::getAccountById))
-                ).doOnNext(t -> {
+                                        accountService::getAccountById)))
+                .doOnNext(t -> {
                     if (t.getBudget() != null && t.getBudget().getId() != null) {
                         budgetMap.computeIfAbsent(t.getBudget().getId(), budgetService::getBudgetById);
                     }
