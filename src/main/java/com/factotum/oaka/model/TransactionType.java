@@ -6,7 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.relational.core.mapping.Column;
+import org.springframework.data.relational.core.mapping.Table;
 
 import java.io.Serializable;
 
@@ -18,11 +19,14 @@ import java.io.Serializable;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Document
+@Table("transaction_type")
 public class TransactionType implements Serializable {
 
     @Id
+    @Column("transaction_type_id")
     private Integer id;
+
+    @Column("transaction_type")
     private String transactionTypeName;
 
 }

@@ -7,7 +7,8 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.relational.core.mapping.Column;
+import org.springframework.data.relational.core.mapping.Table;
 
 import java.io.Serializable;
 
@@ -20,11 +21,14 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
-@Document
+@Table("budget_sub_category")
 public class BudgetSubCategory implements Serializable {
 
     @Id
+    @Column("budget_sub_category_id")
     private Long id;
+
+    @Column("sub_category_name")
     private String name;
 
 }

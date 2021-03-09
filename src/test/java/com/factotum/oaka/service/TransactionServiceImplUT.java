@@ -27,7 +27,6 @@ import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -73,20 +72,18 @@ class TransactionServiceImplUT {
         TransactionType transactionType = new TransactionType(9, "TransactionTypeOne");
 
         BudgetSubCategory budgetSubCategory = new BudgetSubCategory(10L, "BudgetSubCategoryOne");
-        TransactionCategory transactionCategory = new TransactionCategory(11L, "TransactionCategoryOne", budgetSubCategory);
+        TransactionCategory transactionCategory = new TransactionCategory(11L, "TransactionCategoryOne", budgetSubCategory.getId());
 
         Occurrence occurrence = new Occurrence(12, "OccurrenceOne");
-        FrequencyType frequencyType = new FrequencyType();
-        frequencyType.setId(7);
 
         RecurringTransaction recurringTransaction = new RecurringTransaction(
-                13L, "RecurringTransactionName", 3L, budgetSubCategory, transactionCategory,
-                frequencyType, 2, occurrence, transactionType, ZonedDateTime.now(),
+                13L, "RecurringTransactionName", 3L, 10, transactionCategory.getId(),
+                7, 2, occurrence.getId(), transactionType.getId(), ZonedDateTime.now(),
                 ZonedDateTime.now().plusHours(25), BigDecimal.valueOf(34.66));
         ShortAccountDto accountDto = new ShortAccountDto(3L, "Account 1");
 
-        Transaction transaction = new Transaction(14L, accountDto.getId(), 8L, transactionCategory,
-                transactionType, recurringTransaction, LocalDateTime.now(),
+        Transaction transaction = new Transaction(14L, accountDto.getId(), 8L, transactionCategory.getId(),
+                transactionType.getId(), recurringTransaction.getId(), ZonedDateTime.now(),
                 "TransactionDescriptionOne", BigDecimal.valueOf(44.78));
 
         when(transactionRepository.findAllByOrderByDateDesc()).thenReturn(Flux.just(transaction));

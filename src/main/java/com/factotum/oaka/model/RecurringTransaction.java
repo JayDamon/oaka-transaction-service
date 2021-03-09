@@ -6,7 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.relational.core.mapping.Column;
+import org.springframework.data.relational.core.mapping.Table;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -21,22 +22,45 @@ import java.time.ZonedDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Document
+@Table("recurring_transaction")
 public class RecurringTransaction implements Serializable {
 
     @Id
+    @Column("recurring_transaction_id")
     private Long id;
+
+    @Column("name")
     private String recurringTransactionName;
+
+    @Column("account_id")
     private Long account;
-    private BudgetSubCategory budgetSubCategory;
-    private TransactionCategory transactionCategory;
-    private FrequencyType frequencyType;
+
+    @Column("budget_category_id")
+    private Integer budgetSubCategory;
+
+    @Column("transaction_category_id")
+    private Long transactionCategory;
+
+    @Column("frequency_type_id")
+    private Integer frequencyType;
+
     // This is the number of days, months or years between occurrences based on the FrequencyType
+    @Column("frequency")
     private Integer frequency;
-    private Occurrence occurrence;
-    private TransactionType transactionType;
+
+    @Column("occurrence_id")
+    private Integer occurrence;
+
+    @Column("transaction_type_id")
+    private Integer transactionType;
+
+    @Column("start_date")
     private ZonedDateTime startDate;
+
+    @Column("end_date")
     private ZonedDateTime endDate;
+
+    @Column("amount")
     private BigDecimal amount;
 
 }
