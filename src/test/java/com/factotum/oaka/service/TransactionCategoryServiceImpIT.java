@@ -16,7 +16,7 @@ public class TransactionCategoryServiceImpIT {
     @Test
     public void findAllTransactionCategories_GivenDatabaseLoadedWithValidTestData_ThenReturnListOfTransactionCategories() {
         Flux<TransactionCategory> transactionCategories = transactionCategoryService.findAllTransactionCategories();
-        StepVerifier.create(transactionCategories.log()).expectNextCount(891).verifyComplete();
+        StepVerifier.create(transactionCategories.log()).expectNextCount(112).verifyComplete();
 //        assertThat(transactionCategories, is(allOf(notNullValue(), not(IsEmptyCollection.empty()))));
 //        assertThat(transactionCategories.size(), is(greaterThan(0)));
     }

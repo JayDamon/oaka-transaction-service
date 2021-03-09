@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import java.math.BigDecimal;
-import java.time.ZonedDateTime;
+import java.time.LocalDateTime;
 
 @Data
 @ToString
@@ -45,10 +45,10 @@ public class RecurringTransactionDto {
     private String transactionTypeName;
 
     @JsonProperty("startDate")
-    private ZonedDateTime startDate;
+    private LocalDateTime startDate;
 
     @JsonProperty("endDate")
-    private ZonedDateTime endDate;
+    private LocalDateTime endDate;
 
     @JsonProperty("amount")
     private BigDecimal amount;

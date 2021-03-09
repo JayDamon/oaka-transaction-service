@@ -6,7 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.relational.core.mapping.Column;
+import org.springframework.data.relational.core.mapping.Table;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -20,18 +21,34 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Document
+@Table("transaction")
 public class Transaction implements Serializable {
 
     @Id
+    @Column("transaction_id")
     private Long id;
-    private Long accountId;
-    private Long budgetId;
-    private TransactionCategory category;
-    private TransactionType type;
-    private RecurringTransaction recurringTransaction;
-    private LocalDateTime date;
-    private String description;
-    private BigDecimal amount;
 
+    @Column("account_id")
+    private Long accountId;
+
+    @Column("budget_id")
+    private Long budgetId;
+
+    @Column("transaction_category_id")
+    private Long transactionCategory;
+
+    @Column("transaction_type_id")
+    private Integer transactionType;
+
+    @Column("recurring_transaction_id")
+    private Long recurringTransaction;
+
+    @Column("transaction_date")
+    private LocalDateTime date;
+
+    @Column("description")
+    private String description;
+
+    @Column("amount")
+    private BigDecimal amount;
 }

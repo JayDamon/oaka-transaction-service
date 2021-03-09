@@ -11,7 +11,7 @@ import org.springframework.data.relational.core.mapping.Table;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.time.ZonedDateTime;
+import java.time.LocalDateTime;
 
 /**
  * Recurring transactions that are applied on a defined time period that are not bills
@@ -55,10 +55,10 @@ public class RecurringTransaction implements Serializable {
     private Integer transactionType;
 
     @Column("start_date")
-    private ZonedDateTime startDate;
+    private LocalDateTime startDate;
 
     @Column("end_date")
-    private ZonedDateTime endDate;
+    private LocalDateTime endDate;
 
     @Column("amount")
     private BigDecimal amount;
