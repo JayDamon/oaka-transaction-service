@@ -7,7 +7,7 @@ import reactor.core.publisher.Mono;
 
 @Service
 public class BudgetServiceImpl implements BudgetService {
-    
+
     private final WebClient.Builder webClientBuilder;
 
     private BudgetServiceImpl(WebClient.Builder webClientBuilder) {

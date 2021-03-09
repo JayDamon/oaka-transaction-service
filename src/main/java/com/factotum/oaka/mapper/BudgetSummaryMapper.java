@@ -12,8 +12,6 @@ public class BudgetSummaryMapper implements BiFunction<Row, Object, TransactionB
     @Override
     public TransactionBudgetSummary apply(Row row, Object o) {
 
-      log.info("Mapping row {}", row);
-
         return new TransactionBudgetSummary(
                 row.get("transaction_type", String.class),
                 row.get("month", Integer.class),
