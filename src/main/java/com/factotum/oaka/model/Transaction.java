@@ -27,8 +27,8 @@ public class Transaction implements Serializable {
     private Long id;
     private Long accountId;
     private Long budgetId;
-    private TransactionCategory transactionCategory;
-    private TransactionType transactionType;
+    private TransactionCategory category;
+    private TransactionType type;
     private RecurringTransaction recurringTransaction;
     private LocalDateTime date;
     private String description;

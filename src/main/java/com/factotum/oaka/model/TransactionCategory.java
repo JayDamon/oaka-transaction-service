@@ -26,7 +26,6 @@ public class TransactionCategory implements Serializable {
     @Id
     private Long id;
     private String name;
-    private Long budgetSubCategory;
-
+    private BudgetSubCategory subCategory;
 
 }

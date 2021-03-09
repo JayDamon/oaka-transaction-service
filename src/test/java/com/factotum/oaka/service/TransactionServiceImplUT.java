@@ -9,6 +9,7 @@ import com.factotum.oaka.dto.TransactionDto;
 import com.factotum.oaka.http.AccountService;
 import com.factotum.oaka.http.BudgetService;
 import com.factotum.oaka.model.BudgetSubCategory;
+import com.factotum.oaka.model.FrequencyType;
 import com.factotum.oaka.model.Occurrence;
 import com.factotum.oaka.model.RecurringTransaction;
 import com.factotum.oaka.model.Transaction;
@@ -72,23 +73,25 @@ class TransactionServiceImplUT {
         TransactionType transactionType = new TransactionType(9, "TransactionTypeOne");
 
         BudgetSubCategory budgetSubCategory = new BudgetSubCategory(10L, "BudgetSubCategoryOne");
-        TransactionCategory transactionCategory = new TransactionCategory(11L, "TransactionCategoryOne", budgetSubCategory.getId());
+        TransactionCategory transactionCategory = new TransactionCategory(11L, "TransactionCategoryOne", budgetSubCategory);
 
         Occurrence occurrence = new Occurrence(12, "OccurrenceOne");
+        FrequencyType frequencyType = new FrequencyType();
+        frequencyType.setId(7);
 
         RecurringTransaction recurringTransaction = new RecurringTransaction(
-                13L, "RecurringTransactionName", 3L, 10, transactionCategory.getId(),
-                7, 2, occurrence.getId(), transactionType.getId(), ZonedDateTime.now(),
+                13L, "RecurringTransactionName", 3L, budgetSubCategory, transactionCategory,
+                frequencyType, 2, occurrence, transactionType, ZonedDateTime.now(),
                 ZonedDateTime.now().plusHours(25), BigDecimal.valueOf(34.66));
         ShortAccountDto accountDto = new ShortAccountDto(3L, "Account 1");
 
-        Transaction transaction = new Transaction(14L, accountDto.getId(), 8L, transactionCategory.getId(),
-                transactionType.getId(), recurringTransaction.getId(), LocalDateTime.now(),
+        Transaction transaction = new Transaction(14L, accountDto.getId(), 8L, transactionCategory,
+                transactionType, recurringTransaction, LocalDateTime.now(),
                 "TransactionDescriptionOne", BigDecimal.valueOf(44.78));
 
         when(transactionRepository.findAllByOrderByDateDesc()).thenReturn(Flux.just(transaction));
 
-        when(accountService.getAccountById(eq(accountDto.getId()))).thenReturn(accountDto);
+        when(accountService.getAccountById(eq(accountDto.getId()))).thenReturn(Mono.just(accountDto));
 
         BudgetCategoryDto budgetCategory = new BudgetCategoryDto();
         budgetCategory.setId(6);
@@ -98,7 +101,7 @@ class TransactionServiceImplUT {
         budget.setId(8L);
         budget.setName("BudgetItemNameOne");
         budget.setBudgetCategory(budgetCategory);
-        when(budgetService.getBudgetById(anyLong())).thenReturn(budget);
+        when(budgetService.getBudgetById(anyLong())).thenReturn(Mono.just(budget));
 
         // Act
         Flux<TransactionDto> transactions = transactionService.getAllTransactionDtos();

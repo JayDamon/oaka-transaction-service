@@ -24,6 +24,7 @@
         <spring-boot-admin.version>2.4.0</spring-boot-admin.version>
         <spring-cloud.version>2020.0.1</spring-cloud.version>
         <spring-cloud-contract.version>3.0.1</spring-cloud-contract.version>
+        <feign-reactor.version>2.0.28</feign-reactor.version>
     </properties>
 
     <dependencies>
@@ -43,14 +44,17 @@
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-openfeign</artifactId>
-        </dependency>
+
         <dependency>
             <groupId>de.codecentric</groupId>
             <artifactId>spring-boot-admin-starter-client</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
@@ -73,7 +77,7 @@
         <dependency>
             <groupId>de.flapdoodle.embed</groupId>
             <artifactId>de.flapdoodle.embed.mongo</artifactId>
-            <scope>test</scope>
+            <!--            <scope>test</scope>-->
         </dependency>
         <dependency>
             <groupId>org.springframework.cloud</groupId>
