@@ -67,53 +67,6 @@ class TransactionControllerIT {
 
     }
 
-//    @Test
-//    void saveNewTransactions_GivenValidTransactionsProvided_ThenSaveTransactionsAndReturnOk() throws Exception {
-//
-//        ShortAccountDto accountDto = new ShortAccountDto();
-//        accountDto.setId(1L);
-//
-//        BudgetDto budget = new BudgetDto();
-//        budget.setId(1L);
-//
-//        TransactionDto t1 = new TransactionDto();
-//        t1.setAccount(accountDto);
-//        t1.setAmount(BigDecimal.valueOf(451.21));
-//        t1.setDescription("Description 1");
-//        t1.setDate(ZonedDateTime.now());
-//        t1.setBudget(budget);
-//
-//        TransactionDto t2 = new TransactionDto();
-//        t2.setAccount(accountDto);
-//        t2.setAmount(BigDecimal.valueOf(56.22));
-//        t2.setDescription("Description 564");
-//        t2.setDate(ZonedDateTime.now().minusDays(10));
-//        t2.setBudget(budget);
-//
-//        MvcResult result = mockMvc.perform(
-//                post(URI)
-//                    .contentType(MediaType.APPLICATION_JSON)
-//                    .content(this.objectMapper.writeValueAsString(Arrays.asList(t1, t2))))
-//                .andDo(print())
-//                .status().isOk())
-//                .jsonPath("$.[*]", hasSize(2)))
-//                .andReturn();
-//        MockHttpServletResponse response = result.getResponse();
-//        JsonNode json = this.objectMapper.readTree(response.getContentAsString());
-//        assertThat(json.isArray(), is(true));
-//
-//        int itemsToCount = 0;
-//
-//        for (JsonNode n : json) {
-//            TransactionDto tran = this.objectMapper.readValue(n.toString(), TransactionDto.class);
-//            assertThat(this.transactionRepository.existsById(tran.getId()), is(true));
-//            itemsToCount++;
-//        }
-//
-//        assertThat(itemsToCount, is(equalTo(json.size())));
-//
-//    }
-
     @Test
     void getTransactionTotal_GiveTransactionsExistForBudgets_ThenReturnTotalAmount() {
 

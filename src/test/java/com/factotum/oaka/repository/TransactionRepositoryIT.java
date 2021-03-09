@@ -51,7 +51,6 @@ class TransactionRepositoryIT {
     void test() {
         Flux<Transaction> transactionList = transactionRepository.findAll();
         StepVerifier.create(transactionList.log()).expectNextCount(891).verifyComplete();
-//        assertThat(transactionList, hasSize(greaterThan(0)));
     }
 
 }

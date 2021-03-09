@@ -57,18 +57,6 @@ public class TransactionController {
                 .map(TransactionUtil::mapCategoryEntityToDto);
     }
 
-    // TODO: need to figure out if this is actually necessary
-//    @PostMapping("")
-//    public Flux<TransactionDto> saveNewTransactions(
-//            @RequestBody @Valid Set<TransactionDto> transactions) {
-//
-//        return this.transactionService.saveAllTransactions(transactions)
-//                .flatMap(t -> TransactionUtil.mapEntityToDto(t))
-//                .then(t ->
-//                    this.budgetSubCategoryRepository.findById(t.get)
-//                );
-//    }
-
     @GetMapping("/total")
     public Mono<TransactionTypeTotal> getTransactionTotal(
             @RequestParam(name = "year") int year,

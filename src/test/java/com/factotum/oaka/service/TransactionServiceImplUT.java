@@ -23,7 +23,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import reactor.test.StepVerifier;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -100,33 +99,25 @@ class TransactionServiceImplUT {
         when(budgetService.getBudgetById(anyLong())).thenReturn(Mono.just(budget));
 
         // Act
-        Flux<TransactionDto> transactions = transactionService.getAllTransactionDtos();
+        TransactionDto dto = transactionService.getAllTransactionDtos().blockFirst();
 
         // Assert
-        StepVerifier.create(transactions.log()).expectNextCount(1).verifyComplete();
-//        assertThat(transactions, hasSize(1));
-//        int transactionsChecked = 0;
-//        for (TransactionDto dto : transactions) {
-//            assertThat(dto.getId(), is(equalTo(14L)));
-//            assertThat(dto.getAmount(), is(equalTo(BigDecimal.valueOf(44.78))));
-//            assertThat(dto.getDescription(), is(equalTo("TransactionDescriptionOne")));
-//            assertThat(dto.getDate().getMonth(), is(equalTo(ZonedDateTime.now().getMonth())));
-//            assertThat(dto.getAccount().getId(), is(equalTo(3L)));
-//            assertThat(dto.getAccount().getName(), is(equalTo("Account 1")));
-//            assertThat(dto.getBudget().getId(), is(equalTo(8L)));
-//            assertThat(dto.getBudget().getName(), is(equalTo("BudgetItemNameOne")));
-//            assertThat(dto.getBudget().getBudgetCategory().getId(), is(equalTo(6)));
-//            assertThat(dto.getBudget().getBudgetCategory().getTypeName(), is(equalTo("BudgetCategoryType")));
-//            assertThat(dto.getBudget().getBudgetCategory().getName(), is(equalTo("BudgetCategoryName")));
-//            assertThat(dto.getTransactionCategory().getId(), is(equalTo(11L)));
-//            assertThat(dto.getTransactionCategory().getName(), is(equalTo("TransactionCategoryOne")));
-//            assertThat(dto.getTransactionCategory().getBudgetSubCategory().getId(), is(equalTo(10L)));
-//            assertThat(dto.getTransactionCategory().getBudgetSubCategory().getName(), is(equalTo("BudgetSubCategoryOne")));
-//
-//            transactionsChecked++;
-//        }
-//
-//        assertThat(transactionsChecked, is(equalTo(1)));
+        assertThat(dto, is(not(nullValue())));
+        assertThat(dto.getId(), is(equalTo(14L)));
+        assertThat(dto.getAmount(), is(equalTo(BigDecimal.valueOf(44.78))));
+        assertThat(dto.getDescription(), is(equalTo("TransactionDescriptionOne")));
+        assertThat(dto.getDate().getMonth(), is(equalTo(LocalDateTime.now().getMonth())));
+        assertThat(dto.getAccount().getId(), is(equalTo(3L)));
+        assertThat(dto.getAccount().getName(), is(equalTo("Account 1")));
+        assertThat(dto.getBudget().getId(), is(equalTo(8L)));
+        assertThat(dto.getBudget().getName(), is(equalTo("BudgetItemNameOne")));
+        assertThat(dto.getBudget().getBudgetCategory().getId(), is(equalTo(6)));
+        assertThat(dto.getBudget().getBudgetCategory().getTypeName(), is(equalTo("BudgetCategoryType")));
+        assertThat(dto.getBudget().getBudgetCategory().getName(), is(equalTo("BudgetCategoryName")));
+        assertThat(dto.getTransactionCategory().getId(), is(equalTo(11L)));
+        assertThat(dto.getTransactionCategory().getName(), is(equalTo("TransactionCategoryOne")));
+        assertThat(dto.getTransactionCategory().getBudgetSubCategory().getId(), is(equalTo(10L)));
+        assertThat(dto.getTransactionCategory().getBudgetSubCategory().getName(), is(equalTo("BudgetSubCategoryOne")));
     }
 
     @Test

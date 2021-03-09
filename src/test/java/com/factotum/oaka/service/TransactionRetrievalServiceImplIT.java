@@ -27,8 +27,6 @@ class TransactionRetrievalServiceImplIT {
 
         Flux<TransactionDto> transactionDtos = transactionService.getAllTransactionDtos();
         StepVerifier.create(transactionDtos.log()).expectNextCount(891).verifyComplete();
-//        assertThat(transactionDtos, is(not(nullValue())));
-//        assertThat(transactionDtos, hasSize(891));
 
     }
 }
