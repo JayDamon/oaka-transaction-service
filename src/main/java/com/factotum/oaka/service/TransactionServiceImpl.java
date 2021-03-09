@@ -12,6 +12,7 @@ import com.factotum.oaka.model.TransactionCategory;
 import com.factotum.oaka.repository.TransactionRepository;
 import com.factotum.oaka.repository.TransactionSubCategoryRepository;
 import com.factotum.oaka.util.TransactionUtil;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Flux;
@@ -23,7 +24,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -68,30 +68,24 @@ public class TransactionServiceImpl implements TransactionService {
     @Transactional
     public Flux<TransactionDto> getAllTransactionDtos() {
 
-        Map<Long, ShortAccountDto> accountDtoMap = new ConcurrentHashMap<>();
+        Map<Long, ShortAccountDto> accountDtoMap = new HashMap<>();
         Map<Long, BudgetDto> budgetMap = new HashMap<>();
 
         return transactionRepository.findAllByOrderByDateDesc()
+                .map(t -> new ModelMapper().map(t, TransactionDto.class))
 //                .doOnNext(t -> t.setTransactionCategory(
 //                        transactionSubCategoryRepository.findById(t.getTransactionCategory())
 //                ))
-//                .doOnNext(t ->
-//                        t.setAccount(
-//                                accountDtoMap.computeIfAbsent(
-//                                        t.getAccount().getId(),
-//                                        accountService::getAccountById)))
-//                .doOnNext(t ->
-//                        accountService.getAccountById(t.getAccount().getId()).subscribe(t::setAccount))
-//                        t.setAccount(
-//                                accountDtoMap.computeIfAbsent(
-//                                        t.getAccount().getId(),
-//                                        accountService.getAccountById(t.getAccount().getId()).)))
-//                .doOnNext(t -> {
-//                    if (t.getBudget() != null && t.getBudget().getId() != null) {
-//                        budgetMap.computeIfAbsent(t.getBudget().getId(), budgetService::getBudgetById);
-//                    }
-//                })
-                ;
+                .doOnNext(t ->
+                        t.setAccount(
+                                accountDtoMap.computeIfAbsent(
+                                        t.getAccount().getId(),
+                                        accountService::getAccountById)))
+                .doOnNext(t -> {
+                    if (t.getBudget() != null && t.getBudget().getId() != null) {
+                        budgetMap.computeIfAbsent(t.getBudget().getId(), budgetService::getBudgetById);
+                    }
+                });
 //        ModelMapper modelMapper = new ModelMapper();
 //
 //        Set<TransactionDto> dtos = new LinkedHashSet<>();

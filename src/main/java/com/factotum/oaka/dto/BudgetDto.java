@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 @Data
 @ToString
@@ -27,10 +27,10 @@ public class BudgetDto {
     private BudgetCategoryDto budgetCategory;
 
     @JsonProperty("startDate")
-    private LocalDateTime startDate;
+    private ZonedDateTime startDate;
 
     @JsonProperty("endDate")
-    private LocalDateTime endDate;
+    private ZonedDateTime endDate;
 
     @JsonProperty("frequencyTypeId")
     private Integer frequencyTypeId;

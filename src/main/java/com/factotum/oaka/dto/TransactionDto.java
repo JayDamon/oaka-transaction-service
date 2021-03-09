@@ -9,7 +9,7 @@ import lombok.ToString;
 
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 @Data
 @ToString
@@ -28,7 +28,7 @@ public class TransactionDto {
     private String description;
 
     @JsonProperty("date")
-    private LocalDateTime date;
+    private ZonedDateTime date;
 
     @JsonProperty("account")
     @NotNull

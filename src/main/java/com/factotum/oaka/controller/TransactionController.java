@@ -3,6 +3,7 @@ package com.factotum.oaka.controller;
 import com.factotum.oaka.dto.TransactionCategoryDto;
 import com.factotum.oaka.dto.TransactionDto;
 import com.factotum.oaka.dto.TransactionTypeTotal;
+import com.factotum.oaka.repository.BudgetSubCategoryRepository;
 import com.factotum.oaka.repository.TransactionRepository;
 import com.factotum.oaka.repository.TransactionTypeRepository;
 import com.factotum.oaka.service.TransactionCategoryService;
@@ -24,26 +25,28 @@ import java.util.Set;
 @Validated
 public class TransactionController {
 
-    private final TransactionService transactionService;
     private final TransactionCategoryService transactionCategoryService;
+    private final TransactionService transactionService;
     private final TransactionRepository transactionRepository;
     private final TransactionTypeRepository transactionTypeRepository;
+    private final BudgetSubCategoryRepository budgetSubCategoryRepository;
 
     public TransactionController(
-            TransactionService transactionService,
             TransactionCategoryService transactionCategoryService,
+            TransactionService transactionService,
             TransactionRepository transactionRepository,
-            TransactionTypeRepository transactionTypeRepository) {
-        this.transactionService = transactionService;
+            TransactionTypeRepository transactionTypeRepository,
+            BudgetSubCategoryRepository budgetSubCategoryRepository) {
         this.transactionCategoryService = transactionCategoryService;
+        this.transactionService = transactionService;
         this.transactionRepository = transactionRepository;
         this.transactionTypeRepository = transactionTypeRepository;
+        this.budgetSubCategoryRepository = budgetSubCategoryRepository;
     }
 
     @GetMapping("")
     public Flux<TransactionDto> getAllTransactions() {
         // TODO probably want to paginate this
-//        return transactionRepository.findAll();
         return transactionService.getAllTransactionDtos();
 
     }
