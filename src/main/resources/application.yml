@@ -9,7 +9,15 @@ server:
 spring:
   config:
     activate:
-      on-profile: local
+      on-profile: h2
+  h2:
+    console:
+      enabled: true
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+#    show-sql: true
+#debug: true
 management:
   endpoints:
     web:
@@ -18,16 +26,6 @@ management:
   endpoint:
     health:
       show-details: always
-
----
-
-spring:
-  config:
-    activate:
-      on-profile: test
-  cloud:
-    discovery:
-      enabled: true
 
 ---
 
@@ -44,3 +42,5 @@ spring:
     password: SaveMoney
     driver-class-name: com.mysql.cj.jdbc.Driver
     data:
+server:
+  port: 8082

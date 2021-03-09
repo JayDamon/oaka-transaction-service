@@ -21,7 +21,7 @@ class AccountServiceIT {
     @Test
     void getAccountById_GivenAccountExists_ThenReturnAccount() {
 
-        ShortAccountDto accountDto = accountService.getAccountById(1L).block();
+        ShortAccountDto accountDto = accountService.getAccountById(1L);
 
         assertThat(accountDto, is(not(nullValue())));
         assertThat(accountDto.getId(), is(equalTo(1L)));
