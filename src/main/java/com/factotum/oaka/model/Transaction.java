@@ -11,7 +11,7 @@ import org.springframework.data.relational.core.mapping.Table;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.time.ZonedDateTime;
+import java.time.LocalDateTime;
 
 /**
  * Financial transactions
@@ -44,7 +44,7 @@ public class Transaction implements Serializable {
     private Long recurringTransaction;
 
     @Column("transaction_date")
-    private ZonedDateTime date;
+    private LocalDateTime date;
 
     @Column("description")
     private String description;

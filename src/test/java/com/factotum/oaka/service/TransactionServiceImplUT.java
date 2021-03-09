@@ -26,7 +26,7 @@ import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import java.math.BigDecimal;
-import java.time.ZonedDateTime;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -77,12 +77,12 @@ class TransactionServiceImplUT {
 
         RecurringTransaction recurringTransaction = new RecurringTransaction(
                 13L, "RecurringTransactionName", 3L, 10, transactionCategory.getId(),
-                7, 2, occurrence.getId(), transactionType.getId(), ZonedDateTime.now(),
-                ZonedDateTime.now().plusHours(25), BigDecimal.valueOf(34.66));
+                7, 2, occurrence.getId(), transactionType.getId(), LocalDateTime.now(),
+                LocalDateTime.now().plusHours(25), BigDecimal.valueOf(34.66));
         ShortAccountDto accountDto = new ShortAccountDto(3L, "Account 1");
 
         Transaction transaction = new Transaction(14L, accountDto.getId(), 8L, transactionCategory.getId(),
-                transactionType.getId(), recurringTransaction.getId(), ZonedDateTime.now(),
+                transactionType.getId(), recurringTransaction.getId(), LocalDateTime.now(),
                 "TransactionDescriptionOne", BigDecimal.valueOf(44.78));
 
         when(transactionRepository.findAllByOrderByDateDesc()).thenReturn(Flux.just(transaction));
