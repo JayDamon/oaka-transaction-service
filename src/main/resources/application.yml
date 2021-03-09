@@ -16,8 +16,8 @@ spring:
   jpa:
     hibernate:
       ddl-auto: create-drop
-#    show-sql: true
-#debug: true
+    show-sql: true
+debug: false
 management:
   endpoints:
     web:

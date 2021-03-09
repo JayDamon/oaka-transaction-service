@@ -73,41 +73,13 @@ public class TransactionServiceImpl implements TransactionService {
 
         return transactionRepository.findAllByOrderByDateDesc()
                 .map(t -> new ModelMapper().map(t, TransactionDto.class))
-//                .doOnNext(t -> t.setTransactionCategory(
-//                        transactionSubCategoryRepository.findById(t.getTransactionCategory())
-//                ))
                 .doOnNext(t ->
-                        t.setAccount(
-                                accountDtoMap.computeIfAbsent(
-                                        t.getAccount().getId(),
-                                        accountService::getAccountById)))
+                        accountService.getAccountById(t.getAccount().getId()).subscribe(t::setAccount))
                 .doOnNext(t -> {
                     if (t.getBudget() != null && t.getBudget().getId() != null) {
-                        budgetMap.computeIfAbsent(t.getBudget().getId(), budgetService::getBudgetById);
+                        budgetService.getBudgetById(t.getBudget().getId()).subscribe(t::setBudget);
                     }
                 });
-//        ModelMapper modelMapper = new ModelMapper();
-//
-//        Set<TransactionDto> dtos = new LinkedHashSet<>();
-//        Map<Long, ShortAccountDto> accountDtoMap = new HashMap<>();
-//        Map<Long, BudgetDto> budgetMap = new HashMap<>();
-//        for (Transaction t : transactions) {
-//
-//            TransactionDto dto = modelMapper.map(t, TransactionDto.class);
-//
-//            dto.setAccount(
-//                    accountDtoMap.computeIfAbsent(t.getAccountId(), accountService::getAccountById)
-//            );
-//
-//            if (t.getBudgetId() != null) {
-//                dto.setBudget(
-//                        budgetMap.computeIfAbsent(t.getBudgetId(), budgetService::getBudgetById)
-//                );
-//            }
-//
-//            dtos.add(dto);
-//        }
-//        return dtos;
     }
 
     @Override

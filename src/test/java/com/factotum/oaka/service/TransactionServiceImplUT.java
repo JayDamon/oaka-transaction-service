@@ -9,7 +9,6 @@ import com.factotum.oaka.dto.TransactionDto;
 import com.factotum.oaka.http.AccountService;
 import com.factotum.oaka.http.BudgetService;
 import com.factotum.oaka.model.BudgetSubCategory;
-import com.factotum.oaka.model.FrequencyType;
 import com.factotum.oaka.model.Occurrence;
 import com.factotum.oaka.model.RecurringTransaction;
 import com.factotum.oaka.model.Transaction;

@@ -33,9 +33,8 @@ class TransactionRepositoryIT {
     void getBudgetSummaries() {
         TransactionBudgetSummary summary = transactionRepository
                 .getBudgetSummaries(
+                        1,
                         2017,
-                        1
-                        ,
                         new HashSet<>(Arrays.asList(10L, 11L, 12L, 13L, 14L, 15L, 26L, 16L, 17L, 18L, 27L, 19L, 28L, 29L, 30L)),
                         2
                 )
