@@ -26,4 +26,5 @@ public class JpaConfiguration {
         initializer.setDatabasePopulator(populator);
         return initializer;
     }
+
 }
