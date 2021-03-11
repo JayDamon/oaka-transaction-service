@@ -1,8 +1,6 @@
 package com.factotum.oaka.service;
 
-import com.factotum.oaka.dto.BudgetDto;
 import com.factotum.oaka.dto.BudgetSummary;
-import com.factotum.oaka.dto.ShortAccountDto;
 import com.factotum.oaka.dto.TransactionBudgetSummary;
 import com.factotum.oaka.dto.TransactionDto;
 import com.factotum.oaka.http.AccountService;
@@ -12,7 +10,6 @@ import com.factotum.oaka.model.TransactionCategory;
 import com.factotum.oaka.repository.TransactionRepository;
 import com.factotum.oaka.repository.TransactionSubCategoryRepository;
 import com.factotum.oaka.util.TransactionUtil;
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Flux;
@@ -20,9 +17,7 @@ import reactor.core.publisher.Mono;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -68,11 +63,7 @@ public class TransactionServiceImpl implements TransactionService {
     @Transactional
     public Flux<TransactionDto> getAllTransactionDtos() {
 
-        Map<Long, ShortAccountDto> accountDtoMap = new HashMap<>();
-        Map<Long, BudgetDto> budgetMap = new HashMap<>();
-
         return transactionRepository.findAllByOrderByDateDesc()
-                .map(t -> new ModelMapper().map(t, TransactionDto.class))
                 .doOnNext(t ->
                         accountService.getAccountById(t.getAccount().getId()).subscribe(t::setAccount))
                 .doOnNext(t -> {

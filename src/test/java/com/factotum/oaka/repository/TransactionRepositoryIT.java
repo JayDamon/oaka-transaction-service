@@ -16,7 +16,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
@@ -43,7 +43,10 @@ class TransactionRepositoryIT {
 
         System.out.println(summary);
 
-        assertThat(summary.getActual(), is(greaterThan(BigDecimal.ZERO)));
+        assertThat(summary.getActual(), is(equalTo(BigDecimal.valueOf(380.51))));
+        assertThat(summary.getMonth(), is(equalTo(1)));
+        assertThat(summary.getYear(), is(equalTo(2017)));
+        assertThat(summary.getTransactionType(), is(equalTo("Expense")));
 
     }
 

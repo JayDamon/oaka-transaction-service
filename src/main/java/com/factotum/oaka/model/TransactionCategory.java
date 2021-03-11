@@ -32,7 +32,7 @@ public class TransactionCategory implements Serializable {
     private String name;
 
     @Column("budget_sub_category_id")
-    private Long budgetSubCategory;
+    private Long budgetSubCategoryId;
 
 
 }

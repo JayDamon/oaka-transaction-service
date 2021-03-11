@@ -2,9 +2,11 @@ package com.factotum.oaka.service;
 
 import com.factotum.oaka.dto.BudgetCategoryDto;
 import com.factotum.oaka.dto.BudgetDto;
+import com.factotum.oaka.dto.BudgetSubCategoryDto;
 import com.factotum.oaka.dto.BudgetSummary;
 import com.factotum.oaka.dto.ShortAccountDto;
 import com.factotum.oaka.dto.TransactionBudgetSummary;
+import com.factotum.oaka.dto.TransactionCategoryDto;
 import com.factotum.oaka.dto.TransactionDto;
 import com.factotum.oaka.http.AccountService;
 import com.factotum.oaka.http.BudgetService;
@@ -21,6 +23,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.modelmapper.ModelMapper;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -84,7 +87,14 @@ class TransactionServiceImplUT {
                 transactionType.getId(), recurringTransaction.getId(), LocalDateTime.now(),
                 "TransactionDescriptionOne", BigDecimal.valueOf(44.78));
 
-        when(transactionRepository.findAllByOrderByDateDesc()).thenReturn(Flux.just(transaction));
+        ModelMapper mapper = new ModelMapper();
+
+        TransactionDto transactionDto = mapper.map(transaction, TransactionDto.class);
+        TransactionCategoryDto transactionCategoryDto = mapper.map(transactionCategory, TransactionCategoryDto.class);
+        BudgetSubCategoryDto budgetSubCategoryDto = mapper.map(budgetSubCategory, BudgetSubCategoryDto.class);
+        transactionCategoryDto.setBudgetSubCategory(budgetSubCategoryDto);
+        transactionDto.setTransactionCategory(transactionCategoryDto);
+        when(transactionRepository.findAllByOrderByDateDesc()).thenReturn(Flux.just(transactionDto));
 
         when(accountService.getAccountById(eq(accountDto.getId()))).thenReturn(Mono.just(accountDto));
 

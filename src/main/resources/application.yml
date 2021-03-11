@@ -16,6 +16,7 @@ spring:
     discovery:
       enabled: false
 debug: true
+
 ---
 
 spring:
