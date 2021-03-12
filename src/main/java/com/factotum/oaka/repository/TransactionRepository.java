@@ -20,25 +20,6 @@ public interface TransactionRepository extends ReactiveCrudRepository<Transactio
             "ORDER BY transaction_date DESC")
     Flux<TransactionDto> findAllByOrderByDateDesc();
 
-//    Flux<Transaction> findAllByOrderByDateDesc();
-
-//    @Query(value = "SELECT " +
-//            "new com.factotum.oaka.dto.TransactionBudgetSummary(" +
-//            "tt.transactionTypeName, " +
-//            "month(t.date), year(t.date), " +
-//            "ABS(SUM(t.amount))) " +
-//            "FROM Transaction As t " +
-//            "INNER JOIN t.transactionType as tt " +
-//            "WHERE month(t.date) = :month " +
-//            "   AND year(t.date) = :year " +
-//            "   AND t.budgetId in :budgetIds " +
-//            "   AND tt.id = :tTypeId " +
-//            "GROUP BY month(t.date), year(t.date),  tt.transactionTypeName " +
-//            "ORDER BY year(t.date), month(t.date), tt.transactionTypeName DESC")
-//    @Query("SELECT * FROM transaction")
-//    Mono<TransactionBudgetSummary> getBudgetSummaries(
-//            int year, int month, Set<Long> budgetIds, int tTypeId);
-
     @Query("SELECT tt.transaction_type, month(t.transaction_date) as month, year(t.transaction_date) as year, ABS(SUM(t.amount)) as sum " +
             "FROM transaction t " +
             "INNER JOIN transaction_type tt on tt.transaction_type_id = t.transaction_type_id " +
