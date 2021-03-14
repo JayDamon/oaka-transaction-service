@@ -6,21 +6,28 @@ import com.factotum.oaka.dto.ShortAccountDto;
 import com.factotum.oaka.dto.TransactionCategoryDto;
 import com.factotum.oaka.dto.TransactionDto;
 import io.r2dbc.spi.Row;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.data.convert.ReadingConverter;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+@Slf4j
 @ReadingConverter
 public class TransactionDtoConverter implements Converter<Row, TransactionDto> {
     @Override
     public TransactionDto convert(Row source) {
+
         ShortAccountDto account = new ShortAccountDto();
         account.setId(source.get("account_id", Long.class));
 
-        BudgetDto budget = new BudgetDto();
-        budget.setId(source.get("budget_id", Long.class));
+        BudgetDto budget = null;
+        Long budgetId = source.get("budget_id", Long.class);
+        if (budgetId != null) {
+            budget = new BudgetDto();
+            budget.setId(budgetId);
+        }
 
         BudgetSubCategoryDto budgetSubCategory = new BudgetSubCategoryDto(
                 source.get("budget_sub_category_id", Long.class),

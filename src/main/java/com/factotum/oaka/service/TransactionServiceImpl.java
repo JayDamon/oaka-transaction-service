@@ -1,6 +1,8 @@
 package com.factotum.oaka.service;
 
+import com.factotum.oaka.dto.BudgetDto;
 import com.factotum.oaka.dto.BudgetSummary;
+import com.factotum.oaka.dto.ShortAccountDto;
 import com.factotum.oaka.dto.TransactionBudgetSummary;
 import com.factotum.oaka.dto.TransactionDto;
 import com.factotum.oaka.http.AccountService;
@@ -10,6 +12,7 @@ import com.factotum.oaka.model.TransactionCategory;
 import com.factotum.oaka.repository.TransactionRepository;
 import com.factotum.oaka.repository.TransactionSubCategoryRepository;
 import com.factotum.oaka.util.TransactionUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Flux;
@@ -18,13 +21,16 @@ import reactor.core.publisher.Mono;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
 
+@Slf4j
 @Service
 public class TransactionServiceImpl implements TransactionService {
 
@@ -63,14 +69,40 @@ public class TransactionServiceImpl implements TransactionService {
     @Transactional
     public Flux<TransactionDto> getAllTransactionDtos() {
 
+        Map<Long, Mono<BudgetDto>> budgetMap = new ConcurrentHashMap<>();
+        Map<Long, Mono<ShortAccountDto>> accountMap = new ConcurrentHashMap<>();
+
         return transactionRepository.findAllByOrderByDateDesc()
-                .doOnNext(t ->
-                        accountService.getAccountById(t.getAccount().getId()).subscribe(t::setAccount))
-                .doOnNext(t -> {
-                    if (t.getBudget() != null && t.getBudget().getId() != null) {
-                        budgetService.getBudgetById(t.getBudget().getId()).subscribe(t::setBudget);
-                    }
-                });
+                .flatMap(t ->
+                        getAccount(t.getAccount(), accountMap).map(a -> addAccount(a, t)))
+                .flatMap(t ->
+                        getBudget(t.getBudget(), budgetMap).map(b -> addBudget(b, t)))
+                ;
+    }
+
+    private TransactionDto addBudget(BudgetDto budget, TransactionDto transaction) {
+        if (budget.getId() != null) {
+            transaction.setBudget(budget);
+        }
+        return transaction;
+    }
+
+    private TransactionDto addAccount(ShortAccountDto account, TransactionDto transactionDto) {
+        transactionDto.setAccount(account);
+        return transactionDto;
+    }
+
+    private Mono<ShortAccountDto> getAccount(
+            ShortAccountDto account, Map<Long, Mono<ShortAccountDto>> accounts) {
+        return accounts.computeIfAbsent(account.getId(), accountService::getAccountById);
+    }
+
+    private Mono<BudgetDto> getBudget(BudgetDto budgetDto, Map<Long, Mono<BudgetDto>> budgets) {
+        if (budgetDto != null && budgetDto.getId() != null) {
+            return budgets.computeIfAbsent(budgetDto.getId(), budgetService::getBudgetById);
+        } else {
+            return Mono.just(new BudgetDto());
+        }
     }
 
     @Override
