@@ -5,19 +5,13 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Column;
+import org.springframework.data.relational.core.mapping.Table;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.time.ZonedDateTime;
+import java.time.LocalDateTime;
 
 /**
  * Recurring transactions that are applied on a defined time period that are not bills
@@ -28,50 +22,45 @@ import java.time.ZonedDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
-@Table(name = "recurring_transaction")
+@Table("recurring_transaction")
 public class RecurringTransaction implements Serializable {
 
     @Id
-    @Column(name = "recurring_transaction_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column("recurring_transaction_id")
     private Long id;
 
-    @Column(name = "name")
+    @Column("name")
     private String recurringTransactionName;
 
-    @Column(name = "account_id")
+    @Column("account_id")
     private Long account;
 
-    @Column(name = "budget_category_id")
+    @Column("budget_category_id")
     private Integer budgetSubCategory;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "transaction_category_id")
-    private TransactionCategory transactionCategory;
+    @Column("transaction_category_id")
+    private Long transactionCategory;
 
-    @Column(name = "frequency_type_id")
+    @Column("frequency_type_id")
     private Integer frequencyType;
 
     // This is the number of days, months or years between occurrences based on the FrequencyType
-    @Column(name = "frequency")
+    @Column("frequency")
     private Integer frequency;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "occurrence_id")
-    private Occurrence occurrence;
+    @Column("occurrence_id")
+    private Integer occurrence;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "transaction_type_id")
-    private TransactionType transactionType;
+    @Column("transaction_type_id")
+    private Integer transactionType;
 
-    @Column(name = "start_date")
-    private ZonedDateTime startDate;
+    @Column("start_date")
+    private LocalDateTime startDate;
 
-    @Column(name = "end_date")
-    private ZonedDateTime endDate;
+    @Column("end_date")
+    private LocalDateTime endDate;
 
-    @Column(name = "amount")
+    @Column("amount")
     private BigDecimal amount;
 
 }

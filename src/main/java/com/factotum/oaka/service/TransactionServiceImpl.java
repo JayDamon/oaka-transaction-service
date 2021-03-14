@@ -12,18 +12,25 @@ import com.factotum.oaka.model.TransactionCategory;
 import com.factotum.oaka.repository.TransactionRepository;
 import com.factotum.oaka.repository.TransactionSubCategoryRepository;
 import com.factotum.oaka.util.TransactionUtil;
-import org.modelmapper.ModelMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.nullValue;
+
+@Slf4j
 @Service
 public class TransactionServiceImpl implements TransactionService {
 
@@ -43,58 +50,63 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public List<Transaction> saveAllTransactions(Set<TransactionDto> transactions) {
+    public Flux<Transaction> saveAllTransactions(Set<TransactionDto> transactions) {
 
         return transactionRepository.saveAll(TransactionUtil.mapDtosToEntities(transactions));
     }
 
     @Override
-    public Transaction saveTransaction(Transaction transaction) {
+    public Mono<Transaction> saveTransaction(Transaction transaction) {
         return transactionRepository.save(transaction);
     }
 
     @Override
-    public List<Transaction> getAllTransactions() {
-
+    public Flux<Transaction> getAllTransactions() {
         return transactionRepository.findAll();
     }
 
     @Override
-    public Set<Transaction> getAllTransactionsOrdered() {
-        return transactionRepository.findAllByOrderByDateDesc();
-    }
-
-    @Override
     @Transactional
-    public Set<TransactionDto> getAllTransactionDtos() {
+    public Flux<TransactionDto> getAllTransactionDtos() {
 
-        Set<Transaction> transactions = getAllTransactionsOrdered();
-        ModelMapper modelMapper = new ModelMapper();
+        Map<Long, Mono<BudgetDto>> budgetMap = new ConcurrentHashMap<>();
+        Map<Long, Mono<ShortAccountDto>> accountMap = new ConcurrentHashMap<>();
 
-        Set<TransactionDto> dtos = new LinkedHashSet<>();
-        Map<Long, ShortAccountDto> accountDtoMap = new HashMap<>();
-        Map<Long, BudgetDto> budgetMap = new HashMap<>();
-        for (Transaction t : transactions) {
+        return transactionRepository.findAllByOrderByDateDesc()
+                .flatMap(t ->
+                        getAccount(t.getAccount(), accountMap).map(a -> addAccount(a, t)))
+                .flatMap(t ->
+                        getBudget(t.getBudget(), budgetMap).map(b -> addBudget(b, t)))
+                ;
+    }
 
-            TransactionDto dto = modelMapper.map(t, TransactionDto.class);
-
-            dto.setAccount(
-                    accountDtoMap.computeIfAbsent(t.getAccountId(), accountService::getAccountById)
-            );
-
-            if (t.getBudgetId() != null) {
-                dto.setBudget(
-                        budgetMap.computeIfAbsent(t.getBudgetId(), budgetService::getBudgetById)
-                );
-            }
-
-            dtos.add(dto);
+    private TransactionDto addBudget(BudgetDto budget, TransactionDto transaction) {
+        if (budget.getId() != null) {
+            transaction.setBudget(budget);
         }
-        return dtos;
+        return transaction;
+    }
+
+    private TransactionDto addAccount(ShortAccountDto account, TransactionDto transactionDto) {
+        transactionDto.setAccount(account);
+        return transactionDto;
+    }
+
+    private Mono<ShortAccountDto> getAccount(
+            ShortAccountDto account, Map<Long, Mono<ShortAccountDto>> accounts) {
+        return accounts.computeIfAbsent(account.getId(), accountService::getAccountById);
+    }
+
+    private Mono<BudgetDto> getBudget(BudgetDto budgetDto, Map<Long, Mono<BudgetDto>> budgets) {
+        if (budgetDto != null && budgetDto.getId() != null) {
+            return budgets.computeIfAbsent(budgetDto.getId(), budgetService::getBudgetById);
+        } else {
+            return Mono.just(new BudgetDto());
+        }
     }
 
     @Override
-    public List<TransactionCategory> getAllTransactionSubCategories() {
+    public Flux<TransactionCategory> getAllTransactionSubCategories() {
         return transactionSubCategoryRepository.findAll();
     }
 
@@ -126,11 +138,13 @@ public class TransactionServiceImpl implements TransactionService {
         for (BudgetSummary budget : budgetSummaries) {
             TransactionBudgetSummary summary = transactionRepository.getBudgetSummaries(
                     year, month, budget.getBudgetIds(), budget.getTransactionTypeId())
-                    .orElse(
+                    .defaultIfEmpty(
                             new TransactionBudgetSummary(
                                     budget.getTransactionType(), budget.getCategory(), month, null, year, budget.getPlanned(), BigDecimal.ZERO, false)
-                    );
+                    ).block();
 
+
+            assertThat(summary, is(not(nullValue())));
             if (summary.getPlanned().doubleValue() > 0 || summary.getActual().doubleValue() > 0) {
                 summaries.add(summary);
             }

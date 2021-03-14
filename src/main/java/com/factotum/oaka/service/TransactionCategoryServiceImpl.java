@@ -3,8 +3,7 @@ package com.factotum.oaka.service;
 import com.factotum.oaka.model.TransactionCategory;
 import com.factotum.oaka.repository.TransactionCategoryRepository;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
+import reactor.core.publisher.Flux;
 
 @Service
 public class TransactionCategoryServiceImpl implements TransactionCategoryService {
@@ -16,7 +15,7 @@ public class TransactionCategoryServiceImpl implements TransactionCategoryServic
     }
 
     @Override
-    public List<TransactionCategory> findAllTransactionCategories() {
+    public Flux<TransactionCategory> findAllTransactionCategories() {
 
         return transactionCategoryRepository.findAll();
     }

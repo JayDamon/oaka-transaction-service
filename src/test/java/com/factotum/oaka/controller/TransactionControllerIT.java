@@ -1,38 +1,18 @@
 package com.factotum.oaka.controller;
 
 import com.factotum.oaka.IntegrationTest;
-import com.factotum.oaka.dto.BudgetDto;
-import com.factotum.oaka.dto.ShortAccountDto;
-import com.factotum.oaka.dto.TransactionDto;
 import com.factotum.oaka.repository.TransactionRepository;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
-
-import java.math.BigDecimal;
-import java.time.ZonedDateTime;
-import java.util.Arrays;
-
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.is;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import org.springframework.test.web.reactive.server.WebTestClient;
 
 @IntegrationTest
 class TransactionControllerIT {
 
     @Autowired
-    private MockMvc mockMvc;
+    private WebTestClient webTestClient;
     @Autowired
     private TransactionRepository transactionRepository;
 
@@ -47,170 +27,142 @@ class TransactionControllerIT {
     }
 
     @Test
-    void getAllTransactions() throws Exception {
+    void getAllTransactions() {
 
-        this.mockMvc.perform(
-                get(URI))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].id").exists())
-                .andExpect(jsonPath("$[0].amount").exists())
-                .andExpect(jsonPath("$[0].description").exists())
-                .andExpect(jsonPath("$[0].date").exists())
-                .andExpect(jsonPath("$[0].category").exists())
-                .andExpect(jsonPath("$[0].category.id").exists())
-                .andExpect(jsonPath("$[0].category.name").exists())
-                .andExpect(jsonPath("$[0].account").exists())
-                .andExpect(jsonPath("$[0].account.id").exists())
-                .andExpect(jsonPath("$[0].account.name").exists())
-                .andExpect(jsonPath("$[0].budget").exists())
-                .andExpect(jsonPath("$[0].budget.id").exists())
-                .andExpect(jsonPath("$[0].budget.name").exists())
-                .andExpect(jsonPath("$[0].budget.budgetCategory").exists())
-                .andExpect(jsonPath("$[0].budget.budgetCategory.id").exists())
-                .andExpect(jsonPath("$[0].budget.budgetCategory.type").exists())
-                .andExpect(jsonPath("$[0].budget.budgetCategory.name").exists());
+        webTestClient.get().uri(URI)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .jsonPath("$[0].id").exists()
+                .jsonPath("$[0].amount").exists()
+                .jsonPath("$[0].description").exists()
+                .jsonPath("$[0].date").exists()
+                .jsonPath("$[0].category").exists()
+                .jsonPath("$[0].category.id").exists()
+                .jsonPath("$[0].category.name").exists()
+                .jsonPath("$[0].account").exists()
+                .jsonPath("$[0].account.id").exists()
+                .jsonPath("$[0].account.name").exists()
+                .jsonPath("$[0].budget").exists()
+                .jsonPath("$[0].budget.id").exists()
+                .jsonPath("$[0].budget.name").exists()
+                .jsonPath("$[0].budget.budgetCategory").exists()
+                .jsonPath("$[0].budget.budgetCategory.id").exists()
+                .jsonPath("$[0].budget.budgetCategory.type").exists()
+                .jsonPath("$[0].budget.budgetCategory.name").exists();
     }
 
     @Test
-    void getTransactionCategories_GivenCategoriesExist_ThenReturnAllCategories() throws Exception {
+    void getTransactionCategories_GivenCategoriesExist_ThenReturnAllCategories() {
 
-        mockMvc.perform(
-                get(URI + "/categories"))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].id").exists())
-                .andExpect(jsonPath("$[0].name").exists())
-                .andExpect(jsonPath("$[0].subCategory").exists())
-                .andExpect(jsonPath("$[0].subCategory.id").exists())
-                .andExpect(jsonPath("$[0].subCategory.name").exists());
-
-    }
-
-    @Test
-    void saveNewTransactions_GivenValidTransactionsProvided_ThenSaveTransactionsAndReturnOk() throws Exception {
-
-        ShortAccountDto accountDto = new ShortAccountDto();
-        accountDto.setId(1L);
-
-        BudgetDto budget = new BudgetDto();
-        budget.setId(1L);
-
-        TransactionDto t1 = new TransactionDto();
-        t1.setAccount(accountDto);
-        t1.setAmount(BigDecimal.valueOf(451.21));
-        t1.setDescription("Description 1");
-        t1.setDate(ZonedDateTime.now());
-        t1.setBudget(budget);
-
-        TransactionDto t2 = new TransactionDto();
-        t2.setAccount(accountDto);
-        t2.setAmount(BigDecimal.valueOf(56.22));
-        t2.setDescription("Description 564");
-        t2.setDate(ZonedDateTime.now().minusDays(10));
-        t2.setBudget(budget);
-
-        MvcResult ra = mockMvc.perform(
-                post(URI)
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(this.objectMapper.writeValueAsString(Arrays.asList(t1, t2))))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.[*]", hasSize(2)))
-                .andReturn();
-
-        JsonNode json = this.objectMapper.readTree(ra.getResponse().getContentAsString());
-        assertThat(json.isArray(), is(true));
-
-        int itemsToCount = 0;
-
-        for (JsonNode n : json) {
-            TransactionDto tran = this.objectMapper.readValue(n.toString(), TransactionDto.class);
-            assertThat(this.transactionRepository.existsById(tran.getId()), is(true));
-            itemsToCount++;
-        }
-
-        assertThat(itemsToCount, is(equalTo(json.size())));
+        webTestClient.get().uri(URI + "/categories")
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .consumeWith(System.out::println)
+                .jsonPath("$[0].id").exists()
+                .jsonPath("$[0].name").exists()
+                .jsonPath("$[0].subCategory").exists()
+                .jsonPath("$[0].subCategory.id").exists()
+                .jsonPath("$[0].subCategory.name").exists();
 
     }
 
     @Test
-    void getTransactionTotal_GiveTransactionsExistForBudgets_ThenReturnTotalAmount() throws Exception {
+    void getTransactionTotal_GiveTransactionsExistForBudgets_ThenReturnTotalAmount() {
 
-        mockMvc.perform(
-                get(URI + "/total")
-                        .param("year", "2017")
-                        .param("month", "1")
-                        .param("transactionTypeId", "2")
-                        .param("budgetIds", "10, 11, 12, 13, 14, 15, 26, 16, 17, 18, 27, 19, 28, 29, 30"))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.total").exists())
-                .andExpect(jsonPath("$.transactionType").exists());
-
-    }
-
-    @Test
-    void getTransactionTotal_GiveTransactionsExistForBudgetsTwenty_ThenReturnTotalAmount() throws Exception {
-
-        mockMvc.perform(
-                get(URI + "/total")
-                        .param("year", "2017")
-                        .param("month", "1")
-                        .param("transactionTypeId", "1")
-                        .param("budgetIds", "20"))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.total").exists())
-                .andExpect(jsonPath("$.transactionType").exists());
+        webTestClient
+                .get()
+                .uri(uriBuilder ->
+                        uriBuilder.path(URI + "/total")
+                                .queryParam("year", "2017")
+                                .queryParam("month", "1")
+                                .queryParam("transactionTypeId", "2")
+                                .queryParam("budgetIds", "10, 11, 12, 13, 14, 15, 26, 16, 17, 18, 27, 19, 28, 29, 30")
+                                .build())
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .jsonPath("$.total").exists()
+                .jsonPath("$.transactionType").exists();
 
     }
 
     @Test
-    void getTransactionTotal_GiveTransactionsExistForBudgetsThree_ThenReturnTotalAmount() throws Exception {
+    void getTransactionTotal_GiveTransactionsExistForBudgetsTwenty_ThenReturnTotalAmount() {
 
-        mockMvc.perform(
-                get(URI + "/total")
-                        .param("year", "2017")
-                        .param("month", "1")
-                        .param("transactionTypeId", "2")
-                        .param("budgetIds", "1, 2, 3, 4, 5, 6, 21, 22"))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.total").exists())
-                .andExpect(jsonPath("$.transactionType").exists());
-
-    }
-
-    @Test
-    void getTransactionTotal_GiveNoTransactionsExist_ThenReturnTotalAmount() throws Exception {
-
-        mockMvc.perform(
-                get(URI + "/total")
-                        .param("year", "2017")
-                        .param("month", "1")
-                        .param("transactionTypeId", "1")
-                        .param("budgetIds", "23"))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.total").exists())
-                .andExpect(jsonPath("$.transactionType").exists());
+        webTestClient
+                .get()
+                .uri(uriBuilder ->
+                        uriBuilder.path(URI + "/total")
+                                .queryParam("year", "2017")
+                                .queryParam("month", "1")
+                                .queryParam("transactionTypeId", "1")
+                                .queryParam("budgetIds", "20")
+                                .build())
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .jsonPath("$.total").exists()
+                .jsonPath("$.transactionType").exists();
 
     }
 
     @Test
-    void getTransactionTotal_GiveTransactionsExistForBudgetsSix_ThenReturnTotalAmount() throws Exception {
+    void getTransactionTotal_GiveTransactionsExistForBudgetsThree_ThenReturnTotalAmount() {
 
-        mockMvc.perform(
-                get(URI + "/total")
-                        .param("year", "2017")
-                        .param("month", "1")
-                        .param("transactionTypeId", "2")
-                        .param("budgetIds", "24, 7, 8, 9, 25"))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.total").exists())
-                .andExpect(jsonPath("$.transactionType").exists());
+        webTestClient.
+                get()
+                .uri(uriBuilder ->
+                        uriBuilder.path(URI + "/total")
+                                .queryParam("year", "2017")
+                                .queryParam("month", "1")
+                                .queryParam("transactionTypeId", "2")
+                                .queryParam("budgetIds", "1, 2, 3, 4, 5, 6, 21, 22")
+                                .build())
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .jsonPath("$.total").exists()
+                .jsonPath("$.transactionType").exists();
+
+    }
+
+    @Test
+    void getTransactionTotal_GiveNoTransactionsExist_ThenReturnTotalAmount() {
+
+        webTestClient
+                .get()
+                .uri(uriBuilder ->
+                        uriBuilder.path(URI + "/total")
+                                .queryParam("year", "2017")
+                                .queryParam("month", "1")
+                                .queryParam("transactionTypeId", "1")
+                                .queryParam("budgetIds", "23")
+                                .build())
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .jsonPath("$.total").exists()
+                .jsonPath("$.transactionType").exists();
+
+    }
+
+    @Test
+    void getTransactionTotal_GiveTransactionsExistForBudgetsSix_ThenReturnTotalAmount() {
+
+        webTestClient
+                .get()
+                .uri(uriBuilder -> uriBuilder.path(URI + "/total")
+                        .queryParam("year", "2017")
+                        .queryParam("month", "1")
+                        .queryParam("transactionTypeId", "2")
+                        .queryParam("budgetIds", "24, 7, 8, 9, 25").build())
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .jsonPath("$.total").exists()
+                .jsonPath("$.transactionType").exists();
 
     }
 

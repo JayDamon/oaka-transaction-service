@@ -1,47 +1,55 @@
 package com.factotum.oaka.exception;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.core.Ordered;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.web.reactive.error.ErrorWebExceptionHandler;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
-import org.springframework.http.HttpHeaders;
+import org.springframework.core.io.buffer.DataBuffer;
+import org.springframework.core.io.buffer.DataBufferFactory;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ControllerAdvice;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.context.request.WebRequest;
-import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+import org.springframework.http.MediaType;
+import org.springframework.lang.NonNull;
+import org.springframework.web.server.ServerWebExchange;
+import reactor.core.publisher.Mono;
 
-import javax.persistence.NoResultException;
 import javax.validation.ConstraintViolationException;
 
-@ControllerAdvice
-public class OakaResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
+@Slf4j
+@Configuration
+@Order(-2)
+public class OakaResponseEntityExceptionHandler implements ErrorWebExceptionHandler {
 
-    private static final Logger log = LoggerFactory.getLogger(OakaResponseEntityExceptionHandler.class);
+    @NonNull
+    @Override
+    public Mono<Void> handle(ServerWebExchange serverWebExchange, @NonNull Throwable throwable) {
 
-    @Order(Ordered.HIGHEST_PRECEDENCE)
-    @ExceptionHandler(value = {ConstraintViolationException.class})
-    protected ResponseEntity<?> handleIllegalArgumentException(ConstraintViolationException e, WebRequest request) {
-        log.error(e.getMessage(), e);
+        log.error(throwable.getMessage(), throwable);
 
-        return handleExceptionInternal(e, e.getMessage(), new HttpHeaders(), HttpStatus.BAD_REQUEST,
-                request);
+        DataBufferFactory bufferFactory = serverWebExchange.getResponse().bufferFactory();
+
+        if (throwable instanceof ConstraintViolationException
+                || throwable instanceof IllegalArgumentException) {
+
+            serverWebExchange.getResponse().setStatusCode(HttpStatus.BAD_REQUEST);
+            DataBuffer dataBuffer = bufferFactory.wrap(throwable.getMessage().getBytes());
+            serverWebExchange.getResponse().getHeaders().setContentType(MediaType.APPLICATION_JSON);
+
+            return serverWebExchange.getResponse().writeWith(Mono.just(dataBuffer));
+        }
+
+        serverWebExchange.getResponse().setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR);
+        serverWebExchange.getResponse().getHeaders().setContentType(MediaType.TEXT_PLAIN);
+        DataBuffer dataBuffer = bufferFactory.wrap("Unknown error".getBytes());
+
+        return serverWebExchange.getResponse().writeWith(Mono.just(dataBuffer));
     }
 
-    @Order(Ordered.HIGHEST_PRECEDENCE)
-    @ExceptionHandler(value = {IllegalArgumentException.class})
-    protected ResponseEntity<?> handleIllegalArgumentException(IllegalArgumentException e, WebRequest request) {
-        log.error(e.getMessage(), e);
-        return handleExceptionInternal(e, e.getMessage(), new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
-    }
-
-    @Order(Ordered.HIGHEST_PRECEDENCE)
-    @ExceptionHandler(value = {NoResultException.class})
-    protected ResponseEntity<?> handleResourceNotFound(NoResultException e, WebRequest request) {
-        log.error("Resource not found, " + e, e);
-        return handleExceptionInternal(e, e.getMessage(), new HttpHeaders(), HttpStatus.BAD_REQUEST,
-                request);
-    }
+//    @Order(Ordered.HIGHEST_PRECEDENCE)
+//    @ExceptionHandler(value = {NoResultException.class})
+//    protected ResponseEntity<?> handleResourceNotFound(NoResultException e, WebRequest request) {
+//        log.error("Resource not found, " + e, e);
+//        return handleExceptionInternal(e, e.getMessage(), new HttpHeaders(), HttpStatus.BAD_REQUEST,
+//                request);
+//    }
 
 }

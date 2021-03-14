@@ -4,14 +4,15 @@ import com.factotum.oaka.IntegrationTest;
 import com.factotum.oaka.dto.TransactionDto;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import reactor.core.publisher.Flux;
 
-import java.util.Set;
+import java.util.List;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
-import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
+import static org.hamcrest.Matchers.nullValue;
 
 @IntegrationTest
 class TransactionServiceImplT {
@@ -22,9 +23,10 @@ class TransactionServiceImplT {
     @Test
     void getAllTransactionDtos() {
 
-        Set<TransactionDto> dtos = transactionService.getAllTransactionDtos();
+        Flux<TransactionDto> transactions = transactionService.getAllTransactionDtos();
 
-        // Assert
+        List<TransactionDto> dtos = transactions.collectList().block();
+
         assertThat(dtos, hasSize(891));
 
         boolean dtoChecked = false;

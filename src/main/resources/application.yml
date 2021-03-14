@@ -9,6 +9,19 @@ server:
 spring:
   config:
     activate:
+      on-profile: test
+  codec:
+    max-in-memory-size: 10MB
+  cloud:
+    discovery:
+      enabled: false
+debug: true
+
+---
+
+spring:
+  config:
+    activate:
       on-profile: h2
   h2:
     console:
@@ -16,8 +29,8 @@ spring:
   jpa:
     hibernate:
       ddl-auto: create-drop
-#    show-sql: true
-#debug: true
+    show-sql: true
+debug: false
 management:
   endpoints:
     web:

@@ -1,26 +1,29 @@
 package com.factotum.oaka.repository;
 
+import com.factotum.oaka.config.JpaConfiguration;
 import com.factotum.oaka.dto.TransactionBudgetSummary;
 import com.factotum.oaka.model.Transaction;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.data.r2dbc.DataR2dbcTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
+import reactor.core.publisher.Flux;
+import reactor.test.StepVerifier;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.greaterThan;
-import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
 
-@DataJpaTest
+@DataR2dbcTest
 @ActiveProfiles({"test"})
+@Import(JpaConfiguration.class)
 class TransactionRepositoryIT {
 
     @Autowired
@@ -30,26 +33,27 @@ class TransactionRepositoryIT {
     void getBudgetSummaries() {
         TransactionBudgetSummary summary = transactionRepository
                 .getBudgetSummaries(
+                        1,
                         2017,
-                        1
-                        ,
                         new HashSet<>(Arrays.asList(10L, 11L, 12L, 13L, 14L, 15L, 26L, 16L, 17L, 18L, 27L, 19L, 28L, 29L, 30L)),
                         2
                 )
-                .orElse(null);
+                .block();
         assertThat(summary, is(not(nullValue())));
 
         System.out.println(summary);
 
-        assertThat(summary.getActual(), is(greaterThan(BigDecimal.ZERO)));
+        assertThat(summary.getActual(), is(equalTo(BigDecimal.valueOf(380.51))));
+        assertThat(summary.getMonth(), is(equalTo(1)));
+        assertThat(summary.getYear(), is(equalTo(2017)));
+        assertThat(summary.getTransactionType(), is(equalTo("Expense")));
 
     }
 
     @Test
     void test() {
-        List<Transaction> transactionList = transactionRepository.findAll();
-        System.out.println(transactionList);
-        assertThat(transactionList, hasSize(greaterThan(0)));
+        Flux<Transaction> transactionList = transactionRepository.findAll();
+        StepVerifier.create(transactionList.log()).expectNextCount(891).verifyComplete();
     }
 
 }

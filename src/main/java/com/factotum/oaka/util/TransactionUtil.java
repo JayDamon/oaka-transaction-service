@@ -28,25 +28,25 @@ public class TransactionUtil {
         List<TransactionCategoryDto> dtos = new ArrayList<>();
 
         for (TransactionCategory cat : categories) {
-            dtos.add(mapDtoToEntity(cat));
+            dtos.add(mapCategoryEntityToDto(cat));
         }
 
         return dtos;
     }
 
-    public static TransactionCategoryDto mapDtoToEntity(TransactionCategory category) {
+    public static TransactionCategoryDto mapCategoryEntityToDto(TransactionCategory category) {
         return mapper.map(category, TransactionCategoryDto.class);
     }
 
     public static Collection<Transaction> mapDtosToEntities(Collection<TransactionDto> dtos) {
         Collection<Transaction> transactions = new HashSet<>();
         for (TransactionDto dto : dtos) {
-            transactions.add(mapDtoToEntity(dto));
+            transactions.add(mapCategoryEntityToDto(dto));
         }
         return transactions;
     }
 
-    public static Transaction mapDtoToEntity(TransactionDto dto) {
+    public static Transaction mapCategoryEntityToDto(TransactionDto dto) {
         return mapper.map(dto, Transaction.class);
     }
 
