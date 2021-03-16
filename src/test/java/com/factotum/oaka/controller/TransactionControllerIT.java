@@ -1,12 +1,20 @@
 package com.factotum.oaka.controller;
 
 import com.factotum.oaka.IntegrationTest;
+import com.factotum.oaka.dto.BudgetDto;
+import com.factotum.oaka.dto.ShortAccountDto;
+import com.factotum.oaka.dto.TransactionDto;
 import com.factotum.oaka.repository.TransactionRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.reactive.server.WebTestClient;
+import reactor.core.publisher.Flux;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @IntegrationTest
 class TransactionControllerIT {
@@ -50,6 +58,40 @@ class TransactionControllerIT {
                 .jsonPath("$[0].budget.budgetCategory.id").exists()
                 .jsonPath("$[0].budget.budgetCategory.type").exists()
                 .jsonPath("$[0].budget.budgetCategory.name").exists();
+    }
+
+    @Test
+    void createNewTransactions_GivenSingleTransactionProvided_ThenCreateTransaction() throws JsonProcessingException {
+
+        ShortAccountDto shortAccountDto = new ShortAccountDto();
+        shortAccountDto.setId(3L);
+
+        BudgetDto budgetDto = new BudgetDto();
+        budgetDto.setId(5L);
+
+        LocalDateTime tnDate = LocalDateTime.of(2021, 02, 3, 1, 1);
+
+        TransactionDto tn = new TransactionDto();
+        tn.setAccount(shortAccountDto);
+        tn.setBudget(budgetDto);
+        tn.setDate(tnDate);
+        tn.setDescription("Transaction Description");
+        tn.setAmount(BigDecimal.valueOf(22.3));
+
+        webTestClient
+                .post()
+                .uri(URI)
+                .body(Flux.just(tn), TransactionDto.class)
+                .exchange()
+                .expectStatus().isCreated()
+                .expectBody()
+                .jsonPath("$[0].id").exists()
+                .jsonPath("$[0].amount").isEqualTo(22.3)
+                .jsonPath("$[0].description").isEqualTo("Transaction Description")
+                .jsonPath("$[0].date").exists()
+                .jsonPath("$[0].account.id").isEqualTo(3L)
+                .jsonPath("$[0].budget.id").isEqualTo(5L);
+
     }
 
     @Test

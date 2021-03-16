@@ -22,12 +22,15 @@ public class TransactionDto {
     private Long id;
 
     @JsonProperty("amount")
+    @NotNull
     private BigDecimal amount;
 
     @JsonProperty("description")
+    @NotNull
     private String description;
 
     @JsonProperty("date")
+    @NotNull
     private LocalDateTime date;
 
     @JsonProperty("account")
