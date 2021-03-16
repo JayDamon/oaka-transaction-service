@@ -16,7 +16,7 @@ public interface TransactionRepository extends ReactiveCrudRepository<Transactio
 
     @Query("SELECT * FROM transaction t " +
             "INNER JOIN transaction_category tc ON tc.transaction_category_id = t.transaction_category_id " +
-            "INNER JOIN budget_sub_category bsg ON bsg.budget_sub_category_id = tc.budget_sub_category_id " +
+            "INNER JOIN transaction_sub_category bsg ON bsg.transaction_sub_category_id = tc.transaction_sub_category_id " +
             "ORDER BY transaction_date DESC")
     Flux<TransactionDto> findAllByOrderByDateDesc();
 

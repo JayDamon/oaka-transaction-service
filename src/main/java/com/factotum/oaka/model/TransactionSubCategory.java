@@ -21,11 +21,11 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
-@Table("budget_sub_category")
-public class BudgetSubCategory implements Serializable {
+@Table("transaction_sub_category")
+public class TransactionSubCategory implements Serializable {
 
     @Id
-    @Column("budget_sub_category_id")
+    @Column("transaction_sub_category_id")
     private Long id;
 
     @Column("sub_category_name")

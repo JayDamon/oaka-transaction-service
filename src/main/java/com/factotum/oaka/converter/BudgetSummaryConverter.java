@@ -17,6 +17,5 @@ public class BudgetSummaryConverter implements Converter<Row, TransactionBudgetS
                 source.get("year", Integer.class),
                 source.get("sum", BigDecimal.class)
         );
-
     }
 }

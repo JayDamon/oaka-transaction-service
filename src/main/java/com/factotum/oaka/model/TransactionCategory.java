@@ -31,7 +31,7 @@ public class TransactionCategory implements Serializable {
     @Column("category_name")
     private String name;
 
-    @Column("budget_sub_category_id")
+    @Column("transaction_sub_category_id")
     private Long budgetSubCategoryId;
 
 

@@ -10,11 +10,11 @@ import com.factotum.oaka.dto.TransactionCategoryDto;
 import com.factotum.oaka.dto.TransactionDto;
 import com.factotum.oaka.http.AccountService;
 import com.factotum.oaka.http.BudgetService;
-import com.factotum.oaka.model.BudgetSubCategory;
 import com.factotum.oaka.model.Occurrence;
 import com.factotum.oaka.model.RecurringTransaction;
 import com.factotum.oaka.model.Transaction;
 import com.factotum.oaka.model.TransactionCategory;
+import com.factotum.oaka.model.TransactionSubCategory;
 import com.factotum.oaka.model.TransactionType;
 import com.factotum.oaka.repository.TransactionRepository;
 import com.factotum.oaka.repository.TransactionSubCategoryRepository;
@@ -72,8 +72,8 @@ class TransactionServiceImplUT {
         // Arrange
         TransactionType transactionType = new TransactionType(9, "TransactionTypeOne");
 
-        BudgetSubCategory budgetSubCategory = new BudgetSubCategory(10L, "BudgetSubCategoryOne");
-        TransactionCategory transactionCategory = new TransactionCategory(11L, "TransactionCategoryOne", budgetSubCategory.getId());
+        TransactionSubCategory transactionSubCategory = new TransactionSubCategory(10L, "BudgetSubCategoryOne");
+        TransactionCategory transactionCategory = new TransactionCategory(11L, "TransactionCategoryOne", transactionSubCategory.getId());
 
         Occurrence occurrence = new Occurrence(12, "OccurrenceOne");
 
@@ -91,7 +91,7 @@ class TransactionServiceImplUT {
 
         TransactionDto transactionDto = mapper.map(transaction, TransactionDto.class);
         TransactionCategoryDto transactionCategoryDto = mapper.map(transactionCategory, TransactionCategoryDto.class);
-        BudgetSubCategoryDto budgetSubCategoryDto = mapper.map(budgetSubCategory, BudgetSubCategoryDto.class);
+        BudgetSubCategoryDto budgetSubCategoryDto = mapper.map(transactionSubCategory, BudgetSubCategoryDto.class);
         transactionCategoryDto.setBudgetSubCategory(budgetSubCategoryDto);
         transactionDto.setTransactionCategory(transactionCategoryDto);
         when(transactionRepository.findAllByOrderByDateDesc()).thenReturn(Flux.just(transactionDto));

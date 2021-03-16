@@ -1,15 +1,15 @@
-DROP TABLE IF EXISTS budget_sub_category;
+DROP TABLE IF EXISTS transaction_sub_category;
 DROP TABLE IF EXISTS recurring_transaction;
 DROP TABLE IF EXISTS transaction;
 DROP TABLE IF EXISTS transaction_category;
 DROP TABLE IF EXISTS transaction_type;
 DROP TABLE IF EXISTS occurrence;
 
-CREATE TABLE budget_sub_category
+CREATE TABLE transaction_sub_category
 (
-    budget_sub_category_id BIGINT NOT NULL AUTO_INCREMENT,
-    sub_category_name      varchar(100),
-    PRIMARY KEY (budget_sub_category_id)
+    transaction_sub_category_id BIGINT NOT NULL AUTO_INCREMENT,
+    sub_category_name           varchar(100),
+    PRIMARY KEY (transaction_sub_category_id)
 );
 
 CREATE TABLE occurrence
@@ -21,9 +21,9 @@ CREATE TABLE occurrence
 
 CREATE TABLE transaction_category
 (
-    transaction_category_id BIGINT NOT NULL AUTO_INCREMENT,
-    category_name           VARCHAR(100),
-    budget_sub_category_id  BIGINT,
+    transaction_category_id     BIGINT NOT NULL AUTO_INCREMENT,
+    category_name               VARCHAR(100),
+    transaction_sub_category_id BIGINT,
     PRIMARY KEY (transaction_category_id)
 );
 

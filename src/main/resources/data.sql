@@ -14,7 +14,7 @@ VALUES (1, 'Specific Date'),
        (9, 'Saturday'),
        (10, 'Sunday');
 
-INSERT INTO budget_sub_category (budget_sub_category_id, sub_category_name)
+INSERT INTO transaction_sub_category (transaction_sub_category_id, sub_category_name)
 VALUES (1, 'Income'),
        (2, 'Housing'),
        (3, 'Utilities'),
@@ -34,7 +34,8 @@ VALUES (1, 'Income'),
        (17, 'Savings'),
        (18, 'Generic');
 
-INSERT INTO transaction_category (transaction_category_id, category_name, budget_sub_category_id)
+INSERT INTO transaction_category (transaction_category_id, category_name,
+                                  transaction_sub_category_id)
 VALUES (1, 'Paycheck', 1),
        (2, 'Other Income', 1),
        (3, 'Rent/Mortgage', 2),
@@ -64,7 +65,8 @@ VALUES (1, 'Paycheck', 1),
        (27, 'Medicine', 5),
        (28, 'Glasses', 5);
 
-INSERT INTO transaction_category (transaction_category_id, category_name, budget_sub_category_id)
+INSERT INTO transaction_category (transaction_category_id, category_name,
+                                  transaction_sub_category_id)
 VALUES (29, 'Hearing Aids', 5),
        (30, 'First Aid Supplies', 5),
        (31, 'Treatment and Therapy', 5),

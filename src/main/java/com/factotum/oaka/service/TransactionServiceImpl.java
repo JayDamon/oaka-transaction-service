@@ -20,6 +20,7 @@ import reactor.core.publisher.Mono;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -77,7 +78,7 @@ public class TransactionServiceImpl implements TransactionService {
                         getAccount(t.getAccount(), accountMap).map(a -> addAccount(a, t)))
                 .flatMap(t ->
                         getBudget(t.getBudget(), budgetMap).map(b -> addBudget(b, t)))
-                ;
+                .sort(Comparator.comparing(TransactionDto::getDate).reversed());
     }
 
     private TransactionDto addBudget(BudgetDto budget, TransactionDto transaction) {

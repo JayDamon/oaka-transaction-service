@@ -11,7 +11,7 @@ import reactor.core.publisher.Flux;
 public interface TransactionCategoryRepository extends ReactiveCrudRepository<TransactionCategory, Long> {
 
     @Query("SELECT * FROM transaction_category tc " +
-            "INNER JOIN budget_sub_category bsc ON bsc.budget_sub_category_id = tc.budget_sub_category_id")
+            "INNER JOIN transaction_sub_category bsc ON bsc.transaction_sub_category_id = tc.transaction_sub_category_id")
     Flux<TransactionCategoryDto> queryAll();
 
 }

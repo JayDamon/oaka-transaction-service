@@ -23,13 +23,6 @@ spring:
   config:
     activate:
       on-profile: h2
-  h2:
-    console:
-      enabled: true
-  jpa:
-    hibernate:
-      ddl-auto: create-drop
-    show-sql: true
 debug: false
 management:
   endpoints:

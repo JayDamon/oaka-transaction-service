@@ -12,7 +12,7 @@ public class TransactionCategoryConverter implements Converter<Row, TransactionC
     public TransactionCategoryDto convert(Row source) {
 
         BudgetSubCategoryDto budgetSubCategory = new BudgetSubCategoryDto(
-                source.get("budget_sub_category_id", Long.class),
+                source.get("transaction_sub_category_id", Long.class),
                 source.get("sub_category_name", String.class)
         );
 
