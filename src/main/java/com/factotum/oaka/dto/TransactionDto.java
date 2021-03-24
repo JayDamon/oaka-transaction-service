@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
@@ -31,6 +32,7 @@ public class TransactionDto {
 
     @JsonProperty("date")
     @NotNull
+    @DateTimeFormat(pattern = "dd/mm/YYYY")
     private LocalDateTime date;
 
     @JsonProperty("account")
