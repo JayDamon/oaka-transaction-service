@@ -8,6 +8,7 @@ import com.factotum.oaka.repository.TransactionCategoryRepository;
 import com.factotum.oaka.repository.TransactionRepository;
 import com.factotum.oaka.repository.TransactionTypeRepository;
 import com.factotum.oaka.service.TransactionService;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
@@ -24,6 +25,7 @@ import reactor.core.publisher.Mono;
 import java.math.BigDecimal;
 import java.util.Set;
 
+@Slf4j
 @RestController
 @RequestMapping("/v1/transactions")
 @Validated
@@ -71,7 +73,7 @@ public class TransactionController {
             @RequestParam(name = "transactionTypeId") int transactionTypeId,
             @RequestParam(name = "budgetIds") Set<Long> budgetIds) {
 
-        return this.transactionRepository.getBudgetSummaries(year, month, budgetIds, transactionTypeId)
+        return this.transactionRepository.getBudgetSummaries(month, year, budgetIds, transactionTypeId)
                 .map(sum -> new TransactionTypeTotal(sum.getTransactionType(), sum.getActual()))
                 .switchIfEmpty(
                         this.transactionTypeRepository.findById(transactionTypeId)

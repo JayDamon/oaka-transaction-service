@@ -5,7 +5,6 @@ import com.factotum.oaka.dto.BudgetDto;
 import com.factotum.oaka.dto.ShortAccountDto;
 import com.factotum.oaka.dto.TransactionDto;
 import com.factotum.oaka.repository.TransactionRepository;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -61,7 +60,7 @@ class TransactionControllerIT {
     }
 
     @Test
-    void createNewTransactions_GivenSingleTransactionProvided_ThenCreateTransaction() throws JsonProcessingException {
+    void createNewTransactions_GivenSingleTransactionProvided_ThenCreateTransaction() {
 
         ShortAccountDto shortAccountDto = new ShortAccountDto();
         shortAccountDto.setId(3L);
@@ -69,7 +68,7 @@ class TransactionControllerIT {
         BudgetDto budgetDto = new BudgetDto();
         budgetDto.setId(5L);
 
-        LocalDateTime tnDate = LocalDateTime.of(2021, 02, 3, 1, 1);
+        LocalDateTime tnDate = LocalDateTime.of(2021, 2, 3, 1, 1);
 
         TransactionDto tn = new TransactionDto();
         tn.setAccount(shortAccountDto);
@@ -125,6 +124,7 @@ class TransactionControllerIT {
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()
+                .consumeWith(System.out::println)
                 .jsonPath("$.total").exists()
                 .jsonPath("$.transactionType").exists();
 

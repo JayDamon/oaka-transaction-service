@@ -1,21 +1,20 @@
 package com.factotum.oaka.contract;
 
 import com.factotum.oaka.IntegrationTest;
-import io.restassured.module.mockmvc.RestAssuredMockMvc;
+import io.restassured.module.webtestclient.RestAssuredWebTestClient;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.context.WebApplicationContext;
+import org.springframework.context.ApplicationContext;
 
 @IntegrationTest
 public class BaseTestClass {
 
     @Autowired
-    private WebApplicationContext context;
+    private ApplicationContext context;
 
     @BeforeEach
     void setup() {
-        RestAssuredMockMvc.webAppContextSetup(context);
+        RestAssuredWebTestClient.applicationContextSetup(context);
     }
-
 
 }
