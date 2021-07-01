@@ -48,5 +48,3 @@ spring:
     password: SaveMoney
     driver-class-name: com.mysql.cj.jdbc.Driver
     data:
-server:
-  port: 8082
