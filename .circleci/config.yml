@@ -19,7 +19,9 @@ jobs:
             - v1-maven-debs
       - run:
           name: Test
-          command: ./mvnw clean test
+          command: |
+            chmod +x ./mvnw
+            ./mvnw clean test
       - run:
           name: Package
           command: ./mvnw clean package -DskipTests
