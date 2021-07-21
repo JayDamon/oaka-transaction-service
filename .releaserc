@@ -32,7 +32,7 @@
     [
       "@semantic-release-plus/docker",
       {
-        "name": "repo.treescale.com/jaydamon/oaka-transaction-service",
+        "name": "repo.treescale.com/jaydamon/mm-oaka-transaction-service",
         "registryUrl": "repo.treescale.com",
         "publishLatestTag": true,
         "publishMajorTag": true,
