@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [1.0.1](https://github.com/JayDamon/oaka-transaction-service/compare/v1.0.0...v1.0.1) (2021-07-21)
+
+
+### Bug Fixes
+
+* **versioning:** change repo name in .releaserc ([baa4c40](https://github.com/JayDamon/oaka-transaction-service/commit/baa4c4093ec3abcbdff3c849753be92a27b5084e))
+
 # 1.0.0 (2021-07-21)
 
 
