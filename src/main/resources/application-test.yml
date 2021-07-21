@@ -1,0 +1,11 @@
+spring:
+  codec:
+    max-in-memory-size: 10MB
+  cloud:
+    kubernetes:
+      enabled: false
+      discovery:
+        enabled: false
+    discovery:
+      enabled: false
+debug: true

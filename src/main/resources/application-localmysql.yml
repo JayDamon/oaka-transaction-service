@@ -1,0 +1,17 @@
+spring:
+  cloud:
+    discovery:
+      enabled: true
+  jpa:
+    hibernate:
+      ddl-auto: update
+  datasource:
+    url: jdbc:mysql://172.16.0.7:3310/money-maker-test
+    username: mm-app
+    password: SaveMoney
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  sql:
+    init:
+      data-locations:
+server:
+  port: 8082

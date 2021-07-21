@@ -1,29 +1,9 @@
 spring:
   application:
-    name: oaka
-server:
-  port: 8082
+    name: oaka-transaction-service
 
 ---
 
-spring:
-  config:
-    activate:
-      on-profile: test
-  codec:
-    max-in-memory-size: 10MB
-  cloud:
-    discovery:
-      enabled: false
-debug: true
-
----
-
-spring:
-  config:
-    activate:
-      on-profile: h2
-debug: false
 management:
   endpoints:
     web:
@@ -36,15 +16,10 @@ management:
 ---
 
 spring:
-  config:
-    activate:
-      on-profile: mysql
-  jpa:
-    hibernate:
-      ddl-auto: update
-  datasource:
-    url: jdbc:mysql://172.16.0.7:3310/money-maker-test
-    username: mm-app
-    password: SaveMoney
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    data:
+  cloud:
+    kubernetes:
+      enabled: false
+      discovery:
+        enabled: false
+    discovery:
+      enabled: false

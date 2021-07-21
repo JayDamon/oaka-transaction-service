@@ -1,0 +1,13 @@
+spring:
+  cloud:
+    kubernetes:
+      discovery:
+        enabled: true
+        service-labels:
+          discoverable: true
+      enabled: true
+      reload:
+        strategy: restart_context
+        enabled: true
+    discovery:
+      enabled: false

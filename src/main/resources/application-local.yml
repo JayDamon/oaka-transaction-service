@@ -1,0 +1,14 @@
+spring:
+  cloud:
+    discovery:
+      enabled: true
+  h2:
+    console:
+      enabled: true
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: false
+debug: false
+server:
+  port: 8082
