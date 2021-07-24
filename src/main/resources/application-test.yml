@@ -8,4 +8,5 @@ spring:
         enabled: false
     discovery:
       enabled: false
-debug: true
+  flyway:
+    enabled: false

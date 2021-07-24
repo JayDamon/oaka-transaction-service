@@ -60,6 +60,7 @@ class TransactionControllerIT {
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()
+                .consumeWith(System.out::println)
                 .jsonPath("$[0].id").exists()
                 .jsonPath("$[0].amount").exists()
                 .jsonPath("$[0].description").exists()

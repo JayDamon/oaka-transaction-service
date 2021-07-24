@@ -2,16 +2,14 @@ spring:
   cloud:
     discovery:
       enabled: true
-  jpa:
-    hibernate:
-      ddl-auto: update
-  datasource:
-    url: jdbc:mysql://172.16.0.7:3310/money-maker-test
-    username: mm-app
-    password: SaveMoney
-    driver-class-name: com.mysql.cj.jdbc.Driver
-  sql:
-    init:
-      data-locations:
+  r2dbc:
+    url: r2dbc:pool:mysql://172.16.0.7:3306/mm_transaction_dev
+    username: app_user
+    password: 6NSMqvSszpKq42Jf
+  flyway:
+    url: jdbc:mysql://172.16.0.7:3306/mm_transaction_dev
+    user: ${spring.r2dbc.username}
+    password: ${spring.r2dbc.password}
+    baseline-on-migrate: true
 server:
   port: 8082

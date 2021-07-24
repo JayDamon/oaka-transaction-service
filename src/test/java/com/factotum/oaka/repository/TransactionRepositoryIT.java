@@ -1,5 +1,6 @@
 package com.factotum.oaka.repository;
 
+//import com.factotum.oaka.config.JpaConfiguration;
 import com.factotum.oaka.config.JpaConfiguration;
 import com.factotum.oaka.dto.TransactionBudgetSummary;
 import com.factotum.oaka.model.Transaction;
@@ -41,19 +42,11 @@ class TransactionRepositoryIT {
                 .block();
         assertThat(summary, is(not(nullValue())));
 
-        System.out.println(summary);
-
         assertThat(summary.getActual(), is(equalTo(BigDecimal.valueOf(380.51))));
         assertThat(summary.getMonth(), is(equalTo(1)));
         assertThat(summary.getYear(), is(equalTo(2017)));
         assertThat(summary.getTransactionType(), is(equalTo("Expense")));
 
-    }
-
-    @Test
-    void test() {
-        Flux<Transaction> transactionList = transactionRepository.findAll();
-        StepVerifier.create(transactionList.log()).expectNextCount(891).verifyComplete();
     }
 
 }

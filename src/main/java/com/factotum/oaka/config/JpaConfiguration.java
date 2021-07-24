@@ -27,13 +27,14 @@ public class JpaConfiguration extends AbstractR2dbcConfiguration {
     private ConnectionFactory connectionFactory;
 
     @Bean
-    @Profile({"test", "h2"})
+    @Profile({"test"})
     public ConnectionFactoryInitializer initializer(@Qualifier("connectionFactory") ConnectionFactory connectionFactory) {
         ConnectionFactoryInitializer initializer = new ConnectionFactoryInitializer();
         initializer.setConnectionFactory(connectionFactory);
         ResourceDatabasePopulator populator = new ResourceDatabasePopulator(
-                new ClassPathResource("schema.sql"),
-                new ClassPathResource("data.sql")
+                new ClassPathResource("test_data/drop_tables.sql"),
+                new ClassPathResource("db/migration/V1_0__create_mm_transaction_schema.sql"),
+                new ClassPathResource("test_data/V1_1__add_test_data.sql")
         );
         initializer.setDatabasePopulator(populator);
         return initializer;
@@ -50,4 +51,5 @@ public class JpaConfiguration extends AbstractR2dbcConfiguration {
     protected List<Object> getCustomConverters() {
         return List.of(new BudgetSummaryConverter(), new TransactionDtoConverter(), new TransactionCategoryConverter());
     }
+
 }
