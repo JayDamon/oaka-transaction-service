@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+# [1.2.0](https://github.com/JayDamon/oaka-transaction-service/compare/v1.1.0...v1.2.0) (2021-07-25)
+
+
+### Features
+
+* **api:** Update api to work with k8s gateway ([298ca5c](https://github.com/JayDamon/oaka-transaction-service/commit/298ca5c10d9563dd7f07ccf6273b474652078735))
+
 # [1.1.0](https://github.com/JayDamon/oaka-transaction-service/compare/v1.0.1...v1.1.0) (2021-07-25)
 
 
