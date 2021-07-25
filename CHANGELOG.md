@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [1.2.1](https://github.com/JayDamon/oaka-transaction-service/compare/v1.2.0...v1.2.1) (2021-07-25)
+
+
+### Bug Fixes
+
+* **discovery:** Use generic discovery client ([3bbbaf7](https://github.com/JayDamon/oaka-transaction-service/commit/3bbbaf74898c8943a2e440ee0629ceb8f0b235b8))
+
 # [1.2.0](https://github.com/JayDamon/oaka-transaction-service/compare/v1.1.0...v1.2.0) (2021-07-25)
 
 
