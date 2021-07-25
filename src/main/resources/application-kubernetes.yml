@@ -3,8 +3,6 @@ spring:
     kubernetes:
       discovery:
         enabled: true
-        service-labels:
-          discoverable: true
       enabled: true
       reload:
         strategy: restart_context

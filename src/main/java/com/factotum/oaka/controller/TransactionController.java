@@ -55,6 +55,7 @@ public class TransactionController {
     @PostMapping("")
     @ResponseStatus(HttpStatus.CREATED)
     Flux<TransactionDto> createTransactions(@RequestBody Flux<TransactionDto> transactions) {
+        log.info("Saving transactions");
         return transactions
                 .map(t -> new ModelMapper().map(t, Transaction.class))
                 .flatMap(transactionRepository::save)

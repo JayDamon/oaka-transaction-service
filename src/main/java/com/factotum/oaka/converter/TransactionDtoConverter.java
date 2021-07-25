@@ -19,6 +19,8 @@ public class TransactionDtoConverter implements Converter<Row, TransactionDto> {
     @Override
     public TransactionDto convert(Row source) {
 
+        log.info("Converting transaction");
+
         ShortAccountDto account = new ShortAccountDto();
         account.setId(source.get("account_id", Long.class));
 

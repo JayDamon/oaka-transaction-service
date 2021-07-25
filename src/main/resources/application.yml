@@ -1,6 +1,6 @@
 spring:
   application:
-    name: oaka-transaction-service
+    name: moneymaker-transaction-service
 
 ---
 
