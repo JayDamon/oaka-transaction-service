@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [1.2.2](https://github.com/JayDamon/oaka-transaction-service/compare/v1.2.1...v1.2.2) (2021-07-25)
+
+
+### Bug Fixes
+
+* **discovery:** Remove load balancer for web client ([80f4e6a](https://github.com/JayDamon/oaka-transaction-service/commit/80f4e6a64d8f5db2acfd76e76b5c0e1191f47630))
+
 ## [1.2.1](https://github.com/JayDamon/oaka-transaction-service/compare/v1.2.0...v1.2.1) (2021-07-25)
 
 
