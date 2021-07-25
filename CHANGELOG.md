@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [1.2.4](https://github.com/JayDamon/oaka-transaction-service/compare/v1.2.3...v1.2.4) (2021-07-25)
+
+
+### Bug Fixes
+
+* **client:** Set port for http requests ([d9a2aa2](https://github.com/JayDamon/oaka-transaction-service/commit/d9a2aa2d6e4fdf37b5a13572e136e16439e11e35))
+
 ## [1.2.3](https://github.com/JayDamon/oaka-transaction-service/compare/v1.2.2...v1.2.3) (2021-07-25)
 
 
