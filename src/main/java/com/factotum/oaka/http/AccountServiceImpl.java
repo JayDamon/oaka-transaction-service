@@ -18,12 +18,12 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public Mono<ShortAccountDto> getAccountById(long id) {
-        log.info("Retrieving account from setzer {}", id);
+        log.info("Retrieving account from moneymaker-account-service {}", id);
 
         return webClientBuilder
                 .build()
                 .get()
-                .uri("http://setzer/v1/accounts/{id}", id)
+                .uri("http://moneymaker-account-service/v1/accounts/{id}", id)
                 .retrieve()
                 .bodyToMono(ShortAccountDto.class);
     }
