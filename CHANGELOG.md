@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+# [1.1.0](https://github.com/JayDamon/oaka-transaction-service/compare/v1.0.1...v1.1.0) (2021-07-25)
+
+
+### Features
+
+* **db:** Add flyway ([23a9195](https://github.com/JayDamon/oaka-transaction-service/commit/23a9195fff95558b3e1942c4886b6e3172002ca1))
+
 ## [1.0.1](https://github.com/JayDamon/oaka-transaction-service/compare/v1.0.0...v1.0.1) (2021-07-21)
 
 
