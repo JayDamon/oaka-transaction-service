@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [1.2.3](https://github.com/JayDamon/oaka-transaction-service/compare/v1.2.2...v1.2.3) (2021-07-25)
+
+
+### Bug Fixes
+
+* **flyway:** Properly setup flyway ([6a7e371](https://github.com/JayDamon/oaka-transaction-service/commit/6a7e37176deebee4606474729e1e79118a082a78))
+
 ## [1.2.2](https://github.com/JayDamon/oaka-transaction-service/compare/v1.2.1...v1.2.2) (2021-07-25)
 
 
