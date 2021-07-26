@@ -23,7 +23,7 @@ public class AccountServiceImpl implements AccountService {
         return webClientBuilder
                 .build()
                 .get()
-                .uri("http://moneymaker-account-service:8080/v1/accounts/{id}", id)
+                .uri("lb://moneymaker-account-service:8080/v1/accounts/{id}", id)
                 .retrieve()
                 .bodyToMono(ShortAccountDto.class);
     }

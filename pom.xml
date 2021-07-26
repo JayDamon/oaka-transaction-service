@@ -21,7 +21,7 @@
 
     <properties>
         <java.version>16</java.version>
-        <spring-boot-admin.version>2.4.2</spring-boot-admin.version>
+        <spring-boot-admin.version>2.4.3</spring-boot-admin.version>
         <spring-cloud.version>2020.0.3</spring-cloud.version>
     </properties>
 
