@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+# [1.3.0](https://github.com/JayDamon/oaka-transaction-service/compare/v1.2.5...v1.3.0) (2021-07-27)
+
+
+### Features
+
+* **client:** Add local docker config ([0fd906f](https://github.com/JayDamon/oaka-transaction-service/commit/0fd906f165fe1ada6b6422342f9cc7160b3605f9))
+
 ## [1.2.5](https://github.com/JayDamon/oaka-transaction-service/compare/v1.2.4...v1.2.5) (2021-07-26)
 
 
