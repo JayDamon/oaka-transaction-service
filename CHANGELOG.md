@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [1.3.2](https://github.com/JayDamon/oaka-transaction-service/compare/v1.3.1...v1.3.2) (2021-07-27)
+
+
+### Bug Fixes
+
+* Update h2 database ([1455984](https://github.com/JayDamon/oaka-transaction-service/commit/14559847c2d342adaee553ef80d2450cd26dfc7a))
+
 ## [1.3.1](https://github.com/JayDamon/oaka-transaction-service/compare/v1.3.0...v1.3.1) (2021-07-27)
 
 
