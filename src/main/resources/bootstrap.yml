@@ -1,7 +1,7 @@
 spring:
   config:
     activate:
-      on-profile: local, localmysql, test
+      on-profile: local, localmysql, test, localdocker
   cloud:
     kubernetes:
       enabled: false

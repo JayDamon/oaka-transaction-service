@@ -19,7 +19,7 @@ public class BudgetServiceImpl implements BudgetService {
         return webClientBuilder
                 .build()
                 .get()
-                .uri("lb://moneymaker-budget-service:8080/v1/budgets/{id}", id)
+                .uri("lb://moneymaker-budget-service/v1/budgets/{id}", id)
                 .retrieve()
                 .bodyToMono(BudgetDto.class);
     }

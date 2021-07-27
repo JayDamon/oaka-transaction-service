@@ -2,8 +2,6 @@ spring:
   cloud:
     discovery:
       enabled: true
-    loadbalancer:
-      enabled: true
   r2dbc:
     url: r2dbc:h2:mem:///~/db/testdb
     username: sa
@@ -21,8 +19,7 @@ spring:
     hibernate:
       ddl-auto: create-drop
     show-sql: false
-server:
-  port: 8082
-ribbon:
-  eureka:
-    enabled: true
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://mm-eureka:8761/eureka/
