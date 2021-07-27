@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [1.2.5](https://github.com/JayDamon/oaka-transaction-service/compare/v1.2.4...v1.2.5) (2021-07-26)
+
+
+### Bug Fixes
+
+* **client:** Remove Ports ([20c4887](https://github.com/JayDamon/oaka-transaction-service/commit/20c48876d4b5b3a3055cf7da90e0a995ebd303b4))
+
 ## [1.2.4](https://github.com/JayDamon/oaka-transaction-service/compare/v1.2.3...v1.2.4) (2021-07-25)
 
 
