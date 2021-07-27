@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [1.3.1](https://github.com/JayDamon/oaka-transaction-service/compare/v1.3.0...v1.3.1) (2021-07-27)
+
+
+### Bug Fixes
+
+* move web client config ([e678d57](https://github.com/JayDamon/oaka-transaction-service/commit/e678d57715f4135bcd8c76fe2ded14afa54d3ff5))
+
 # [1.3.0](https://github.com/JayDamon/oaka-transaction-service/compare/v1.2.5...v1.3.0) (2021-07-27)
 
 
