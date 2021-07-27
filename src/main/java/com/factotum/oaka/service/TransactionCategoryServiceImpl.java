@@ -16,7 +16,6 @@ public class TransactionCategoryServiceImpl implements TransactionCategoryServic
 
     @Override
     public Flux<TransactionCategory> findAllTransactionCategories() {
-
         return transactionCategoryRepository.findAll();
     }
 }

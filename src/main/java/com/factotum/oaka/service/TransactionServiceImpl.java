@@ -46,8 +46,6 @@ public class TransactionServiceImpl implements TransactionService {
     @Transactional
     public Flux<TransactionDto> getAllTransactionDtos() {
 
-        log.info("Retrieving Transactions");
-
         Map<Long, Mono<BudgetDto>> budgetMap = new ConcurrentHashMap<>();
         Map<Long, Mono<ShortAccountDto>> accountMap = new ConcurrentHashMap<>();
 
@@ -73,14 +71,11 @@ public class TransactionServiceImpl implements TransactionService {
 
     private Mono<ShortAccountDto> getAccount(
             ShortAccountDto account, Map<Long, Mono<ShortAccountDto>> accounts) {
-        log.info("Retrieving account");
-        Mono<ShortAccountDto> accountDto = accounts.computeIfAbsent(account.getId(), accountService::getAccountById);
-        log.info("Account retrieved");
-        return accountDto;
+
+        return accounts.computeIfAbsent(account.getId(), accountService::getAccountById);
     }
 
     private Mono<BudgetDto> getBudget(BudgetDto budgetDto, Map<Long, Mono<BudgetDto>> budgets) {
-        log.info("Retrieving Budget");
         if (budgetDto != null && budgetDto.getId() != null) {
             return budgets.computeIfAbsent(budgetDto.getId(), budgetService::getBudgetById);
         } else {
