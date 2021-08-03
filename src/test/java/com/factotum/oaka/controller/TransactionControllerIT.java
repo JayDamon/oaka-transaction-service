@@ -11,17 +11,20 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.LongStream;
 
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
 @IntegrationTest
+@WithMockUser
 class TransactionControllerIT {
 
     @Autowired
@@ -37,20 +40,24 @@ class TransactionControllerIT {
 
     @BeforeEach
     void setUp() {
-        when(accountService.getAccountById(anyLong())).thenAnswer(i ->
-                Mono.just(new ShortAccountDto(i.getArgument(0), "AccountName")));
+        List<ShortAccountDto> shortAccountDtos = LongStream.range(0, 40).mapToObj(l -> new ShortAccountDto(l, "AccountName)")).collect(Collectors.toList());
+        when(accountService.getAccounts()).thenReturn(Flux.fromIterable(shortAccountDtos));
 
-        when(budgetService.getBudgetById(anyLong())).thenAnswer(i -> {
+        List<BudgetDto> budgetDtos = LongStream.range(0, 40).mapToObj(l -> {
             BudgetDto budget = new BudgetDto();
-            budget.setId(i.getArgument(0));
+            budget.setId(l);
             budget.setName("TestName");
+            budget.setFrequencyTypeName("FrequencyType");
+            budget.setAmount(BigDecimal.valueOf(22.45));
+            budget.setInUse(false);
             BudgetCategoryDto budgetCategoryDto = new BudgetCategoryDto();
             budgetCategoryDto.setId(1);
             budgetCategoryDto.setName("BudgetCategoryName");
             budgetCategoryDto.setTypeName("Type");
             budget.setBudgetCategory(budgetCategoryDto);
-            return Mono.just(budget);
-        });
+            return budget;
+        }).collect(Collectors.toList());
+        when(budgetService.getBudgets()).thenReturn(Flux.fromIterable(budgetDtos));
     }
 
     @Test

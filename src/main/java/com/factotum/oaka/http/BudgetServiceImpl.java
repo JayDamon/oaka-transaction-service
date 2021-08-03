@@ -1,9 +1,10 @@
 package com.factotum.oaka.http;
 
 import com.factotum.oaka.dto.BudgetDto;
+import org.springframework.security.oauth2.client.web.reactive.function.client.ServerOAuth2AuthorizedClientExchangeFilterFunction;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Mono;
+import reactor.core.publisher.Flux;
 
 @Service
 public class BudgetServiceImpl implements BudgetService {
@@ -15,12 +16,16 @@ public class BudgetServiceImpl implements BudgetService {
     }
 
     @Override
-    public Mono<BudgetDto> getBudgetById(long id) {
+    public Flux<BudgetDto> getBudgets() {
         return webClientBuilder
                 .build()
                 .get()
-                .uri("lb://moneymaker-budget-service/v1/budgets/{id}", id)
+                .uri("lb://moneymaker-budget-service/v1/budgets")
+                .attributes(
+                        ServerOAuth2AuthorizedClientExchangeFilterFunction
+                                .clientRegistrationId("oaka-transaction-service")
+                )
                 .retrieve()
-                .bodyToMono(BudgetDto.class);
+                .bodyToFlux(BudgetDto.class);
     }
 }

@@ -23,3 +23,22 @@ server:
 ribbon:
   eureka:
     enabled: true
+
+---
+
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8081/auth/realms/moneymaker
+      client:
+        registration:
+          oaka-transaction-service:
+            provider: keycloak
+            client-id: oaka-transaction-service
+            client-secret: d8a5c291-ec05-47f5-819d-5d4eb48481c1
+            authorization-grant-type: client_credentials
+        provider:
+          keycloak:
+            issuer-uri: http://localhost:8081/auth/realms/moneymaker

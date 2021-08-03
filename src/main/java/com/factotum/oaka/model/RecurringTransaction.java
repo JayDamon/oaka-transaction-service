@@ -1,6 +1,10 @@
 package com.factotum.oaka.model;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
@@ -40,7 +44,9 @@ public class RecurringTransaction implements Serializable {
     @Column("frequency_type_id")
     private Integer frequencyType;
 
-    // This is the number of days, months or years between occurrences based on the FrequencyType
+    /**
+     * This is the number of days, months or years between occurrences based on the FrequencyType
+     */
     @Column("frequency")
     private Integer frequency;
 
