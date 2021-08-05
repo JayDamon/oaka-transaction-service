@@ -13,10 +13,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
-import static org.mockito.ArgumentMatchers.anyLong;
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.LongStream;
+
 import static org.mockito.Mockito.when;
 
 @IntegrationTest
@@ -33,20 +36,24 @@ class TransactionRetrievalServiceImplIT {
 
     @BeforeEach
     void setup() {
-        when(accountService.getAccountById(anyLong())).thenAnswer(i ->
-                Mono.just(new ShortAccountDto(i.getArgument(0), "AccountName")));
-        when(budgetService.getBudgetById(anyLong())).thenAnswer(i -> {
+        List<ShortAccountDto> shortAccountDtos = LongStream.range(0, 40).mapToObj(i -> new ShortAccountDto(i, "AccountName)")).collect(Collectors.toList());
+        when(accountService.getAccounts()).thenReturn(Flux.fromIterable(shortAccountDtos));
 
+        List<BudgetDto> budgetDtos = LongStream.range(0, 40).mapToObj(l -> {
             BudgetDto budget = new BudgetDto();
-            budget.setId(i.getArgument(0));
+            budget.setId(l);
             budget.setName("TestName");
+            budget.setFrequencyTypeName("FrequencyType");
+            budget.setAmount(BigDecimal.valueOf(22.45));
+            budget.setInUse(false);
             BudgetCategoryDto budgetCategoryDto = new BudgetCategoryDto();
             budgetCategoryDto.setId(1);
             budgetCategoryDto.setName("BudgetCategoryName");
             budgetCategoryDto.setTypeName("Type");
             budget.setBudgetCategory(budgetCategoryDto);
-            return Mono.just(budget);
-        });
+            return budget;
+        }).collect(Collectors.toList());
+        when(budgetService.getBudgets()).thenReturn(Flux.fromIterable(budgetDtos));
     }
 
     @Test

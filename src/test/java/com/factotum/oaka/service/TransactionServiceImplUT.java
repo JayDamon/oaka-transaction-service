@@ -1,9 +1,19 @@
 package com.factotum.oaka.service;
 
-import com.factotum.oaka.dto.*;
+import com.factotum.oaka.dto.BudgetCategoryDto;
+import com.factotum.oaka.dto.BudgetDto;
+import com.factotum.oaka.dto.BudgetSubCategoryDto;
+import com.factotum.oaka.dto.ShortAccountDto;
+import com.factotum.oaka.dto.TransactionCategoryDto;
+import com.factotum.oaka.dto.TransactionDto;
 import com.factotum.oaka.http.AccountService;
 import com.factotum.oaka.http.BudgetService;
-import com.factotum.oaka.model.*;
+import com.factotum.oaka.model.Occurrence;
+import com.factotum.oaka.model.RecurringTransaction;
+import com.factotum.oaka.model.Transaction;
+import com.factotum.oaka.model.TransactionCategory;
+import com.factotum.oaka.model.TransactionSubCategory;
+import com.factotum.oaka.model.TransactionType;
 import com.factotum.oaka.repository.TransactionRepository;
 import com.factotum.oaka.repository.TransactionSubCategoryRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,15 +23,15 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -41,7 +51,7 @@ class TransactionServiceImplUT {
     @BeforeEach
     void setUp() {
         transactionService = new TransactionServiceImpl(
-                transactionRepository, transactionSubCategoryRepository, accountService, budgetService);
+                transactionRepository, accountService, budgetService);
     }
 
     @Test
@@ -74,7 +84,7 @@ class TransactionServiceImplUT {
         transactionDto.setTransactionCategory(transactionCategoryDto);
         when(transactionRepository.findAllByOrderByDateDesc()).thenReturn(Flux.just(transactionDto));
 
-        when(accountService.getAccountById(eq(accountDto.getId()))).thenReturn(Mono.just(accountDto));
+        when(accountService.getAccounts()).thenReturn(Flux.just(accountDto));
 
         BudgetCategoryDto budgetCategory = new BudgetCategoryDto();
         budgetCategory.setId(6);
@@ -84,7 +94,7 @@ class TransactionServiceImplUT {
         budget.setId(8L);
         budget.setName("BudgetItemNameOne");
         budget.setBudgetCategory(budgetCategory);
-        when(budgetService.getBudgetById(anyLong())).thenReturn(Mono.just(budget));
+        when(budgetService.getBudgets()).thenReturn(Flux.just(budget));
 
         // Act
         TransactionDto dto = transactionService.getAllTransactionDtos().blockFirst();
