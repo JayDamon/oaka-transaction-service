@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+# [1.4.0](https://github.com/JayDamon/oaka-transaction-service/compare/v1.3.2...v1.4.0) (2021-08-05)
+
+
+### Features
+
+* **security:** Integrate local with oauth2/keycloak ([4b033ba](https://github.com/JayDamon/oaka-transaction-service/commit/4b033bae4f9c8596dafc3be98565c77ff680af40))
+
 ## [1.3.2](https://github.com/JayDamon/oaka-transaction-service/compare/v1.3.1...v1.3.2) (2021-07-27)
 
 
