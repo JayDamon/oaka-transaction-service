@@ -1,5 +1,17 @@
 # Semantic Versioning Changelog
 
+# [1.5.0](https://github.com/JayDamon/oaka-transaction-service/compare/v1.4.0...v1.5.0) (2021-08-06)
+
+
+### Bug Fixes
+
+* **ci:** Fix main branch only exclusion ([393f4f9](https://github.com/JayDamon/oaka-transaction-service/commit/393f4f9b3087bc401d4e59053a8bf70deb62bb17))
+
+
+### Features
+
+* **ci:** limit to only main branch for circle CI ([4c6867a](https://github.com/JayDamon/oaka-transaction-service/commit/4c6867a6825fb04e6321f4d28be7d7410a986fc4))
+
 # [1.4.0](https://github.com/JayDamon/oaka-transaction-service/compare/v1.3.2...v1.4.0) (2021-08-05)
 
 
