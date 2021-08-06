@@ -14,7 +14,7 @@
     <groupId>com.factotum</groupId>
     <artifactId>oaka</artifactId>
     <version>1.4.0</version>
-    <name>oaka</name>
+    <name>oaka-transaction-service</name>
     <description>Oaka XIII is a traveling merchant who sells items and equipment to the player. He
         is Yunas devout supporter.
     </description>
