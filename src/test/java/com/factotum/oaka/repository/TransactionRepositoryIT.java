@@ -35,7 +35,8 @@ class TransactionRepositoryIT {
                         1,
                         2017,
                         new HashSet<>(Arrays.asList(10L, 11L, 12L, 13L, 14L, 15L, 26L, 16L, 17L, 18L, 27L, 19L, 28L, 29L, 30L)),
-                        2
+                        2,
+                        "684996db-6cf8-4976-8336-6e664386dcda"
                 )
                 .block();
         assertThat(summary, is(not(nullValue())));

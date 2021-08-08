@@ -11,6 +11,7 @@ import org.springframework.core.convert.converter.Converter;
 import org.springframework.data.convert.ReadingConverter;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Slf4j
@@ -44,7 +45,7 @@ public class TransactionDtoConverter implements Converter<Row, TransactionDto> {
                 source.get("transaction_id", Long.class),
                 source.get("amount", BigDecimal.class),
                 source.get("description", String.class),
-                source.get("transaction_date", LocalDateTime.class),
+                source.get("transaction_date", LocalDate.class),
                 account,
                 budget,
                 transactionCategory

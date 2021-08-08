@@ -11,6 +11,7 @@ import org.springframework.data.relational.core.mapping.Table;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
@@ -44,11 +45,14 @@ public class Transaction implements Serializable {
     private Long recurringTransaction;
 
     @Column("transaction_date")
-    private LocalDateTime date;
+    private LocalDate date;
 
     @Column("description")
     private String description;
 
     @Column("amount")
     private BigDecimal amount;
+
+    @Column("tenant_id")
+    private String tenantId;
 }

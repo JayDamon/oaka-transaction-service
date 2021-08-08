@@ -26,32 +26,8 @@ public class WebClientConfig {
     }
 
     @Bean
-    WebClient webClient(ReactiveOAuth2AuthorizedClientManager auth2AuthorizedClientManager) {
-        ServerOAuth2AuthorizedClientExchangeFilterFunction oath =
-                new ServerOAuth2AuthorizedClientExchangeFilterFunction(auth2AuthorizedClientManager);
-        return builder()
-                .filter(oath)
-                .build();
-    }
-
-    @Bean
-    ReactiveOAuth2AuthorizedClientManager authorizedClientManager(
-            ReactiveClientRegistrationRepository clientRegistrationRepository,
-            ServerOAuth2AuthorizedClientRepository authorizedClientRepository) {
-
-        ReactiveOAuth2AuthorizedClientProvider authorizedClientProvider =
-                ReactiveOAuth2AuthorizedClientProviderBuilder.builder()
-                        .clientCredentials()
-                        .build();
-
-        DefaultReactiveOAuth2AuthorizedClientManager auth2AuthorizedClientManager =
-                new DefaultReactiveOAuth2AuthorizedClientManager(
-                        clientRegistrationRepository,
-                        authorizedClientRepository);
-
-        auth2AuthorizedClientManager.setAuthorizedClientProvider(authorizedClientProvider);
-
-        return auth2AuthorizedClientManager;
+    WebClient webClient() {
+        return builder().build();
     }
 
 }

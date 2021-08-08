@@ -3,13 +3,33 @@ spring:
     discovery:
       enabled: true
   r2dbc:
-    url: r2dbc:pool:mysql://172.16.0.7:3306/mm_transaction_dev
-    username: app_user
-    password: 6NSMqvSszpKq42Jf
+    url: r2dbc:pool:mysql://localhost:3306/transaction
+    username: keycloak
+    password: password
   flyway:
-    url: jdbc:mysql://172.16.0.7:3306/mm_transaction_dev
+    url: jdbc:mysql://localhost:3306/transaction
     user: ${spring.r2dbc.username}
     password: ${spring.r2dbc.password}
-    baseline-on-migrate: true
 server:
   port: 8082
+
+
+---
+
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8081/auth/realms/moneymaker
+      client:
+        registration:
+          oaka-transaction-service:
+            provider: keycloak
+            client-id: oaka-transaction-service
+            client-secret: d8a5c291-ec05-47f5-819d-5d4eb48481c1
+            authorization-grant-type: client_credentials
+        provider:
+          keycloak:
+            issuer-uri: http://localhost:8081/auth/realms/moneymaker
+

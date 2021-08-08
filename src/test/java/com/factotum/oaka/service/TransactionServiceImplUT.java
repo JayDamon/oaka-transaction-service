@@ -15,7 +15,7 @@ import com.factotum.oaka.model.TransactionCategory;
 import com.factotum.oaka.model.TransactionSubCategory;
 import com.factotum.oaka.model.TransactionType;
 import com.factotum.oaka.repository.TransactionRepository;
-import com.factotum.oaka.repository.TransactionSubCategoryRepository;
+import com.factotum.oaka.util.SecurityTestUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,6 +25,7 @@ import org.modelmapper.ModelMapper;
 import reactor.core.publisher.Flux;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -32,6 +33,8 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -39,10 +42,10 @@ class TransactionServiceImplUT {
 
     @Mock
     private TransactionRepository transactionRepository;
-    @Mock
-    private TransactionSubCategoryRepository transactionSubCategoryRepository;
+
     @Mock
     private AccountService accountService;
+
     @Mock
     private BudgetService budgetService;
 
@@ -58,6 +61,8 @@ class TransactionServiceImplUT {
     void getAllTransactionDtos_GivenCompleteTransactionsFound_ThenMapCompleteDto() {
 
         // Arrange
+        String tenantId = "test_tenant_id";
+
         TransactionType transactionType = new TransactionType(9, "TransactionTypeOne");
 
         TransactionSubCategory transactionSubCategory = new TransactionSubCategory(10L, "BudgetSubCategoryOne");
@@ -68,12 +73,12 @@ class TransactionServiceImplUT {
         RecurringTransaction recurringTransaction = new RecurringTransaction(
                 13L, "RecurringTransactionName", 3L, 10, transactionCategory.getId(),
                 7, 2, occurrence.getId(), transactionType.getId(), LocalDateTime.now(),
-                LocalDateTime.now().plusHours(25), BigDecimal.valueOf(34.66));
+                LocalDateTime.now().plusHours(25), BigDecimal.valueOf(34.66), tenantId);
         ShortAccountDto accountDto = new ShortAccountDto(3L, "Account 1");
 
         Transaction transaction = new Transaction(14L, accountDto.getId(), 8L, transactionCategory.getId(),
-                transactionType.getId(), recurringTransaction.getId(), LocalDateTime.now(),
-                "TransactionDescriptionOne", BigDecimal.valueOf(44.78));
+                transactionType.getId(), recurringTransaction.getId(), LocalDate.now(),
+                "TransactionDescriptionOne", BigDecimal.valueOf(44.78), tenantId);
 
         ModelMapper mapper = new ModelMapper();
 
@@ -82,9 +87,9 @@ class TransactionServiceImplUT {
         BudgetSubCategoryDto budgetSubCategoryDto = mapper.map(transactionSubCategory, BudgetSubCategoryDto.class);
         transactionCategoryDto.setBudgetSubCategory(budgetSubCategoryDto);
         transactionDto.setTransactionCategory(transactionCategoryDto);
-        when(transactionRepository.findAllByOrderByDateDesc()).thenReturn(Flux.just(transactionDto));
+        when(transactionRepository.findAllByOrderByDateDesc(eq(tenantId))).thenReturn(Flux.just(transactionDto));
 
-        when(accountService.getAccounts()).thenReturn(Flux.just(accountDto));
+        when(accountService.getAccounts(any())).thenReturn(Flux.just(accountDto));
 
         BudgetCategoryDto budgetCategory = new BudgetCategoryDto();
         budgetCategory.setId(6);
@@ -94,10 +99,10 @@ class TransactionServiceImplUT {
         budget.setId(8L);
         budget.setName("BudgetItemNameOne");
         budget.setBudgetCategory(budgetCategory);
-        when(budgetService.getBudgets()).thenReturn(Flux.just(budget));
+        when(budgetService.getBudgets(any())).thenReturn(Flux.just(budget));
 
         // Act
-        TransactionDto dto = transactionService.getAllTransactionDtos().blockFirst();
+        TransactionDto dto = transactionService.getAllTransactionDtos(SecurityTestUtil.getTestJwt(tenantId)).blockFirst();
 
         // Assert
         assertThat(dto, is(not(nullValue())));

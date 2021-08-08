@@ -65,4 +65,7 @@ public class RecurringTransaction implements Serializable {
     @Column("amount")
     private BigDecimal amount;
 
+    @Column("tenant_id")
+    private String tenantId;
+
 }

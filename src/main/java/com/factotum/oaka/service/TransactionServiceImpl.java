@@ -5,9 +5,9 @@ import com.factotum.oaka.dto.ShortAccountDto;
 import com.factotum.oaka.dto.TransactionDto;
 import com.factotum.oaka.http.AccountService;
 import com.factotum.oaka.http.BudgetService;
-import com.factotum.oaka.model.Transaction;
 import com.factotum.oaka.repository.TransactionRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Flux;
@@ -32,17 +32,13 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public Flux<Transaction> getAllTransactions() {
-        return transactionRepository.findAll();
-    }
-
-    @Override
     @Transactional
-    public Flux<TransactionDto> getAllTransactionDtos() {
+    public Flux<TransactionDto> getAllTransactionDtos(Jwt jwt) {
 
-        Flux<ShortAccountDto> accounts = accountService.getAccounts();
-        Flux<BudgetDto> budgetDtoFlux = budgetService.getBudgets();
-        Flux<TransactionDto> transactions = transactionRepository.findAllByOrderByDateDesc();
+        Flux<ShortAccountDto> accounts = accountService.getAccounts(jwt);
+        Flux<BudgetDto> budgetDtoFlux = budgetService.getBudgets(jwt);
+
+        Flux<TransactionDto> transactions = transactionRepository.findAllByOrderByDateDesc(jwt.getClaimAsString("sub"));
 
         Flux<TransactionDto> withAccounts = accounts.collectMap(ShortAccountDto::getId, a -> a)
                 .flatMapMany(accountDtos -> transactions.handle((t, sink) -> {
@@ -53,7 +49,8 @@ public class TransactionServiceImpl implements TransactionService {
                         sink.next(t);
                     }
                 }));
-        Flux<TransactionDto> withBudgets = budgetDtoFlux.collectMap(BudgetDto::getId, b -> b)
+
+        return budgetDtoFlux.collectMap(BudgetDto::getId, b -> b)
                 .flatMapMany(budgetDtos -> withAccounts.handle((t, sink) -> {
                     BudgetDto originalBudgetDto = t.getBudget();
                     if (originalBudgetDto != null && originalBudgetDto.getId() != null) {
@@ -67,7 +64,6 @@ public class TransactionServiceImpl implements TransactionService {
                     }
                     sink.next(t);
                 }));
-        return withBudgets.sort(Comparator.comparing(TransactionDto::getDate).reversed());
     }
 
 }

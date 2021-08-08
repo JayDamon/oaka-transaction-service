@@ -2,7 +2,8 @@ package com.factotum.oaka.http;
 
 import com.factotum.oaka.dto.ShortAccountDto;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.oauth2.client.web.reactive.function.client.ServerOAuth2AuthorizedClientExchangeFilterFunction;
+import org.springframework.http.HttpHeaders;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
@@ -18,14 +19,12 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public Flux<ShortAccountDto> getAccounts() {
+    public Flux<ShortAccountDto> getAccounts(Jwt jwt) {
+
         return webClient
                 .get()
                 .uri("lb://moneymaker-account-service/v1/accounts")
-                .attributes(
-                        ServerOAuth2AuthorizedClientExchangeFilterFunction
-                                .clientRegistrationId("oaka-transaction-service")
-                )
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwt.getTokenValue())
                 .retrieve().bodyToFlux(ShortAccountDto.class);
     }
 

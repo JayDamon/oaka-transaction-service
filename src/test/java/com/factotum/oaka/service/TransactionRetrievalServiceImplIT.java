@@ -8,18 +8,24 @@ import com.factotum.oaka.dto.TransactionDto;
 import com.factotum.oaka.http.AccountService;
 import com.factotum.oaka.http.BudgetService;
 import com.factotum.oaka.model.Transaction;
+import com.factotum.oaka.util.SecurityTestUtil;
+import org.apache.commons.collections4.map.HashedMap;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.oauth2.jwt.Jwt;
 import reactor.core.publisher.Flux;
 import reactor.test.StepVerifier;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.LongStream;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @IntegrationTest
@@ -37,7 +43,7 @@ class TransactionRetrievalServiceImplIT {
     @BeforeEach
     void setup() {
         List<ShortAccountDto> shortAccountDtos = LongStream.range(0, 40).mapToObj(i -> new ShortAccountDto(i, "AccountName)")).collect(Collectors.toList());
-        when(accountService.getAccounts()).thenReturn(Flux.fromIterable(shortAccountDtos));
+        when(accountService.getAccounts(any())).thenReturn(Flux.fromIterable(shortAccountDtos));
 
         List<BudgetDto> budgetDtos = LongStream.range(0, 40).mapToObj(l -> {
             BudgetDto budget = new BudgetDto();
@@ -53,22 +59,15 @@ class TransactionRetrievalServiceImplIT {
             budget.setBudgetCategory(budgetCategoryDto);
             return budget;
         }).collect(Collectors.toList());
-        when(budgetService.getBudgets()).thenReturn(Flux.fromIterable(budgetDtos));
-    }
-
-    @Test
-    void getAllTransactions_ReturnsTestTransactions() {
-
-        Flux<Transaction> transactions = transactionService.getAllTransactions();
-        StepVerifier.create(transactions.log()).expectNextCount(891).verifyComplete();
-
+        when(budgetService.getBudgets(any())).thenReturn(Flux.fromIterable(budgetDtos));
     }
 
     @Test
     void getAllTransactionDtos_ReturnsTestTransactionsAsDtos() {
 
-        Flux<TransactionDto> transactionDtos = transactionService.getAllTransactionDtos();
+        Flux<TransactionDto> transactionDtos = transactionService.getAllTransactionDtos(SecurityTestUtil.getTestJwt());
         StepVerifier.create(transactionDtos.log()).expectNextCount(891).verifyComplete();
 
     }
+
 }

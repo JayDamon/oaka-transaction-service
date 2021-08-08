@@ -7,6 +7,7 @@ import com.factotum.oaka.dto.ShortAccountDto;
 import com.factotum.oaka.dto.TransactionDto;
 import com.factotum.oaka.http.AccountService;
 import com.factotum.oaka.http.BudgetService;
+import com.factotum.oaka.util.SecurityTestUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,7 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @IntegrationTest
@@ -42,7 +44,7 @@ class TransactionServiceImplT {
     void setup() {
 
         List<ShortAccountDto> shortAccountDtos = LongStream.range(0, 40).mapToObj(l -> new ShortAccountDto(l, "AccountName)")).collect(Collectors.toList());
-        when(accountService.getAccounts()).thenReturn(Flux.fromIterable(shortAccountDtos));
+        when(accountService.getAccounts(any())).thenReturn(Flux.fromIterable(shortAccountDtos));
 
         List<BudgetDto> budgetDtos = LongStream.range(0, 40).mapToObj(l -> {
             BudgetDto budget = new BudgetDto();
@@ -58,13 +60,13 @@ class TransactionServiceImplT {
             budget.setBudgetCategory(budgetCategoryDto);
             return budget;
         }).collect(Collectors.toList());
-        when(budgetService.getBudgets()).thenReturn(Flux.fromIterable(budgetDtos));
+        when(budgetService.getBudgets(any())).thenReturn(Flux.fromIterable(budgetDtos));
     }
 
     @Test
     void getAllTransactionDtos() {
 
-        Flux<TransactionDto> transactions = transactionService.getAllTransactionDtos();
+        Flux<TransactionDto> transactions = transactionService.getAllTransactionDtos(SecurityTestUtil.getTestJwt());
 
         List<TransactionDto> dtos = transactions.collectList().block();
 

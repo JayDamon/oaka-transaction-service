@@ -7,24 +7,41 @@ import com.factotum.oaka.dto.ShortAccountDto;
 import com.factotum.oaka.dto.TransactionDto;
 import com.factotum.oaka.http.AccountService;
 import com.factotum.oaka.http.BudgetService;
+import com.factotum.oaka.util.SecurityTestUtil;
+import org.apache.commons.collections4.map.HashedMap;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.authentication.TestingAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.ReactiveSecurityContextHolder;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextImpl;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
+import org.springframework.security.test.context.TestSecurityContextHolder;
+import org.springframework.security.test.context.support.ReactorContextTestExecutionListener;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.math.BigDecimal;
+import java.time.Instant;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.LongStream;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.reactive.server.SecurityMockServerConfigurers.mockJwt;
 
 @IntegrationTest
-@WithMockUser
 class TransactionControllerIT {
 
     @Autowired
@@ -40,8 +57,9 @@ class TransactionControllerIT {
 
     @BeforeEach
     void setUp() {
+
         List<ShortAccountDto> shortAccountDtos = LongStream.range(0, 40).mapToObj(l -> new ShortAccountDto(l, "AccountName)")).collect(Collectors.toList());
-        when(accountService.getAccounts()).thenReturn(Flux.fromIterable(shortAccountDtos));
+        when(accountService.getAccounts(any())).thenReturn(Flux.fromIterable(shortAccountDtos));
 
         List<BudgetDto> budgetDtos = LongStream.range(0, 40).mapToObj(l -> {
             BudgetDto budget = new BudgetDto();
@@ -57,24 +75,22 @@ class TransactionControllerIT {
             budget.setBudgetCategory(budgetCategoryDto);
             return budget;
         }).collect(Collectors.toList());
-        when(budgetService.getBudgets()).thenReturn(Flux.fromIterable(budgetDtos));
+        when(budgetService.getBudgets(any())).thenReturn(Flux.fromIterable(budgetDtos));
     }
 
     @Test
-    void getAllTransactions() {
-
-        webTestClient.get().uri(URI)
+    void getAllTransactions_GivenTransactionsExist_ThenReturnTransactions() {
+        webTestClient
+                .mutateWith(mockJwt().jwt(SecurityTestUtil.getTestJwt()))
+                .get()
+                .uri(URI)
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()
-                .consumeWith(System.out::println)
                 .jsonPath("$[0].id").exists()
                 .jsonPath("$[0].amount").exists()
                 .jsonPath("$[0].description").exists()
                 .jsonPath("$[0].date").exists()
-                .jsonPath("$[0].category").exists()
-                .jsonPath("$[0].category.id").exists()
-                .jsonPath("$[0].category.name").exists()
                 .jsonPath("$[0].account").exists()
                 .jsonPath("$[0].account.id").exists()
                 .jsonPath("$[0].account.name").exists()
@@ -88,6 +104,7 @@ class TransactionControllerIT {
     }
 
     @Test
+    @WithMockUser
     void createNewTransactions_GivenSingleTransactionProvided_ThenCreateTransaction() {
 
         ShortAccountDto shortAccountDto = new ShortAccountDto();
@@ -96,7 +113,7 @@ class TransactionControllerIT {
         BudgetDto budgetDto = new BudgetDto();
         budgetDto.setId(5L);
 
-        LocalDateTime tnDate = LocalDateTime.of(2021, 2, 3, 1, 1);
+        LocalDate tnDate = LocalDate.of(2021, 2, 3);
 
         TransactionDto tn = new TransactionDto();
         tn.setAccount(shortAccountDto);
@@ -106,6 +123,7 @@ class TransactionControllerIT {
         tn.setAmount(BigDecimal.valueOf(22.3));
 
         webTestClient
+                .mutateWith(mockJwt().jwt(SecurityTestUtil.getTestJwt()))
                 .post()
                 .uri(URI)
                 .body(Flux.just(tn), TransactionDto.class)
@@ -122,6 +140,7 @@ class TransactionControllerIT {
     }
 
     @Test
+    @WithMockUser
     void getTransactionCategories_GivenCategoriesExist_ThenReturnAllCategories() {
 
         webTestClient.get().uri(URI + "/categories")
@@ -138,9 +157,11 @@ class TransactionControllerIT {
     }
 
     @Test
+    @WithMockUser
     void getTransactionTotal_GiveTransactionsExistForBudgets_ThenReturnTotalAmount() {
 
         webTestClient
+                .mutateWith(mockJwt().jwt(SecurityTestUtil.getTestJwt()))
                 .get()
                 .uri(uriBuilder ->
                         uriBuilder.path(URI + "/total")
@@ -159,9 +180,11 @@ class TransactionControllerIT {
     }
 
     @Test
+    @WithMockUser
     void getTransactionTotal_GiveTransactionsExistForBudgetsTwenty_ThenReturnTotalAmount() {
 
         webTestClient
+                .mutateWith(mockJwt().jwt(SecurityTestUtil.getTestJwt()))
                 .get()
                 .uri(uriBuilder ->
                         uriBuilder.path(URI + "/total")
@@ -179,10 +202,12 @@ class TransactionControllerIT {
     }
 
     @Test
+    @WithMockUser
     void getTransactionTotal_GiveTransactionsExistForBudgetsThree_ThenReturnTotalAmount() {
 
-        webTestClient.
-                get()
+        webTestClient
+                .mutateWith(mockJwt().jwt(SecurityTestUtil.getTestJwt()))
+                .get()
                 .uri(uriBuilder ->
                         uriBuilder.path(URI + "/total")
                                 .queryParam("year", "2017")
@@ -199,9 +224,11 @@ class TransactionControllerIT {
     }
 
     @Test
+    @WithMockUser
     void getTransactionTotal_GiveNoTransactionsExist_ThenReturnTotalAmount() {
 
         webTestClient
+                .mutateWith(mockJwt().jwt(SecurityTestUtil.getTestJwt()))
                 .get()
                 .uri(uriBuilder ->
                         uriBuilder.path(URI + "/total")
@@ -219,9 +246,11 @@ class TransactionControllerIT {
     }
 
     @Test
+    @WithMockUser
     void getTransactionTotal_GiveTransactionsExistForBudgetsSix_ThenReturnTotalAmount() {
 
         webTestClient
+                .mutateWith(mockJwt().jwt(SecurityTestUtil.getTestJwt()))
                 .get()
                 .uri(uriBuilder -> uriBuilder.path(URI + "/total")
                         .queryParam("year", "2017")

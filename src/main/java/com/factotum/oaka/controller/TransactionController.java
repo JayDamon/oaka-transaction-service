@@ -11,6 +11,7 @@ import com.factotum.oaka.service.TransactionService;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,6 +24,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.math.BigDecimal;
+import java.security.Principal;
 import java.util.Set;
 
 @Slf4j
@@ -48,8 +50,8 @@ public class TransactionController {
     }
 
     @GetMapping("")
-    public Flux<TransactionDto> getAllTransactions() {
-        return transactionService.getAllTransactionDtos();
+    public Flux<TransactionDto> getAllTransactions(JwtAuthenticationToken jwt) {
+        return transactionService.getAllTransactionDtos(jwt.getToken());
     }
 
     @PostMapping("")
@@ -68,12 +70,13 @@ public class TransactionController {
 
     @GetMapping("/total")
     public Mono<TransactionTypeTotal> getTransactionTotal(
+            JwtAuthenticationToken jwt,
             @RequestParam(name = "year") int year,
             @RequestParam(name = "month") int month,
             @RequestParam(name = "transactionTypeId") int transactionTypeId,
             @RequestParam(name = "budgetIds") Set<Long> budgetIds) {
 
-        return this.transactionRepository.getBudgetSummaries(month, year, budgetIds, transactionTypeId)
+        return this.transactionRepository.getBudgetSummaries(month, year, budgetIds, transactionTypeId, jwt.getToken().getClaimAsString("sub"))
                 .map(sum -> new TransactionTypeTotal(sum.getTransactionType(), sum.getActual()))
                 .switchIfEmpty(
                         this.transactionTypeRepository.findById(transactionTypeId)
