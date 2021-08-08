@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+# [1.6.0](https://github.com/JayDamon/oaka-transaction-service/compare/v1.5.0...v1.6.0) (2021-08-08)
+
+
+### Features
+
+* **security:** Add discriminator based multi tenancy ([a771443](https://github.com/JayDamon/oaka-transaction-service/commit/a7714438500c255bc5e39e9d305b214f4bd88461))
+
 # [1.5.0](https://github.com/JayDamon/oaka-transaction-service/compare/v1.4.0...v1.5.0) (2021-08-06)
 
 
