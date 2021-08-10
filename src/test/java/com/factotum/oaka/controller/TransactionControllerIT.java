@@ -141,6 +141,113 @@ class TransactionControllerIT {
 
     @Test
     @WithMockUser
+    void createNewTransactions_GivenTransactionIsMissingAccountId_ThenReturnBadRequest() {
+
+        BudgetDto budgetDto = new BudgetDto();
+        budgetDto.setId(5L);
+
+        LocalDate tnDate = LocalDate.of(2021, 2, 3);
+
+        TransactionDto tn = new TransactionDto();
+        tn.setBudget(budgetDto);
+        tn.setDate(tnDate);
+        tn.setDescription("Transaction Description");
+        tn.setAmount(BigDecimal.valueOf(22.3));
+
+        webTestClient
+                .mutateWith(mockJwt().jwt(SecurityTestUtil.getTestJwt()))
+                .post()
+                .uri(URI)
+                .body(Flux.just(tn), TransactionDto.class)
+                .exchange()
+                .expectStatus().isBadRequest();
+
+    }
+
+    @Test
+    @WithMockUser
+    void createNewTransactions_GivenAmountIsNotProvide_ThenReturnBadRequest() {
+
+        ShortAccountDto shortAccountDto = new ShortAccountDto();
+        shortAccountDto.setId(3L);
+
+        BudgetDto budgetDto = new BudgetDto();
+        budgetDto.setId(5L);
+
+        LocalDate tnDate = LocalDate.of(2021, 2, 3);
+
+        TransactionDto tn = new TransactionDto();
+        tn.setAccount(shortAccountDto);
+        tn.setBudget(budgetDto);
+        tn.setDate(tnDate);
+        tn.setDescription("Transaction Description");
+
+        webTestClient
+                .mutateWith(mockJwt().jwt(SecurityTestUtil.getTestJwt()))
+                .post()
+                .uri(URI)
+                .body(Flux.just(tn), TransactionDto.class)
+                .exchange()
+                .expectStatus().isBadRequest();
+
+    }
+
+    @Test
+    @WithMockUser
+    void createNewTransactions_GivenDescriptionIsNotProvided_ThenReturnBadRequest() {
+
+        ShortAccountDto shortAccountDto = new ShortAccountDto();
+        shortAccountDto.setId(3L);
+
+        BudgetDto budgetDto = new BudgetDto();
+        budgetDto.setId(5L);
+
+        LocalDate tnDate = LocalDate.of(2021, 2, 3);
+
+        TransactionDto tn = new TransactionDto();
+        tn.setAccount(shortAccountDto);
+        tn.setBudget(budgetDto);
+        tn.setDate(tnDate);
+        tn.setAmount(BigDecimal.valueOf(22.3));
+
+        webTestClient
+                .mutateWith(mockJwt().jwt(SecurityTestUtil.getTestJwt()))
+                .post()
+                .uri(URI)
+                .body(Flux.just(tn), TransactionDto.class)
+                .exchange()
+                .expectStatus().isBadRequest();
+
+    }
+
+    @Test
+    @WithMockUser
+    void createNewTransactions_GivenDatenIsNotProvided_ThenReturnBadRequest() {
+
+        ShortAccountDto shortAccountDto = new ShortAccountDto();
+        shortAccountDto.setId(3L);
+
+        BudgetDto budgetDto = new BudgetDto();
+        budgetDto.setId(5L);
+
+        TransactionDto tn = new TransactionDto();
+        tn.setAccount(shortAccountDto);
+        tn.setBudget(budgetDto);
+        tn.setDescription("A Description");
+        tn.setAmount(BigDecimal.valueOf(22.3));
+
+        webTestClient
+                .mutateWith(mockJwt().jwt(SecurityTestUtil.getTestJwt()))
+                .post()
+                .uri(URI)
+                .body(Flux.just(tn), TransactionDto.class)
+                .exchange()
+                .expectStatus().isBadRequest();
+
+    }
+
+    @Test
+    @WithMockUser
     void getTransactionCategories_GivenCategoriesExist_ThenReturnAllCategories() {
 
         webTestClient.get().uri(URI + "/categories")

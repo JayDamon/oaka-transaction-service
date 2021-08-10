@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.security.Principal;
 import java.util.Set;
@@ -56,7 +57,7 @@ public class TransactionController {
 
     @PostMapping("")
     @ResponseStatus(HttpStatus.CREATED)
-    Flux<TransactionDto> createTransactions(@RequestBody Flux<TransactionDto> transactions) {
+    Flux<TransactionDto> createTransactions(@Valid @RequestBody Flux<TransactionDto> transactions) {
         return transactions
                 .map(t -> new ModelMapper().map(t, Transaction.class))
                 .flatMap(transactionRepository::save)

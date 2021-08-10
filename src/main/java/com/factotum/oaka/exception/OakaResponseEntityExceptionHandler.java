@@ -9,6 +9,7 @@ import org.springframework.core.io.buffer.DataBufferFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.lang.NonNull;
+import org.springframework.web.bind.support.WebExchangeBindException;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
@@ -28,7 +29,8 @@ public class OakaResponseEntityExceptionHandler implements ErrorWebExceptionHand
         DataBufferFactory bufferFactory = serverWebExchange.getResponse().bufferFactory();
 
         if (throwable instanceof ConstraintViolationException
-                || throwable instanceof IllegalArgumentException) {
+                || throwable instanceof IllegalArgumentException
+                || throwable instanceof WebExchangeBindException) {
 
             serverWebExchange.getResponse().setStatusCode(HttpStatus.BAD_REQUEST);
             DataBuffer dataBuffer = bufferFactory.wrap(throwable.getMessage().getBytes());
