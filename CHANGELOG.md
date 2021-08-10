@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [1.6.1](https://github.com/JayDamon/oaka-transaction-service/compare/v1.6.0...v1.6.1) (2021-08-10)
+
+
+### Bug Fixes
+
+* **transaction:** Return bad request when transaction info missing ([77dea93](https://github.com/JayDamon/oaka-transaction-service/commit/77dea9369168d1e08866f7d051f38dd8c607d5ba)), closes [#32](https://github.com/JayDamon/oaka-transaction-service/issues/32)
+
 # [1.6.0](https://github.com/JayDamon/oaka-transaction-service/compare/v1.5.0...v1.6.0) (2021-08-08)
 
 
