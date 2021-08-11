@@ -8,32 +8,17 @@ import com.factotum.oaka.dto.TransactionDto;
 import com.factotum.oaka.http.AccountService;
 import com.factotum.oaka.http.BudgetService;
 import com.factotum.oaka.util.SecurityTestUtil;
-import org.apache.commons.collections4.map.HashedMap;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.security.authentication.TestingAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.ReactiveSecurityContextHolder;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextImpl;
-import org.springframework.security.oauth2.jwt.Jwt;
-import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
-import org.springframework.security.test.context.TestSecurityContextHolder;
-import org.springframework.security.test.context.support.ReactorContextTestExecutionListener;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 
 import java.math.BigDecimal;
-import java.time.Instant;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.LongStream;
 
@@ -78,6 +63,7 @@ class TransactionControllerIT {
         when(budgetService.getBudgets(any())).thenReturn(Flux.fromIterable(budgetDtos));
     }
 
+    // getAllTransactions
     @Test
     void getAllTransactions_GivenTransactionsExist_ThenReturnTransactions() {
         webTestClient
@@ -103,6 +89,7 @@ class TransactionControllerIT {
                 .jsonPath("$[0].budget.budgetCategory.name").exists();
     }
 
+    // createNewTransactions
     @Test
     @WithMockUser
     void createNewTransactions_GivenSingleTransactionProvided_ThenCreateTransaction() {
@@ -166,7 +153,7 @@ class TransactionControllerIT {
 
     @Test
     @WithMockUser
-    void createNewTransactions_GivenAmountIsNotProvide_ThenReturnBadRequest() {
+    void createNewTransactions_GivenAmountIsNotProvided_ThenReturnBadRequest() {
 
         ShortAccountDto shortAccountDto = new ShortAccountDto();
         shortAccountDto.setId(3L);
@@ -222,7 +209,7 @@ class TransactionControllerIT {
 
     @Test
     @WithMockUser
-    void createNewTransactions_GivenDatenIsNotProvided_ThenReturnBadRequest() {
+    void createNewTransactions_GivenDateIsNotProvided_ThenReturnBadRequest() {
 
         ShortAccountDto shortAccountDto = new ShortAccountDto();
         shortAccountDto.setId(3L);
@@ -246,6 +233,7 @@ class TransactionControllerIT {
 
     }
 
+    // getTransactionCategories
     @Test
     @WithMockUser
     void getTransactionCategories_GivenCategoriesExist_ThenReturnAllCategories() {
