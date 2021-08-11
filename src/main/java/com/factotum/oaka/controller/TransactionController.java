@@ -3,6 +3,7 @@ package com.factotum.oaka.controller;
 import com.factotum.oaka.dto.TransactionCategoryDto;
 import com.factotum.oaka.dto.TransactionDto;
 import com.factotum.oaka.dto.TransactionTypeTotal;
+import com.factotum.oaka.enumeration.BudgetType;
 import com.factotum.oaka.model.Transaction;
 import com.factotum.oaka.repository.TransactionCategoryRepository;
 import com.factotum.oaka.repository.TransactionRepository;
@@ -25,7 +26,6 @@ import reactor.core.publisher.Mono;
 
 import javax.validation.Valid;
 import java.math.BigDecimal;
-import java.security.Principal;
 import java.util.Set;
 
 @Slf4j
@@ -74,14 +74,19 @@ public class TransactionController {
             JwtAuthenticationToken jwt,
             @RequestParam(name = "year") int year,
             @RequestParam(name = "month") int month,
-            @RequestParam(name = "transactionTypeId") int transactionTypeId,
+            @RequestParam(name = "budgetType") BudgetType budgetType,
             @RequestParam(name = "budgetIds") Set<Long> budgetIds) {
 
-        return this.transactionRepository.getBudgetSummaries(month, year, budgetIds, transactionTypeId, jwt.getToken().getClaimAsString("sub"))
-                .map(sum -> new TransactionTypeTotal(sum.getTransactionType(), sum.getActual()))
-                .switchIfEmpty(
-                        this.transactionTypeRepository.findById(transactionTypeId)
-                                .map(tt -> new TransactionTypeTotal(tt.getTransactionTypeName(), BigDecimal.ZERO))
-                                .switchIfEmpty(Mono.empty().ofType(TransactionTypeTotal.class)));
+        if (BudgetType.INCOME.equals(budgetType)) {
+            return this.transactionRepository.getIncomeTransactionSummary(month, year, budgetIds, jwt.getToken().getClaimAsString("sub"))
+                    .map(sum -> new TransactionTypeTotal(budgetType, sum.getActual()))
+                    .switchIfEmpty(Mono.just(new TransactionTypeTotal(budgetType, BigDecimal.ZERO)));
+        } else {
+            return this.transactionRepository.getExpenseTransactionSummary(month, year, budgetIds, jwt.getToken().getClaimAsString("sub"))
+                    .map(sum -> new TransactionTypeTotal(budgetType, sum.getActual()))
+                    .switchIfEmpty(Mono.just(new TransactionTypeTotal(budgetType, BigDecimal.ZERO)));
+        }
+
+
     }
 }

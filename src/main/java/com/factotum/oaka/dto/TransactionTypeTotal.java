@@ -1,5 +1,6 @@
 package com.factotum.oaka.dto;
 
+import com.factotum.oaka.enumeration.BudgetType;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
@@ -16,8 +17,8 @@ import java.math.BigDecimal;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class TransactionTypeTotal {
 
-    @JsonProperty("transactionType")
-    private String transactionType;
+    @JsonProperty("budgetType")
+    private BudgetType budgetType;
 
     @JsonProperty("total")
     private BigDecimal total;
