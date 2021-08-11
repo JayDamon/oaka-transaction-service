@@ -5,6 +5,7 @@ import com.factotum.oaka.dto.BudgetCategoryDto;
 import com.factotum.oaka.dto.BudgetDto;
 import com.factotum.oaka.dto.ShortAccountDto;
 import com.factotum.oaka.dto.TransactionDto;
+import com.factotum.oaka.enumeration.BudgetType;
 import com.factotum.oaka.http.AccountService;
 import com.factotum.oaka.http.BudgetService;
 import com.factotum.oaka.util.SecurityTestUtil;
@@ -262,7 +263,7 @@ class TransactionControllerIT {
                         uriBuilder.path(URI + "/total")
                                 .queryParam("year", "2017")
                                 .queryParam("month", "1")
-                                .queryParam("transactionTypeId", "2")
+                                .queryParam("budgetType", BudgetType.EXPENSE)
                                 .queryParam("budgetIds", "10, 11, 12, 13, 14, 15, 26, 16, 17, 18, 27, 19, 28, 29, 30")
                                 .build())
                 .exchange()
@@ -270,7 +271,7 @@ class TransactionControllerIT {
                 .expectBody()
                 .consumeWith(System.out::println)
                 .jsonPath("$.total").exists()
-                .jsonPath("$.transactionType").exists();
+                .jsonPath("$.budgetType").exists();
 
     }
 
@@ -285,14 +286,14 @@ class TransactionControllerIT {
                         uriBuilder.path(URI + "/total")
                                 .queryParam("year", "2017")
                                 .queryParam("month", "1")
-                                .queryParam("transactionTypeId", "1")
+                                .queryParam("budgetType", BudgetType.INCOME)
                                 .queryParam("budgetIds", "20")
                                 .build())
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()
                 .jsonPath("$.total").exists()
-                .jsonPath("$.transactionType").exists();
+                .jsonPath("$.budgetType").exists();
 
     }
 
@@ -307,14 +308,14 @@ class TransactionControllerIT {
                         uriBuilder.path(URI + "/total")
                                 .queryParam("year", "2017")
                                 .queryParam("month", "1")
-                                .queryParam("transactionTypeId", "2")
+                                .queryParam("budgetType", BudgetType.EXPENSE)
                                 .queryParam("budgetIds", "1, 2, 3, 4, 5, 6, 21, 22")
                                 .build())
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()
                 .jsonPath("$.total").exists()
-                .jsonPath("$.transactionType").exists();
+                .jsonPath("$.budgetType").exists();
 
     }
 
@@ -329,14 +330,14 @@ class TransactionControllerIT {
                         uriBuilder.path(URI + "/total")
                                 .queryParam("year", "2017")
                                 .queryParam("month", "1")
-                                .queryParam("transactionTypeId", "1")
+                                .queryParam("budgetType", BudgetType.INCOME)
                                 .queryParam("budgetIds", "23")
                                 .build())
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()
                 .jsonPath("$.total").exists()
-                .jsonPath("$.transactionType").exists();
+                .jsonPath("$.budgetType").exists();
 
     }
 
@@ -350,13 +351,13 @@ class TransactionControllerIT {
                 .uri(uriBuilder -> uriBuilder.path(URI + "/total")
                         .queryParam("year", "2017")
                         .queryParam("month", "1")
-                        .queryParam("transactionTypeId", "2")
+                        .queryParam("budgetType", BudgetType.EXPENSE)
                         .queryParam("budgetIds", "24, 7, 8, 9, 25").build())
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()
                 .jsonPath("$.total").exists()
-                .jsonPath("$.transactionType").exists();
+                .jsonPath("$.budgetType").exists();
 
     }
 

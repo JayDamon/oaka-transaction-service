@@ -16,9 +16,6 @@ import java.math.BigDecimal;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class TransactionBudgetSummary {
 
-    @JsonProperty("transactionType")
-    private String transactionType;
-
     @JsonProperty("category")
     private String category;
 
@@ -41,11 +38,9 @@ public class TransactionBudgetSummary {
     private boolean expected;
 
     public TransactionBudgetSummary(
-            String transactionType,
             Integer month,
             Integer year,
             BigDecimal actual) {
-        this.transactionType = transactionType;
         this.month = month;
         this.year = year;
         this.actual = actual;

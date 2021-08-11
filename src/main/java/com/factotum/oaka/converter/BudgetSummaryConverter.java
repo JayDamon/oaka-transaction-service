@@ -12,7 +12,6 @@ public class BudgetSummaryConverter implements Converter<Row, TransactionBudgetS
     @Override
     public TransactionBudgetSummary convert(Row source) {
         return new TransactionBudgetSummary(
-                source.get("transaction_type", String.class),
                 source.get("month", Integer.class),
                 source.get("year", Integer.class),
                 source.get("sum", BigDecimal.class)
