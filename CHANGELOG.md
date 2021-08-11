@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [1.6.2](https://github.com/JayDamon/oaka-transaction-service/compare/v1.6.1...v1.6.2) (2021-08-11)
+
+
+### Bug Fixes
+
+* **budget:** Use budget type over budget id ([715bea5](https://github.com/JayDamon/oaka-transaction-service/commit/715bea51781573081cf5e048bdf484403cec40ba))
+
 ## [1.6.1](https://github.com/JayDamon/oaka-transaction-service/compare/v1.6.0...v1.6.1) (2021-08-10)
 
 
