@@ -9,7 +9,6 @@ import com.factotum.oaka.dto.TransactionDto;
 import com.factotum.oaka.http.AccountService;
 import com.factotum.oaka.http.BudgetService;
 import com.factotum.oaka.model.Occurrence;
-import com.factotum.oaka.model.RecurringTransaction;
 import com.factotum.oaka.model.Transaction;
 import com.factotum.oaka.model.TransactionCategory;
 import com.factotum.oaka.model.TransactionSubCategory;
@@ -70,14 +69,10 @@ class TransactionServiceImplUT {
 
         Occurrence occurrence = new Occurrence(12, "OccurrenceOne");
 
-        RecurringTransaction recurringTransaction = new RecurringTransaction(
-                13L, "RecurringTransactionName", 3L, 10, transactionCategory.getId(),
-                7, 2, occurrence.getId(), transactionType.getId(), LocalDateTime.now(),
-                LocalDateTime.now().plusHours(25), BigDecimal.valueOf(34.66), tenantId);
         ShortAccountDto accountDto = new ShortAccountDto(3L, "Account 1");
 
         Transaction transaction = new Transaction(14L, accountDto.getId(), 8L, transactionCategory.getId(),
-                transactionType.getId(), recurringTransaction.getId(), LocalDate.now(),
+                transactionType.getId(), 13L, LocalDate.now(),
                 "TransactionDescriptionOne", BigDecimal.valueOf(44.78), tenantId);
 
         ModelMapper mapper = new ModelMapper();
