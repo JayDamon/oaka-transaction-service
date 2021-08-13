@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+# [1.7.0](https://github.com/JayDamon/oaka-transaction-service/compare/v1.6.4...v1.7.0) (2021-08-13)
+
+
+### Features
+
+* **transaction:** Add update transaction endpoint ([8181955](https://github.com/JayDamon/oaka-transaction-service/commit/81819554ccabbc156b030e7de17dd7cc2232ab61))
+
 ## [1.6.4](https://github.com/JayDamon/oaka-transaction-service/compare/v1.6.3...v1.6.4) (2021-08-13)
 
 
