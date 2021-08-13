@@ -21,18 +21,24 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.math.BigDecimal;
+import java.security.Security;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.NoSuchElementException;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doCallRealMethod;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -171,6 +177,84 @@ class TransactionServiceImplUT {
         assertThat(dto.getTransactionCategory().getName(), is(equalTo("TransactionCategoryOne")));
         assertThat(dto.getTransactionCategory().getBudgetSubCategory().getId(), is(equalTo(10L)));
         assertThat(dto.getTransactionCategory().getBudgetSubCategory().getName(), is(equalTo("BudgetSubCategoryOne")));
+    }
+
+    // updateTransaction
+    @Test
+    void updateTransaction_GivenAllFieldsChanged_ThenSaveChangedTransaction() {
+
+        // Arrange
+        BigDecimal amount = BigDecimal.valueOf(21.048);
+        String description = "New Description";
+        LocalDate date = LocalDate.now();
+        ShortAccountDto accountDto = new ShortAccountDto();
+        accountDto.setId(4L);
+        BudgetDto budgetDto = new BudgetDto();
+        budgetDto.setId(2L);
+        TransactionCategoryDto transactionCategoryDto = new TransactionCategoryDto();
+        transactionCategoryDto.setId(6L);
+
+        TransactionDto transactionDto = new TransactionDto();
+        transactionDto.setId(1L);
+        transactionDto.setAmount(amount);
+        transactionDto.setDescription(description);
+        transactionDto.setDate(date);
+        transactionDto.setAccount(accountDto);
+        transactionDto.setBudget(budgetDto);
+        transactionDto.setTransactionCategory(transactionCategoryDto);
+
+        Transaction transaction = new Transaction();
+        transaction.setId(1L);
+
+        String userId = "TestUserId";
+
+        when(this.transactionRepository.findByIdAndTenantId(eq(transactionDto.getId()), eq(userId)))
+                .thenReturn(Mono.just(transaction));
+
+        when(this.transactionRepository.save(any())).thenAnswer(i -> Mono.just(i.getArgument(0)));
+
+        // Act
+        Transaction updatedTransaction = this.transactionService.updateTransaction(SecurityTestUtil.getTestJwt(userId), transactionDto).block();
+
+        // Assert
+        assertThat(updatedTransaction, is(not(nullValue())));
+        assertThat(updatedTransaction.getAmount(), is(equalTo(amount)));
+        assertThat(updatedTransaction.getDescription(), is(equalTo(description)));
+        assertThat(updatedTransaction.getDate(), is(equalTo(date)));
+        assertThat(updatedTransaction.getAccountId(), is(equalTo(accountDto.getId())));
+        assertThat(updatedTransaction.getBudgetId(), is(equalTo(budgetDto.getId())));
+        assertThat(updatedTransaction.getTransactionCategory(), is(equalTo(transactionCategoryDto.getId())));
+    }
+
+        @Test
+        void updateTransaction_GivenTransactionDtoIsNull_ThenThrowIllegalArgumentException() {
+            Throwable throwable = assertThrows(IllegalArgumentException.class,
+                    () -> this.transactionService.updateTransaction(SecurityTestUtil.getTestJwt(), null).block());
+
+            assertThat(throwable.getMessage(), is(equalTo("Transaction must not be null")));
+        }
+
+    @Test
+    void updateTransaction_GivenJwtIsNull_ThenThrowIllegalArgumentException() {
+        Throwable throwable = assertThrows(IllegalArgumentException.class,
+                () -> this.transactionService.updateTransaction(null, new TransactionDto()).block());
+
+        assertThat(throwable.getMessage(), is(equalTo("Jwt must not be null")));
+    }
+
+    @Test
+    void updateTransaction_GivenTransactionNotFound_ThenThrowNotFoundException() {
+
+        TransactionDto transactionDto = new TransactionDto();
+        transactionDto.setId(1L);
+
+        when(this.transactionRepository.findByIdAndTenantId(eq(transactionDto.getId()), anyString()))
+                .thenReturn(Mono.empty());
+
+        Throwable throwable = assertThrows(NoSuchElementException.class,
+                () -> this.transactionService.updateTransaction(SecurityTestUtil.getTestJwt(), transactionDto).block());
+
+        assertThat(throwable.getMessage(), is(equalTo("Transaction with id 1 was not found")));
     }
 
 }

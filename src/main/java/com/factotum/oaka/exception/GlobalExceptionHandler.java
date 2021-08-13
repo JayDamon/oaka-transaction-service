@@ -11,9 +11,11 @@ import org.springframework.http.MediaType;
 import org.springframework.lang.NonNull;
 import org.springframework.web.bind.support.WebExchangeBindException;
 import org.springframework.web.server.ServerWebExchange;
+import org.springframework.web.server.ServerWebInputException;
 import reactor.core.publisher.Mono;
 
 import javax.validation.ConstraintViolationException;
+import java.util.NoSuchElementException;
 
 @Slf4j
 @Configuration
@@ -28,15 +30,13 @@ public class GlobalExceptionHandler implements ErrorWebExceptionHandler {
 
         DataBufferFactory bufferFactory = serverWebExchange.getResponse().bufferFactory();
 
-        if (throwable instanceof ConstraintViolationException
-                || throwable instanceof IllegalArgumentException
-                || throwable instanceof WebExchangeBindException) {
+        if (badRequestException(throwable)) {
 
-            serverWebExchange.getResponse().setStatusCode(HttpStatus.BAD_REQUEST);
-            DataBuffer dataBuffer = bufferFactory.wrap(throwable.getMessage().getBytes());
-            serverWebExchange.getResponse().getHeaders().setContentType(MediaType.APPLICATION_JSON);
+            return handleRequest(serverWebExchange, throwable, bufferFactory, HttpStatus.BAD_REQUEST);
+        }
 
-            return serverWebExchange.getResponse().writeWith(Mono.just(dataBuffer));
+        if (notFoundExceptionType(throwable)) {
+            return handleRequest(serverWebExchange, throwable, bufferFactory, HttpStatus.NOT_FOUND);
         }
 
         serverWebExchange.getResponse().setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -46,12 +46,22 @@ public class GlobalExceptionHandler implements ErrorWebExceptionHandler {
         return serverWebExchange.getResponse().writeWith(Mono.just(dataBuffer));
     }
 
-//    @Order(Ordered.HIGHEST_PRECEDENCE)
-//    @ExceptionHandler(value = {NoResultException.class})
-//    protected ResponseEntity<?> handleResourceNotFound(NoResultException e, WebRequest request) {
-//        log.error("Resource not found, " + e, e);
-//        return handleExceptionInternal(e, e.getMessage(), new HttpHeaders(), HttpStatus.BAD_REQUEST,
-//                request);
-//    }
+    private boolean notFoundExceptionType(Throwable throwable) {
+        return throwable instanceof NoSuchElementException;
+    }
+
+    private boolean badRequestException(Throwable throwable) {
+        return throwable instanceof ConstraintViolationException
+                || throwable instanceof IllegalArgumentException
+                || throwable instanceof ServerWebInputException;
+    }
+
+    private Mono<Void> handleRequest(ServerWebExchange serverWebExchange, @NonNull Throwable throwable, DataBufferFactory bufferFactory, HttpStatus badRequest) {
+        serverWebExchange.getResponse().setStatusCode(badRequest);
+        DataBuffer dataBuffer = bufferFactory.wrap(throwable.getMessage().getBytes());
+        serverWebExchange.getResponse().getHeaders().setContentType(MediaType.APPLICATION_JSON);
+
+        return serverWebExchange.getResponse().writeWith(Mono.just(dataBuffer));
+    }
 
 }

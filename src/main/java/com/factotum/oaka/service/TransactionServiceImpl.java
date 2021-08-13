@@ -5,14 +5,16 @@ import com.factotum.oaka.dto.ShortAccountDto;
 import com.factotum.oaka.dto.TransactionDto;
 import com.factotum.oaka.http.AccountService;
 import com.factotum.oaka.http.BudgetService;
+import com.factotum.oaka.model.Transaction;
 import com.factotum.oaka.repository.TransactionRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
-import java.util.Comparator;
+import java.util.NoSuchElementException;
 
 @Slf4j
 @Service
@@ -66,6 +68,46 @@ public class TransactionServiceImpl implements TransactionService {
                     }
                     sink.next(t);
                 }));
+    }
+
+    @Override
+    public Mono<Transaction> updateTransaction(Jwt jwt, TransactionDto updatedTransaction) {
+
+        if (jwt == null) {
+            throw new IllegalArgumentException("Jwt must not be null");
+        }
+
+        if (updatedTransaction == null) throw new IllegalArgumentException("Transaction must not be null");
+
+        return getTransactionById(updatedTransaction.getId(), jwt.getClaimAsString("sub"))
+                .flatMap(t -> addTransactionUpdatesToEntity(updatedTransaction, t))
+                .flatMap(transactionRepository::save);
+    }
+
+    private Mono<Transaction> addTransactionUpdatesToEntity(TransactionDto transaction, Transaction t) {
+
+        if (transaction.getAmount() != null) t.setAmount(transaction.getAmount());
+        if (transaction.getDescription() != null) t.setDescription(transaction.getDescription());
+        if (transaction.getDate() != null) t.setDate(transaction.getDate());
+        if (transaction.getAccount() != null) t.setAccountId(transaction.getAccount().getId());
+        if (transaction.getBudget() != null) t.setBudgetId(transaction.getBudget().getId());
+        if (transaction.getTransactionCategory() != null) t.setTransactionCategory(transaction.getTransactionCategory().getId());
+
+        return Mono.just(t);
+    }
+
+    private Mono<Transaction> getTransactionById(long transactionId, String userId) {
+
+        Mono<Transaction> fallback = Mono.error(
+                new NoSuchElementException(
+                        String.format(
+                                "Transaction with id %s was not found",
+                                transactionId
+                        )));
+
+        return transactionRepository
+                .findByIdAndTenantId(transactionId, userId)
+                .switchIfEmpty(fallback);
     }
 
 }

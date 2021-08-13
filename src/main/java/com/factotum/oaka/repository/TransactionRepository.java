@@ -15,6 +15,8 @@ import java.util.Set;
 @Repository
 public interface TransactionRepository extends ReactiveCrudRepository<Transaction, Long> {
 
+    Mono<Transaction> findByIdAndTenantId(long id, String tenantId);
+
     @Query("SELECT * FROM transaction t " +
             "LEFT JOIN transaction_category tc ON tc.transaction_category_id = t.transaction_category_id " +
             "LEFT JOIN transaction_sub_category bsg ON bsg.transaction_sub_category_id = tc.transaction_sub_category_id " +
