@@ -18,7 +18,7 @@ import javax.validation.ConstraintViolationException;
 @Slf4j
 @Configuration
 @Order(-2)
-public class OakaResponseEntityExceptionHandler implements ErrorWebExceptionHandler {
+public class GlobalExceptionHandler implements ErrorWebExceptionHandler {
 
     @NonNull
     @Override
