@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [1.6.4](https://github.com/JayDamon/oaka-transaction-service/compare/v1.6.3...v1.6.4) (2021-08-13)
+
+
+### Bug Fixes
+
+* **kubernetes:** Use fabric8 client to avoid log error" ([7f06e88](https://github.com/JayDamon/oaka-transaction-service/commit/7f06e88b781dd3a78206e8e7c0388ad1cf95112b))
+
 ## [1.6.3](https://github.com/JayDamon/oaka-transaction-service/compare/v1.6.2...v1.6.3) (2021-08-13)
 
 
