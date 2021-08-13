@@ -15,6 +15,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -61,6 +63,27 @@ public class TransactionController {
         return transactions
                 .map(t -> new ModelMapper().map(t, Transaction.class))
                 .flatMap(transactionRepository::save)
+                .map(t -> new ModelMapper().map(t, TransactionDto.class));
+    }
+
+    @PatchMapping("/{id}")
+    Mono<TransactionDto> updateTransaction(
+            JwtAuthenticationToken jwt,
+            @PathVariable(name = "id") long id,
+            @RequestBody Mono<TransactionDto> transaction) {
+
+        return transaction
+                .map(t -> {
+
+                    if (t.getId() == null)
+                        throw new IllegalArgumentException("Body must contain a valid transaction id");
+
+                    if (t.getId() != id)
+                        throw new IllegalArgumentException("Transaction id must match the body, but does not");
+
+                    return t;
+                })
+                .flatMap(t -> this.transactionService.updateTransaction(jwt.getToken(), t))
                 .map(t -> new ModelMapper().map(t, TransactionDto.class));
     }
 

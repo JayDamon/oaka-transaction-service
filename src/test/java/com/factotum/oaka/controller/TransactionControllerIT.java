@@ -16,6 +16,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -234,6 +235,118 @@ class TransactionControllerIT {
 
     }
 
+    // updateTransaction
+    @Test
+    void updateTransaction_GivenValidTransaction_ThenReturnOk() {
+
+        ShortAccountDto shortAccountDto = new ShortAccountDto();
+        shortAccountDto.setId(3L);
+
+        BudgetDto budgetDto = new BudgetDto();
+        budgetDto.setId(5L);
+
+        LocalDate tnDate = LocalDate.of(2021, 2, 3);
+
+        TransactionDto tn = new TransactionDto();
+        tn.setId(1L);
+        tn.setAccount(shortAccountDto);
+        tn.setBudget(budgetDto);
+        tn.setDate(tnDate);
+        tn.setDescription("Transaction Description");
+        tn.setAmount(BigDecimal.valueOf(22.3));
+
+        webTestClient
+                .mutateWith(mockJwt().jwt(SecurityTestUtil.getTestJwt()))
+                .patch()
+                .uri(URI + "/{id}", tn.getId())
+                .body(Mono.just(tn), TransactionDto.class)
+                .exchange()
+                .expectStatus().isOk();
+    }
+
+    @Test
+    void updateTransaction_GivenTransactionDoesNotExist_ThenReturnNotFound() {
+
+        ShortAccountDto shortAccountDto = new ShortAccountDto();
+        shortAccountDto.setId(3L);
+
+        BudgetDto budgetDto = new BudgetDto();
+        budgetDto.setId(5L);
+
+        LocalDate tnDate = LocalDate.of(2021, 2, 3);
+
+        TransactionDto tn = new TransactionDto();
+        tn.setId(1L);
+        tn.setAccount(shortAccountDto);
+        tn.setBudget(budgetDto);
+        tn.setDate(tnDate);
+        tn.setDescription("Transaction Description");
+        tn.setAmount(BigDecimal.valueOf(22.3));
+
+        webTestClient
+                .mutateWith(mockJwt().jwt(SecurityTestUtil.getTestJwt("User_With_No_Transactions")))
+                .patch()
+                .uri(URI + "/{id}", tn.getId())
+                .body(Mono.just(tn), TransactionDto.class)
+                .exchange()
+                .expectStatus().isNotFound();
+    }
+
+    @Test
+    void updateTransaction_GivenPathIdAndDtoIdDoNotMatch_ThenReturnBadRequest() {
+
+        ShortAccountDto shortAccountDto = new ShortAccountDto();
+        shortAccountDto.setId(3L);
+
+        BudgetDto budgetDto = new BudgetDto();
+        budgetDto.setId(5L);
+
+        LocalDate tnDate = LocalDate.of(2021, 2, 3);
+
+        TransactionDto tn = new TransactionDto();
+        tn.setId(1L);
+        tn.setAccount(shortAccountDto);
+        tn.setBudget(budgetDto);
+        tn.setDate(tnDate);
+        tn.setDescription("Transaction Description");
+        tn.setAmount(BigDecimal.valueOf(22.3));
+
+        webTestClient
+                .mutateWith(mockJwt().jwt(SecurityTestUtil.getTestJwt()))
+                .patch()
+                .uri(URI + "/{id}", 2L)
+                .body(Mono.just(tn), TransactionDto.class)
+                .exchange()
+                .expectStatus().isBadRequest();
+    }
+
+    @Test
+    void updateTransaction_GivenTransactionIdNotProvidedInBody_ThenReturnBadRequest() {
+
+        ShortAccountDto shortAccountDto = new ShortAccountDto();
+        shortAccountDto.setId(3L);
+
+        BudgetDto budgetDto = new BudgetDto();
+        budgetDto.setId(5L);
+
+        LocalDate tnDate = LocalDate.of(2021, 2, 3);
+
+        TransactionDto tn = new TransactionDto();
+        tn.setAccount(shortAccountDto);
+        tn.setBudget(budgetDto);
+        tn.setDate(tnDate);
+        tn.setDescription("Transaction Description");
+        tn.setAmount(BigDecimal.valueOf(22.3));
+
+        webTestClient
+                .mutateWith(mockJwt().jwt(SecurityTestUtil.getTestJwt()))
+                .patch()
+                .uri(URI + "/{id}", 2L)
+                .body(Mono.just(tn), TransactionDto.class)
+                .exchange()
+                .expectStatus().isBadRequest();
+    }
+
     // getTransactionCategories
     @Test
     @WithMockUser
@@ -243,7 +356,6 @@ class TransactionControllerIT {
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()
-                .consumeWith(System.out::println)
                 .jsonPath("$[0].id").exists()
                 .jsonPath("$[0].name").exists()
                 .jsonPath("$[0].subCategory").exists()
@@ -252,6 +364,7 @@ class TransactionControllerIT {
 
     }
 
+    // getTransactionTotal
     @Test
     @WithMockUser
     void getTransactionTotal_GiveTransactionsExistForBudgets_ThenReturnTotalAmount() {
