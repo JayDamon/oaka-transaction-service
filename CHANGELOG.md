@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [1.6.3](https://github.com/JayDamon/oaka-transaction-service/compare/v1.6.2...v1.6.3) (2021-08-13)
+
+
+### Bug Fixes
+
+* **service:** Still return transactions that have no account ([b0d381f](https://github.com/JayDamon/oaka-transaction-service/commit/b0d381ff7c44d68916c868bf4b7821efb2f127a6))
+
 ## [1.6.2](https://github.com/JayDamon/oaka-transaction-service/compare/v1.6.1...v1.6.2) (2021-08-11)
 
 
