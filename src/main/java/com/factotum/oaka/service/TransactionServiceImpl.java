@@ -42,12 +42,14 @@ public class TransactionServiceImpl implements TransactionService {
 
         Flux<TransactionDto> withAccounts = accounts.collectMap(ShortAccountDto::getId, a -> a)
                 .flatMapMany(accountDtos -> transactions.handle((t, sink) -> {
-                    Long accountId = t.getAccount().getId();
-                    if (accountDtos.containsKey(accountId)) {
-                        ShortAccountDto accountDto = accountDtos.get(accountId);
-                        t.setAccount(accountDto);
-                        sink.next(t);
+                    if (t.getAccount() != null) {
+                        Long accountId = t.getAccount().getId();
+                        if (accountDtos.containsKey(accountId)) {
+                            ShortAccountDto accountDto = accountDtos.get(accountId);
+                            t.setAccount(accountDto);
+                        }
                     }
+                    sink.next(t);
                 }));
 
         return budgetDtoFlux.collectMap(BudgetDto::getId, b -> b)
