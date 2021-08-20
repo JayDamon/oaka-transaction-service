@@ -12,9 +12,6 @@ import org.springframework.data.relational.core.mapping.Table;
 
 import java.io.Serializable;
 
-/**
- * i.e. Primary transaction category // TODO fix this comment
- */
 @Data
 @ToString
 @Builder

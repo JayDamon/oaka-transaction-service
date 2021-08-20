@@ -7,7 +7,6 @@ import com.factotum.oaka.enumeration.BudgetType;
 import com.factotum.oaka.model.Transaction;
 import com.factotum.oaka.repository.TransactionCategoryRepository;
 import com.factotum.oaka.repository.TransactionRepository;
-import com.factotum.oaka.repository.TransactionTypeRepository;
 import com.factotum.oaka.service.TransactionService;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -38,17 +37,14 @@ public class TransactionController {
 
     private final TransactionService transactionService;
     private final TransactionRepository transactionRepository;
-    private final TransactionTypeRepository transactionTypeRepository;
     private final TransactionCategoryRepository transactionCategoryRepository;
 
     public TransactionController(
             TransactionService transactionService,
             TransactionRepository transactionRepository,
-            TransactionTypeRepository transactionTypeRepository,
             TransactionCategoryRepository transactionCategoryRepository) {
         this.transactionService = transactionService;
         this.transactionRepository = transactionRepository;
-        this.transactionTypeRepository = transactionTypeRepository;
         this.transactionCategoryRepository = transactionCategoryRepository;
     }
 

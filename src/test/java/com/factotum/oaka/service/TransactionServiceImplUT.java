@@ -11,7 +11,6 @@ import com.factotum.oaka.http.BudgetService;
 import com.factotum.oaka.model.Transaction;
 import com.factotum.oaka.model.TransactionCategory;
 import com.factotum.oaka.model.TransactionSubCategory;
-import com.factotum.oaka.model.TransactionType;
 import com.factotum.oaka.repository.TransactionRepository;
 import com.factotum.oaka.util.SecurityTestUtil;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,7 +23,6 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.math.BigDecimal;
-import java.security.Security;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.NoSuchElementException;
@@ -38,7 +36,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.doCallRealMethod;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -68,15 +65,13 @@ class TransactionServiceImplUT {
         // Arrange
         String tenantId = "test_tenant_id";
 
-        TransactionType transactionType = new TransactionType(9, "TransactionTypeOne");
-
         TransactionSubCategory transactionSubCategory = new TransactionSubCategory(10L, "BudgetSubCategoryOne");
         TransactionCategory transactionCategory = new TransactionCategory(11L, "TransactionCategoryOne", transactionSubCategory.getId());
 
         ShortAccountDto accountDto = new ShortAccountDto(3L, "Account 1");
 
         Transaction transaction = new Transaction(14L, accountDto.getId(), 8L, transactionCategory.getId(),
-                transactionType.getId(), 13L, LocalDate.now(),
+                9, 13L, LocalDate.now(),
                 "TransactionDescriptionOne", BigDecimal.valueOf(44.78), tenantId);
 
         ModelMapper mapper = new ModelMapper();
@@ -128,13 +123,11 @@ class TransactionServiceImplUT {
         // Arrange
         String tenantId = "test_tenant_id";
 
-        TransactionType transactionType = new TransactionType(9, "TransactionTypeOne");
-
         TransactionSubCategory transactionSubCategory = new TransactionSubCategory(10L, "BudgetSubCategoryOne");
         TransactionCategory transactionCategory = new TransactionCategory(11L, "TransactionCategoryOne", transactionSubCategory.getId());
 
         Transaction transaction = new Transaction(14L, null, 8L, transactionCategory.getId(),
-                transactionType.getId(), 13L, LocalDate.now(),
+                9, 13L, LocalDate.now(),
                 "TransactionDescriptionOne", BigDecimal.valueOf(44.78), tenantId);
 
         ModelMapper mapper = new ModelMapper();
