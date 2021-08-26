@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+# [1.8.0](https://github.com/JayDamon/oaka-transaction-service/compare/v1.7.0...v1.8.0) (2021-08-26)
+
+
+### Features
+
+* **rabbit:** Add rabbit mq messaging queue for async communication ([ab97045](https://github.com/JayDamon/oaka-transaction-service/commit/ab97045e9fb6b5eef6d9ea3401360bebd75c6168))
+
 # [1.7.0](https://github.com/JayDamon/oaka-transaction-service/compare/v1.6.4...v1.7.0) (2021-08-13)
 
 
