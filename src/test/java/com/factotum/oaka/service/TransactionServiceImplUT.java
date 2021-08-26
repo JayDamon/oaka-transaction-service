@@ -12,6 +12,7 @@ import com.factotum.oaka.model.Transaction;
 import com.factotum.oaka.model.TransactionCategory;
 import com.factotum.oaka.model.TransactionSubCategory;
 import com.factotum.oaka.repository.TransactionRepository;
+import com.factotum.oaka.sender.TransactionChangeSender;
 import com.factotum.oaka.util.SecurityTestUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -36,6 +37,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -50,12 +53,15 @@ class TransactionServiceImplUT {
     @Mock
     private BudgetService budgetService;
 
+    @Mock
+    private TransactionChangeSender transactionChangeSender;
+
     private TransactionService transactionService;
 
     @BeforeEach
     void setUp() {
         transactionService = new TransactionServiceImpl(
-                transactionRepository, accountService, budgetService);
+                transactionRepository, accountService, budgetService, transactionChangeSender);
     }
 
     // getAllTransactionDtos
@@ -217,15 +223,17 @@ class TransactionServiceImplUT {
         assertThat(updatedTransaction.getAccountId(), is(equalTo(accountDto.getId())));
         assertThat(updatedTransaction.getBudgetId(), is(equalTo(budgetDto.getId())));
         assertThat(updatedTransaction.getTransactionCategory(), is(equalTo(transactionCategoryDto.getId())));
+
+        verify(transactionChangeSender, times(1)).sendTransactionChangedMessage(eq(updatedTransaction));
     }
 
-        @Test
-        void updateTransaction_GivenTransactionDtoIsNull_ThenThrowIllegalArgumentException() {
-            Throwable throwable = assertThrows(IllegalArgumentException.class,
-                    () -> this.transactionService.updateTransaction(SecurityTestUtil.getTestJwt(), null).block());
+    @Test
+    void updateTransaction_GivenTransactionDtoIsNull_ThenThrowIllegalArgumentException() {
+        Throwable throwable = assertThrows(IllegalArgumentException.class,
+                () -> this.transactionService.updateTransaction(SecurityTestUtil.getTestJwt(), null).block());
 
-            assertThat(throwable.getMessage(), is(equalTo("Transaction must not be null")));
-        }
+        assertThat(throwable.getMessage(), is(equalTo("Transaction must not be null")));
+    }
 
     @Test
     void updateTransaction_GivenJwtIsNull_ThenThrowIllegalArgumentException() {

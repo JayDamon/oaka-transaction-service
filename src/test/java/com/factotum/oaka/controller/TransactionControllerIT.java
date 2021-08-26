@@ -11,6 +11,7 @@ import com.factotum.oaka.http.BudgetService;
 import com.factotum.oaka.util.SecurityTestUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -39,6 +40,9 @@ class TransactionControllerIT {
 
     @MockBean
     private BudgetService budgetService;
+
+    @MockBean
+    private RabbitTemplate rabbitTemplate;
 
     private static final String URI = "/v1/transactions";
 

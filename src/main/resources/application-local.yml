@@ -41,3 +41,10 @@ spring:
         provider:
           keycloak:
             issuer-uri: http://localhost:8081/auth/realms/moneymaker
+
+---
+
+spring:
+  rabbitmq:
+    username: test
+    password: test
