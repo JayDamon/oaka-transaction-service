@@ -5,6 +5,7 @@ import com.factotum.oaka.http.AccountService;
 import com.factotum.oaka.http.BudgetService;
 import com.factotum.oaka.model.TransactionCategory;
 import org.junit.jupiter.api.Test;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -23,6 +24,9 @@ public class TransactionCategoryServiceImpIT {
 
     @MockBean
     private BudgetService budgetService;
+
+    @MockBean
+    private RabbitTemplate rabbitTemplate;
 
 
     @Test

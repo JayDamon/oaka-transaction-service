@@ -10,6 +10,7 @@ import com.factotum.oaka.http.BudgetService;
 import com.factotum.oaka.util.SecurityTestUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import reactor.core.publisher.Flux;
@@ -34,6 +35,9 @@ class TransactionRetrievalServiceImplIT {
 
     @MockBean
     private BudgetService budgetService;
+
+    @MockBean
+    private RabbitTemplate rabbitTemplate;
 
     @BeforeEach
     void setup() {

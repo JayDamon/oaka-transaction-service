@@ -7,6 +7,7 @@ import com.factotum.oaka.http.AccountService;
 import com.factotum.oaka.http.BudgetService;
 import com.factotum.oaka.model.Transaction;
 import com.factotum.oaka.repository.TransactionRepository;
+import com.factotum.oaka.sender.TransactionChangeSender;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
@@ -23,14 +24,17 @@ public class TransactionServiceImpl implements TransactionService {
     private final TransactionRepository transactionRepository;
     private final AccountService accountService;
     private final BudgetService budgetService;
+    private final TransactionChangeSender transactionChangeSender;
 
     public TransactionServiceImpl(
             TransactionRepository transactionRepository,
             AccountService accountService,
-            BudgetService budgetService) {
+            BudgetService budgetService,
+            TransactionChangeSender transactionChangeSender) {
         this.transactionRepository = transactionRepository;
         this.accountService = accountService;
         this.budgetService = budgetService;
+        this.transactionChangeSender = transactionChangeSender;
     }
 
     @Override
@@ -81,7 +85,8 @@ public class TransactionServiceImpl implements TransactionService {
 
         return getTransactionById(updatedTransaction.getId(), jwt.getClaimAsString("sub"))
                 .flatMap(t -> addTransactionUpdatesToEntity(updatedTransaction, t))
-                .flatMap(transactionRepository::save);
+                .flatMap(transactionRepository::save)
+                .doOnNext(transactionChangeSender::sendTransactionChangedMessage);
     }
 
     private Mono<Transaction> addTransactionUpdatesToEntity(TransactionDto transaction, Transaction t) {

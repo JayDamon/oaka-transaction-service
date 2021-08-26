@@ -7,6 +7,7 @@ import com.factotum.oaka.enumeration.BudgetType;
 import com.factotum.oaka.model.Transaction;
 import com.factotum.oaka.repository.TransactionCategoryRepository;
 import com.factotum.oaka.repository.TransactionRepository;
+import com.factotum.oaka.sender.TransactionChangeSender;
 import com.factotum.oaka.service.TransactionService;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -38,14 +39,17 @@ public class TransactionController {
     private final TransactionService transactionService;
     private final TransactionRepository transactionRepository;
     private final TransactionCategoryRepository transactionCategoryRepository;
+    private final TransactionChangeSender transactionChangeSender;
 
     public TransactionController(
             TransactionService transactionService,
             TransactionRepository transactionRepository,
-            TransactionCategoryRepository transactionCategoryRepository) {
+            TransactionCategoryRepository transactionCategoryRepository,
+            TransactionChangeSender transactionChangeSender) {
         this.transactionService = transactionService;
         this.transactionRepository = transactionRepository;
         this.transactionCategoryRepository = transactionCategoryRepository;
+        this.transactionChangeSender = transactionChangeSender;
     }
 
     @GetMapping("")
@@ -59,6 +63,7 @@ public class TransactionController {
         return transactions
                 .map(t -> new ModelMapper().map(t, Transaction.class))
                 .flatMap(transactionRepository::save)
+                .doOnNext(transactionChangeSender::sendTransactionChangedMessage)
                 .map(t -> new ModelMapper().map(t, TransactionDto.class));
     }
 
@@ -105,7 +110,6 @@ public class TransactionController {
                     .map(sum -> new TransactionTypeTotal(budgetType, sum.getActual()))
                     .switchIfEmpty(Mono.just(new TransactionTypeTotal(budgetType, BigDecimal.ZERO)));
         }
-
 
     }
 }
