@@ -53,11 +53,4 @@ jobs:
       - run:
           name: Build and Push Image
           command: |
-            echo 'export VERSION=$(git describe --tags --abbrev=0 | sed 's/v//')' $BASH_ENV
-            echo 'export MAJOR_VERSION=$(git describe --tags --abbrev=0 | cut -f1 -d"." | sed 's/v//')' $BASH_ENV
-            echo 'export MINOR_VERSION=$(git describe --tags --abbrev=0 | cut -f1-2 -d"." | sed 's/v//')' $BASH_ENV
-            echo $(git describe --tags --abbrev=0 | sed 's/v//')
-            echo $(git describe --tags --abbrev=0 | cut -f1 -d"." | sed 's/v//')
-            echo $(git describe --tags --abbrev=0 | cut -f1-2 -d"." | sed 's/v//')
-            docker build -t $DOCKER_REPOSITORY/$IMAGE_NAME:$(git describe --tags --abbrev=0 | sed 's/v//') -t $DOCKER_REPOSITORY/$IMAGE_NAME:$(git describe --tags --abbrev=0 | cut -f1 -d"." | sed 's/v//') -t $DOCKER_REPOSITORY/$IMAGE_NAME:$(git describe --tags --abbrev=0 | cut -f1-2 -d"." | sed 's/v//') -t $DOCKER_REPOSITORY/$IMAGE_NAME:latest .
-            docker push
+            bash docker_build_push.sh $DOCKER_REPOSITORY/$IMAGE_NAME
