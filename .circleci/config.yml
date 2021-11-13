@@ -46,8 +46,15 @@ jobs:
       - setup_remote_docker:
           version: 19.03.13
       - run:
-          name: Build and push Docker image
+          name: Prepare Release
           command: |
-            docker build -t $DOCKER_REPOSITORY/$IMAGE_NAME .
             chmod +x ./prepare-release.sh
             /home/circleci/npm/bin/semantic-release
+      - run:
+          name: Build and Push Image
+          command: |
+            echo 'export VERSION=$(git describe --tags --abbrev=0 | sed 's/v//')' $BASH_ENV
+            echo 'export MAJOR_VERSION=$(git describe --tags --abbrev=0 | cut -f1 -d"." | sed 's/v//')' $BASH_ENV
+            echo 'export MINOR_VERSION=$(git describe --tags --abbrev=0 | cut -f1-2 -d"." | sed 's/v//')' $BASH_ENV
+            docker build -t $DOCKER_REPOSITORY/$IMAGE_NAME:$VERSION -t $DOCKER_REPOSITORY/$IMAGE_NAME:MAJOR_VERSION -t $DOCKER_REPOSITORY/$IMAGE_NAME:MINOR_VERSION -t $DOCKER_REPOSITORY/$IMAGE_NAME:latest .
+            docker push
