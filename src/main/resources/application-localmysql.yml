@@ -27,7 +27,7 @@ spring:
           oaka-transaction-service:
             provider: keycloak
             client-id: oaka-transaction-service
-            client-secret: d8a5c291-ec05-47f5-819d-5d4eb48481c1
+            client-secret: fe9eb8a0-d930-4c9e-8d62-b1932835ad6a
             authorization-grant-type: client_credentials
         provider:
           keycloak:
