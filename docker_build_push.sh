@@ -14,7 +14,7 @@ echo $minor_version
 
 docker build -t $image:$version -t $image:$major_version -t $image:$minor_version -t $image:latest .
 
-docker login -u $docker_user -p $docker_password
+docker login -u $docker_user -p $docker_password repo.treescale.com/jaydamon
 
 docker push $image:$version
 docker push $image:$major_version
