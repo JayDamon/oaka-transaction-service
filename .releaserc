@@ -18,6 +18,16 @@
         "prepareCmd": "./prepare-release.sh ${nextRelease.version}"
       }
     ],
+    [
+      "@semantic-release-plus/docker",
+      {
+        "name": "repo.treescale.com/jaydamon/mm-oaka-transaction-service",
+        "registryUrl": "repo.treescale.com",
+        "publishLatestTag": true,
+        "publishMajorTag": true,
+        "publishMinorTag": true
+      }
+    ],
     "@semantic-release/github",
     [
       "@semantic-release/git",
@@ -27,16 +37,6 @@
           "CHANGELOG.md"
         ],
         "message": "release: ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
-      }
-    ],
-    [
-      "@semantic-release-plus/docker",
-      {
-        "name": "repo.treescale.com/jaydamon/mm-oaka-transaction-service",
-        "registryUrl": "repo.treescale.com",
-        "publishLatestTag": true,
-        "publishMajorTag": true,
-        "publishMinorTag": true
       }
     ]
   ]
