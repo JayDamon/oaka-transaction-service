@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+# [1.10.0](https://github.com/JayDamon/oaka-transaction-service/compare/v1.9.0...v1.10.0) (2021-11-13)
+
+
+### Features
+
+* **docker:** Upgrade base image to jdk 17 ([4f0eed6](https://github.com/JayDamon/oaka-transaction-service/commit/4f0eed624f48063300326af9251ec976bc834d72))
+
 # [1.9.0](https://github.com/JayDamon/oaka-transaction-service/compare/v1.8.0...v1.9.0) (2021-11-13)
 
 
