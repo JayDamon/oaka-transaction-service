@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+# [1.11.0](https://github.com/JayDamon/oaka-transaction-service/compare/v1.10.0...v1.11.0) (2021-11-13)
+
+
+### Features
+
+* **semantic:** Update semantic release order ([d268d5a](https://github.com/JayDamon/oaka-transaction-service/commit/d268d5a238803edd5172c205bff4d590ec30af11))
+
 # [1.10.0](https://github.com/JayDamon/oaka-transaction-service/compare/v1.9.0...v1.10.0) (2021-11-13)
 
 
