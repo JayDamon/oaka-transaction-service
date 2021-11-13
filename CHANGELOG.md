@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+# [1.12.0](https://github.com/JayDamon/oaka-transaction-service/compare/v1.11.0...v1.12.0) (2021-11-13)
+
+
+### Features
+
+* **release:** Move docker build and push out of semantic ([60de4f9](https://github.com/JayDamon/oaka-transaction-service/commit/60de4f94980adaeec496dedddb30880cec4ecf68))
+
 # [1.11.0](https://github.com/JayDamon/oaka-transaction-service/compare/v1.10.0...v1.11.0) (2021-11-13)
 
 
