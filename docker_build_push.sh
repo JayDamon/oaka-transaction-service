@@ -12,6 +12,8 @@ echo $minor_version
 
 docker build -t $image:$version -t $image:$major_version -t $image:$minor_version -t $image:latest .
 
+docker login
+
 docker push $image:$version
 docker push $image:$major_version
 docker push $image:$minor_version
