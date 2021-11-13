@@ -1,4 +1,3 @@
-FROM openjdk:16-jdk-buster
-COPY ./target/*.jar /usr/local/lib/app.jar
+FROM openjdk:17-jdk-alpine
 EXPOSE 8080
 ENTRYPOINT ["java","-jar", "/usr/local/lib/app.jar"]
