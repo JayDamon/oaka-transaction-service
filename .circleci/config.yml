@@ -56,5 +56,8 @@ jobs:
             echo 'export VERSION=$(git describe --tags --abbrev=0 | sed 's/v//')' $BASH_ENV
             echo 'export MAJOR_VERSION=$(git describe --tags --abbrev=0 | cut -f1 -d"." | sed 's/v//')' $BASH_ENV
             echo 'export MINOR_VERSION=$(git describe --tags --abbrev=0 | cut -f1-2 -d"." | sed 's/v//')' $BASH_ENV
+            echo $VERSION
+            echo $MAJOR_VERSION
+            echo $MINOR_VERSION
             docker build -t $DOCKER_REPOSITORY/$IMAGE_NAME:$VERSION -t $DOCKER_REPOSITORY/$IMAGE_NAME:MAJOR_VERSION -t $DOCKER_REPOSITORY/$IMAGE_NAME:MINOR_VERSION -t $DOCKER_REPOSITORY/$IMAGE_NAME:latest .
             docker push
