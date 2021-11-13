@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+# [1.9.0](https://github.com/JayDamon/oaka-transaction-service/compare/v1.8.0...v1.9.0) (2021-11-13)
+
+
+### Features
+
+* **jdk:** Java 17 upgrade ([5ed50af](https://github.com/JayDamon/oaka-transaction-service/commit/5ed50af670d7d287035a62fd470a41e851451e82))
+
 # [1.8.0](https://github.com/JayDamon/oaka-transaction-service/compare/v1.7.0...v1.8.0) (2021-08-26)
 
 
