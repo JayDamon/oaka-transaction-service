@@ -14,6 +14,7 @@ echo $minor_version
 
 docker build -t $image:$version -t $image:$major_version -t $image:$minor_version -t $image:latest .
 
+echo "performing docker login for $version with username: $docker_user password $docker_password"
 docker login -u $docker_user -p $docker_password repo.treescale.com/jaydamon
 
 docker push $image:$version
