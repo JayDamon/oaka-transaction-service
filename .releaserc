@@ -1,6 +1,6 @@
 {
   "branches": ["main"],
-  "repositoryUrl":"https://github.com/JayDamon/oaka-transaction-service.git",
+  "repositoryUrl":"https://github.com/JayDamon/transaction-service.git",
   "debug": "true",
   "plugins": [
     "@semantic-release/commit-analyzer",

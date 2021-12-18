@@ -33,9 +33,9 @@ spring:
           issuer-uri: http://localhost:8081/auth/realms/moneymaker
       client:
         registration:
-          oaka-transaction-service:
+          transaction-service:
             provider: keycloak
-            client-id: oaka-transaction-service
+            client-id: transaction-service
             client-secret: fe9eb8a0-d930-4c9e-8d62-b1932835ad6a
             authorization-grant-type: client_credentials
         provider:

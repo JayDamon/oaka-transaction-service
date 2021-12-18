@@ -12,12 +12,10 @@
     </parent>
 
     <groupId>com.factotum</groupId>
-    <artifactId>oaka-transaction-service</artifactId>
+    <artifactId>transaction-service</artifactId>
     <version>1.12.0</version>
-    <name>oaka-transaction-service</name>
-    <description>Oaka XIII is a traveling merchant who sells items and equipment to the player. He
-        is Yunas devout supporter.
-    </description>
+    <name>transaction-service</name>
+    <description>Transaction Service for the MoneyMaker application</description>
 
     <properties>
         <java.version>17</java.version>
