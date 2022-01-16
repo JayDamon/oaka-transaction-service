@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [1.12.1](https://github.com/JayDamon/transaction-service/compare/v1.12.0...v1.12.1) (2022-01-16)
+
+
+### Bug Fixes
+
+* **docker:** Add back incorrect line deletion ([159f240](https://github.com/JayDamon/transaction-service/commit/159f240b5bd5eaab6c682c3215e8cc2f939a20d3))
+
 # [1.12.0](https://github.com/JayDamon/oaka-transaction-service/compare/v1.11.0...v1.12.0) (2021-11-13)
 
 
