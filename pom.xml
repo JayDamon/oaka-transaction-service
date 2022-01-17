@@ -13,7 +13,7 @@
 
     <groupId>com.factotum</groupId>
     <artifactId>transaction-service</artifactId>
-    <version>1.12.2</version>
+    <version>1.13.0</version>
     <name>transaction-service</name>
     <description>Transaction Service for the MoneyMaker application</description>
 

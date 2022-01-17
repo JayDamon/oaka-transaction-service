@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+# [1.13.0](https://github.com/JayDamon/transaction-service/compare/v1.12.2...v1.13.0) (2022-01-17)
+
+
+### Features
+
+* **spring:** update spring boot and spring cloud version ([64a0794](https://github.com/JayDamon/transaction-service/commit/64a0794fb632dc22e3f38e7a4ffa82f4107a81e5))
+
 ## [1.12.2](https://github.com/JayDamon/transaction-service/compare/v1.12.1...v1.12.2) (2022-01-17)
 
 
