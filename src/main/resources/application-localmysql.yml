@@ -2,6 +2,8 @@ spring:
   cloud:
     discovery:
       enabled: true
+    loadbalancer:
+      enabled: true
   r2dbc:
     url: r2dbc:pool:mysql://localhost:3306/transaction
     username: keycloak
@@ -12,7 +14,9 @@ spring:
     password: ${spring.r2dbc.password}
 server:
   port: 8082
-
+ribbon:
+  eureka:
+    enabled: true
 
 ---
 
@@ -33,3 +37,9 @@ spring:
           keycloak:
             issuer-uri: http://localhost:8081/auth/realms/moneymaker
 
+---
+
+spring:
+  rabbitmq:
+    username: test
+    password: test
