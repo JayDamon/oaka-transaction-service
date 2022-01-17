@@ -71,7 +71,7 @@ class TransactionServiceImplIntegrationTest {
 
         List<TransactionDto> dtos = transactions.collectList().block();
 
-        assertThat(dtos, hasSize(891));
+        assertThat(dtos, hasSize(greaterThan(891)));
 
         TransactionDto dto = dtos.stream().sorted(Comparator.comparingLong(TransactionDto::getId)).toList().get(0);
 
