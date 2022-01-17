@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+## [1.12.2](https://github.com/JayDamon/transaction-service/compare/v1.12.1...v1.12.2) (2022-01-17)
+
+
+### Bug Fixes
+
+* **app:** fix test ([3d35856](https://github.com/JayDamon/transaction-service/commit/3d35856a96ff1407f888af9e5a3e355e8171b232))
+
 ## [1.12.1](https://github.com/JayDamon/transaction-service/compare/v1.12.0...v1.12.1) (2022-01-16)
 
 
