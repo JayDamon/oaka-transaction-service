@@ -21,6 +21,7 @@ import reactor.core.publisher.Mono;
 import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.util.Set;
+import java.util.UUID;
 
 @Slf4j
 @RestController
@@ -62,7 +63,7 @@ public class TransactionController {
     @PatchMapping("/{id}")
     Mono<TransactionDto> updateTransaction(
             JwtAuthenticationToken jwt,
-            @PathVariable(name = "id") long id,
+            @PathVariable(name = "id") UUID id,
             @RequestBody Mono<TransactionDto> transaction) {
 
         return transaction
@@ -71,7 +72,7 @@ public class TransactionController {
                     if (t.getId() == null)
                         throw new IllegalArgumentException("Body must contain a valid transaction id");
 
-                    if (t.getId() != id)
+                    if (!t.getId().equals(id))
                         throw new IllegalArgumentException("Transaction id must match the body, but does not");
 
                     return t;
@@ -91,7 +92,7 @@ public class TransactionController {
             @RequestParam(name = "year") int year,
             @RequestParam(name = "month") int month,
             @RequestParam(name = "budgetType") BudgetType budgetType,
-            @RequestParam(name = "budgetIds") Set<Long> budgetIds) {
+            @RequestParam(name = "budgetIds") Set<UUID> budgetIds) {
 
         if (BudgetType.INCOME.equals(budgetType)) {
             return this.transactionRepository.getIncomeTransactionSummary(month, year, budgetIds, jwt.getToken().getClaimAsString("sub"))

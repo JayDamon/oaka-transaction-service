@@ -8,6 +8,7 @@ import org.springframework.data.relational.core.mapping.Table;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.UUID;
 
 /**
  * Financial transactions
@@ -22,22 +23,22 @@ public class Transaction implements Serializable {
 
     @Id
     @Column("transaction_id")
-    private Long id;
+    private UUID id;
 
     @Column("account_id")
-    private Long accountId;
+    private UUID accountId;
 
     @Column("budget_id")
-    private Long budgetId;
+    private UUID budgetId;
 
     @Column("transaction_category_id")
-    private Long transactionCategory;
+    private UUID transactionCategory;
 
     @Column("transaction_type_id")
-    private Integer transactionType;
+    private UUID transactionType;
 
     @Column("recurring_transaction_id")
-    private Long recurringTransaction;
+    private UUID recurringTransaction;
 
     @Column("transaction_date")
     private LocalDate date;

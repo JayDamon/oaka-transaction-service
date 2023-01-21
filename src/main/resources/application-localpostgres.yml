@@ -1,22 +1,19 @@
 spring:
   cloud:
     discovery:
-      enabled: true
-    loadbalancer:
-      enabled: true
+      enabled: false
   r2dbc:
-    url: r2dbc:pool:mysql://localhost:3306/transaction
-    username: keycloak
+    url: r2dbc:pool:postgresql://localhost:5436/transactions
+    username: postgres
     password: password
   flyway:
-    url: jdbc:mysql://localhost:3306/transaction
+    url: jdbc:postgresql://localhost:5436/transactions
     user: ${spring.r2dbc.username}
     password: ${spring.r2dbc.password}
+    baseline-on-migrate: true
+    locations: 'classpath:db/migration'
 server:
-  port: 8082
-ribbon:
-  eureka:
-    enabled: true
+  port: 8091
 
 ---
 
@@ -31,7 +28,7 @@ spring:
           transaction-service:
             provider: keycloak
             client-id: transaction-service
-            client-secret: fe9eb8a0-d930-4c9e-8d62-b1932835ad6a
+            client-secret: je8fIE6iHlkU6Qv53PaBrFrlcrp7tHak
             authorization-grant-type: client_credentials
         provider:
           keycloak:

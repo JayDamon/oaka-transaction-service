@@ -32,11 +32,8 @@ public class JpaConfiguration extends AbstractR2dbcConfiguration {
         ConnectionFactoryInitializer initializer = new ConnectionFactoryInitializer();
         initializer.setConnectionFactory(connectionFactory);
         ResourceDatabasePopulator populator = new ResourceDatabasePopulator(
-                new ClassPathResource("test_data/drop_tables.sql"),
                 new ClassPathResource("db/migration/V1_0__create_mm_transaction_schema.sql"),
-                new ClassPathResource("db/migration/V2_0__add_tenant_identifier.sql"),
-                new ClassPathResource("test_data/V1_1__add_test_data.sql"),
-                new ClassPathResource("test_data/V2_1__add_tenant_id.sql")
+                new ClassPathResource("test_data/V1_1__add_test_data.sql")
         );
         initializer.setDatabasePopulator(populator);
         return initializer;

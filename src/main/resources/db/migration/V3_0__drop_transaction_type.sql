@@ -1,1 +1,0 @@
-ALTER TABLE transaction DROP COLUMN transaction_type_id;

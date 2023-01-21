@@ -13,6 +13,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -32,6 +33,8 @@ public class TransactionSenderUnitTest {
     @Captor
     private ArgumentCaptor<TransactionAmountChanged> transactionChangeCaptor;
 
+    private static final UUID accountIdOne = UUID.fromString("09a3b555-ea95-4f5b-a4e5-660d5f3657e5");
+
     @BeforeEach
     void setUp() {
         this.transactionChangeSender = new TransactionChangeSender(rabbitTemplate);
@@ -43,7 +46,7 @@ public class TransactionSenderUnitTest {
 
         // Arrange
         Transaction transaction = new Transaction();
-        transaction.setAccountId(1L);
+        transaction.setAccountId(accountIdOne);
         transaction.setAmount(BigDecimal.valueOf(24));
         transaction.setTenantId("TestId");
 

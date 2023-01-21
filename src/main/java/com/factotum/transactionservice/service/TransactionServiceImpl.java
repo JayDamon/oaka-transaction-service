@@ -16,6 +16,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.NoSuchElementException;
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -49,7 +50,7 @@ public class TransactionServiceImpl implements TransactionService {
         Flux<TransactionDto> withAccounts = accounts.collectMap(ShortAccountDto::getId, a -> a)
                 .flatMapMany(accountDtos -> transactions.handle((t, sink) -> {
                     if (t.getAccount() != null) {
-                        Long accountId = t.getAccount().getId();
+                        UUID accountId = t.getAccount().getId();
                         if (accountDtos.containsKey(accountId)) {
                             ShortAccountDto accountDto = accountDtos.get(accountId);
                             t.setAccount(accountDto);
@@ -62,7 +63,7 @@ public class TransactionServiceImpl implements TransactionService {
                 .flatMapMany(budgetDtos -> withAccounts.handle((t, sink) -> {
                     BudgetDto originalBudgetDto = t.getBudget();
                     if (originalBudgetDto != null && originalBudgetDto.getId() != null) {
-                        Long budgetId = t.getBudget().getId();
+                        UUID budgetId = t.getBudget().getId();
                         if (budgetDtos.containsKey(budgetId)) {
                             BudgetDto budgetDto = budgetDtos.get(budgetId);
                             t.setBudget(budgetDto);
@@ -101,7 +102,7 @@ public class TransactionServiceImpl implements TransactionService {
         return Mono.just(t);
     }
 
-    private Mono<Transaction> getTransactionById(long transactionId, String userId) {
+    private Mono<Transaction> getTransactionById(UUID transactionId, String userId) {
 
         Mono<Transaction> fallback = Mono.error(
                 new NoSuchElementException(
