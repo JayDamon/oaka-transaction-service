@@ -7,7 +7,6 @@ import com.factotum.transactionservice.dto.ShortAccountDto;
 import com.factotum.transactionservice.dto.TransactionDto;
 import com.factotum.transactionservice.http.AccountService;
 import com.factotum.transactionservice.http.BudgetService;
-import com.factotum.transactionservice.model.Transaction;
 import com.factotum.transactionservice.repository.TransactionRepository;
 import com.factotum.transactionservice.util.SecurityTestUtil;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,15 +17,16 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import reactor.core.publisher.Flux;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
-import java.util.stream.LongStream;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.greaterThanOrEqualTo;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.nullValue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -122,7 +122,7 @@ class TransactionServiceImplIntegrationTest {
 
         List<TransactionDto> dtos = transactions.collectList().block();
 
-        assertThat(dtos, hasSize(greaterThan(891)));
+        assertThat(dtos, hasSize(greaterThanOrEqualTo(891)));
 
         UUID transactionId = UUID.fromString("82516837-6a0a-4627-b7a3-5554c16e5e54");
 

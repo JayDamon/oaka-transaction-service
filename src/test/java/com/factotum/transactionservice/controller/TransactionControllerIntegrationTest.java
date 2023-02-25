@@ -8,7 +8,6 @@ import com.factotum.transactionservice.dto.TransactionDto;
 import com.factotum.transactionservice.enumeration.BudgetType;
 import com.factotum.transactionservice.http.AccountService;
 import com.factotum.transactionservice.http.BudgetService;
-import com.factotum.transactionservice.model.Transaction;
 import com.factotum.transactionservice.repository.TransactionRepository;
 import com.factotum.transactionservice.util.SecurityTestUtil;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,7 +25,6 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
-import java.util.stream.LongStream;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
