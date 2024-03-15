@@ -11,11 +11,12 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.Set;
+import java.util.UUID;
 
 @Repository
-public interface TransactionRepository extends ReactiveCrudRepository<Transaction, Long> {
+public interface TransactionRepository extends ReactiveCrudRepository<Transaction, UUID> {
 
-    Mono<Transaction> findByIdAndTenantId(long id, String tenantId);
+    Mono<Transaction> findByIdAndTenantId(UUID id, String tenantId);
 
     @Query("SELECT * FROM transaction t " +
             "LEFT JOIN transaction_category tc ON tc.transaction_category_id = t.transaction_category_id " +
@@ -24,26 +25,28 @@ public interface TransactionRepository extends ReactiveCrudRepository<Transactio
             "ORDER BY transaction_date DESC")
     Flux<TransactionDto> findAllByOrderByDateDesc(@Param("tenantId") String tenantId);
 
-    @Query("SELECT month(t.transaction_date) as month, year(t.transaction_date) as year, ABS(SUM(t.amount)) as sum " +
+    @Query("SELECT DATE_PART('month', t.transaction_date) as month, DATE_PART('year', t.transaction_date) as year, ABS(SUM(t.amount)) as sum " +
             "FROM transaction t " +
-            "WHERE month(t.transaction_date) = :month " +
-            "  AND year(transaction_date) = :year " +
+            "WHERE DATE_PART('month', t.transaction_date) = :month " +
+            "  AND DATE_PART('year', t.transaction_date) = :year " +
             "  AND t.budget_id in (:budgetIds) " +
             "  AND t.amount >= 0 " +
             "  AND t.tenant_id = :tenantId " +
-            "GROUP BY month(t.transaction_date), year(t.transaction_date) " +
-            "ORDER BY month(t.transaction_date), year(t.transaction_date) DESC;")
-    Mono<TransactionBudgetSummary> getIncomeTransactionSummary(int month, int year, Set<Long> budgetIds, String tenantId);
+            "GROUP BY DATE_PART('month', t.transaction_date), DATE_PART('year', t.transaction_date) " +
+            "ORDER BY DATE_PART('month', t.transaction_date), DATE_PART('year', t.transaction_date) DESC;")
+    Mono<TransactionBudgetSummary> getIncomeTransactionSummary(int month, int year, Set<UUID> budgetIds, String tenantId);
 
-    @Query("SELECT month(t.transaction_date) as month, year(t.transaction_date) as year, ABS(SUM(t.amount)) as sum " +
-            "FROM transaction t " +
-            "WHERE month(t.transaction_date) = :month " +
-            "  AND year(transaction_date) = :year " +
-            "  AND t.budget_id in (:budgetIds) " +
-            "  AND t.amount < 0 " +
-            "  AND t.tenant_id = :tenantId " +
-            "GROUP BY month(t.transaction_date), year(t.transaction_date) " +
-            "ORDER BY month(t.transaction_date), year(t.transaction_date) DESC;")
-    Mono<TransactionBudgetSummary> getExpenseTransactionSummary(int month, int year, Set<Long> budgetIds, String tenantId);
+    @Query("""
+            SELECT DATE_PART('month', t.transaction_date) as month, DATE_PART('year', t.transaction_date) as year, ABS(SUM(t.amount)) as sum 
+            FROM transaction t 
+            WHERE DATE_PART('month', t.transaction_date) = :month 
+              AND DATE_PART('year', t.transaction_date) = :year 
+              AND t.budget_id in (:budgetIds) 
+              AND t.amount < 0 
+              AND t.tenant_id = :tenantId 
+            GROUP BY DATE_PART('month', t.transaction_date), DATE_PART('year', t.transaction_date) 
+            ORDER BY DATE_PART('month', t.transaction_date), DATE_PART('year', t.transaction_date) DESC
+            """)
+    Mono<TransactionBudgetSummary> getExpenseTransactionSummary(int month, int year, Set<UUID> budgetIds, String tenantId);
 
 }

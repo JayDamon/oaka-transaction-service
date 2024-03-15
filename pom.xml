@@ -7,7 +7,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.6.2</version>
+        <version>3.0.2</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
@@ -19,8 +19,8 @@
 
     <properties>
         <java.version>17</java.version>
-        <spring-boot-admin.version>2.6.1</spring-boot-admin.version>
-        <spring-cloud.version>2021.0.0</spring-cloud.version>
+        <spring-boot-admin.version>3.0.0</spring-boot-admin.version>
+        <spring-cloud.version>2022.0.0</spring-cloud.version>
     </properties>
 
     <dependencies>
@@ -97,20 +97,14 @@
 
         <!--Database Dependencies-->
         <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <scope>runtime</scope>
         </dependency>
         <dependency>
-            <groupId>dev.miku</groupId>
-            <artifactId>r2dbc-mysql</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.r2dbc</groupId>
-            <artifactId>r2dbc-h2</artifactId>
+            <groupId>org.postgresql</groupId>
+            <artifactId>r2dbc-postgresql</artifactId>
+            <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>org.flywaydb</groupId>
@@ -135,6 +129,14 @@
         <dependency>
             <groupId>io.projectreactor</groupId>
             <artifactId>reactor-test</artifactId>
+        </dependency>
+
+        <!--Third Party Test Dependencies-->
+        <dependency>
+            <groupId>io.zonky.test</groupId>
+            <artifactId>embedded-database-spring-test</artifactId>
+            <version>2.2.0</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 

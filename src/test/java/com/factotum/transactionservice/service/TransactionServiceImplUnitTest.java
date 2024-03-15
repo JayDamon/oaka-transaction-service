@@ -1,6 +1,11 @@
 package com.factotum.transactionservice.service;
 
-import com.factotum.transactionservice.dto.*;
+import com.factotum.transactionservice.dto.BudgetCategoryDto;
+import com.factotum.transactionservice.dto.BudgetDto;
+import com.factotum.transactionservice.dto.BudgetSubCategoryDto;
+import com.factotum.transactionservice.dto.ShortAccountDto;
+import com.factotum.transactionservice.dto.TransactionCategoryDto;
+import com.factotum.transactionservice.dto.TransactionDto;
 import com.factotum.transactionservice.http.AccountService;
 import com.factotum.transactionservice.http.BudgetService;
 import com.factotum.transactionservice.model.Transaction;
@@ -22,13 +27,20 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.NoSuchElementException;
+import java.util.UUID;
 
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class TransactionServiceImplUnitTest {
@@ -47,6 +59,15 @@ class TransactionServiceImplUnitTest {
 
     private TransactionService transactionService;
 
+    private static final UUID transactionSubCategoryId = UUID.randomUUID();
+    private static final UUID transactionCategoryId = UUID.randomUUID();
+    private static final UUID accountId = UUID.randomUUID();
+    private static final UUID transactionId = UUID.randomUUID();
+    private static final UUID transactionTypeId = UUID.randomUUID();
+    private static final UUID recurringTransactionId = UUID.randomUUID();
+    private static final UUID budgetId = UUID.randomUUID();
+    private static final UUID budgetCategoryId = UUID.randomUUID();
+
     @BeforeEach
     void setUp() {
         transactionService = new TransactionServiceImpl(
@@ -60,13 +81,13 @@ class TransactionServiceImplUnitTest {
         // Arrange
         String tenantId = "test_tenant_id";
 
-        TransactionSubCategory transactionSubCategory = new TransactionSubCategory(10L, "BudgetSubCategoryOne");
-        TransactionCategory transactionCategory = new TransactionCategory(11L, "TransactionCategoryOne", transactionSubCategory.getId());
+        TransactionSubCategory transactionSubCategory = new TransactionSubCategory(transactionSubCategoryId, "BudgetSubCategoryOne");
+        TransactionCategory transactionCategory = new TransactionCategory(transactionCategoryId, "TransactionCategoryOne", transactionSubCategory.getId());
 
-        ShortAccountDto accountDto = new ShortAccountDto(3L, "Account 1");
+        ShortAccountDto accountDto = new ShortAccountDto(accountId, "Account 1");
 
-        Transaction transaction = new Transaction(14L, accountDto.getId(), 8L, transactionCategory.getId(),
-                9, 13L, LocalDate.now(),
+        Transaction transaction = new Transaction(transactionId, accountDto.getId(), budgetId, transactionCategory.getId(),
+                transactionTypeId, recurringTransactionId, LocalDate.now(),
                 "TransactionDescriptionOne", BigDecimal.valueOf(44.78), tenantId);
 
         ModelMapper mapper = new ModelMapper();
@@ -81,11 +102,11 @@ class TransactionServiceImplUnitTest {
         when(accountService.getAccounts(any())).thenReturn(Flux.just(accountDto));
 
         BudgetCategoryDto budgetCategory = new BudgetCategoryDto();
-        budgetCategory.setId(6);
+        budgetCategory.setId(budgetCategoryId);
         budgetCategory.setName("BudgetCategoryName");
         budgetCategory.setTypeName("BudgetCategoryType");
         BudgetDto budget = new BudgetDto();
-        budget.setId(8L);
+        budget.setId(budgetId);
         budget.setName("BudgetItemNameOne");
         budget.setBudgetCategory(budgetCategory);
         when(budgetService.getBudgets(any())).thenReturn(Flux.just(budget));
@@ -95,20 +116,20 @@ class TransactionServiceImplUnitTest {
 
         // Assert
         assertThat(dto, is(not(nullValue())));
-        assertThat(dto.getId(), is(equalTo(14L)));
+        assertThat(dto.getId(), is(equalTo(transactionId)));
         assertThat(dto.getAmount(), is(equalTo(BigDecimal.valueOf(44.78))));
         assertThat(dto.getDescription(), is(equalTo("TransactionDescriptionOne")));
         assertThat(dto.getDate().getMonth(), is(equalTo(LocalDateTime.now().getMonth())));
-        assertThat(dto.getAccount().getId(), is(equalTo(3L)));
+        assertThat(dto.getAccount().getId(), is(equalTo(accountId)));
         assertThat(dto.getAccount().getName(), is(equalTo("Account 1")));
-        assertThat(dto.getBudget().getId(), is(equalTo(8L)));
+        assertThat(dto.getBudget().getId(), is(equalTo(budgetId)));
         assertThat(dto.getBudget().getName(), is(equalTo("BudgetItemNameOne")));
-        assertThat(dto.getBudget().getBudgetCategory().getId(), is(equalTo(6)));
+        assertThat(dto.getBudget().getBudgetCategory().getId(), is(equalTo(budgetCategoryId)));
         assertThat(dto.getBudget().getBudgetCategory().getTypeName(), is(equalTo("BudgetCategoryType")));
         assertThat(dto.getBudget().getBudgetCategory().getName(), is(equalTo("BudgetCategoryName")));
-        assertThat(dto.getTransactionCategory().getId(), is(equalTo(11L)));
+        assertThat(dto.getTransactionCategory().getId(), is(equalTo(transactionCategoryId)));
         assertThat(dto.getTransactionCategory().getName(), is(equalTo("TransactionCategoryOne")));
-        assertThat(dto.getTransactionCategory().getBudgetSubCategory().getId(), is(equalTo(10L)));
+        assertThat(dto.getTransactionCategory().getBudgetSubCategory().getId(), is(equalTo(transactionSubCategoryId)));
         assertThat(dto.getTransactionCategory().getBudgetSubCategory().getName(), is(equalTo("BudgetSubCategoryOne")));
     }
 
@@ -118,11 +139,11 @@ class TransactionServiceImplUnitTest {
         // Arrange
         String tenantId = "test_tenant_id";
 
-        TransactionSubCategory transactionSubCategory = new TransactionSubCategory(10L, "BudgetSubCategoryOne");
-        TransactionCategory transactionCategory = new TransactionCategory(11L, "TransactionCategoryOne", transactionSubCategory.getId());
+        TransactionSubCategory transactionSubCategory = new TransactionSubCategory(transactionSubCategoryId, "BudgetSubCategoryOne");
+        TransactionCategory transactionCategory = new TransactionCategory(transactionCategoryId, "TransactionCategoryOne", transactionSubCategory.getId());
 
-        Transaction transaction = new Transaction(14L, null, 8L, transactionCategory.getId(),
-                9, 13L, LocalDate.now(),
+        Transaction transaction = new Transaction(transactionId, null, budgetId, transactionCategory.getId(),
+                transactionTypeId, recurringTransactionId, LocalDate.now(),
                 "TransactionDescriptionOne", BigDecimal.valueOf(44.78), tenantId);
 
         ModelMapper mapper = new ModelMapper();
@@ -137,11 +158,11 @@ class TransactionServiceImplUnitTest {
         when(accountService.getAccounts(any())).thenReturn(Flux.empty());
 
         BudgetCategoryDto budgetCategory = new BudgetCategoryDto();
-        budgetCategory.setId(6);
+        budgetCategory.setId(budgetCategoryId);
         budgetCategory.setName("BudgetCategoryName");
         budgetCategory.setTypeName("BudgetCategoryType");
         BudgetDto budget = new BudgetDto();
-        budget.setId(8L);
+        budget.setId(budgetId);
         budget.setName("BudgetItemNameOne");
         budget.setBudgetCategory(budgetCategory);
         when(budgetService.getBudgets(any())).thenReturn(Flux.just(budget));
@@ -151,19 +172,19 @@ class TransactionServiceImplUnitTest {
 
         // Assert
         assertThat(dto, is(not(nullValue())));
-        assertThat(dto.getId(), is(equalTo(14L)));
+        assertThat(dto.getId(), is(equalTo(transactionId)));
         assertThat(dto.getAmount(), is(equalTo(BigDecimal.valueOf(44.78))));
         assertThat(dto.getDescription(), is(equalTo("TransactionDescriptionOne")));
         assertThat(dto.getDate().getMonth(), is(equalTo(LocalDateTime.now().getMonth())));
         assertThat(dto.getAccount(), is(nullValue()));
-        assertThat(dto.getBudget().getId(), is(equalTo(8L)));
+        assertThat(dto.getBudget().getId(), is(equalTo(budgetId)));
         assertThat(dto.getBudget().getName(), is(equalTo("BudgetItemNameOne")));
-        assertThat(dto.getBudget().getBudgetCategory().getId(), is(equalTo(6)));
+        assertThat(dto.getBudget().getBudgetCategory().getId(), is(equalTo(budgetCategoryId)));
         assertThat(dto.getBudget().getBudgetCategory().getTypeName(), is(equalTo("BudgetCategoryType")));
         assertThat(dto.getBudget().getBudgetCategory().getName(), is(equalTo("BudgetCategoryName")));
-        assertThat(dto.getTransactionCategory().getId(), is(equalTo(11L)));
+        assertThat(dto.getTransactionCategory().getId(), is(equalTo(transactionCategoryId)));
         assertThat(dto.getTransactionCategory().getName(), is(equalTo("TransactionCategoryOne")));
-        assertThat(dto.getTransactionCategory().getBudgetSubCategory().getId(), is(equalTo(10L)));
+        assertThat(dto.getTransactionCategory().getBudgetSubCategory().getId(), is(equalTo(transactionSubCategoryId)));
         assertThat(dto.getTransactionCategory().getBudgetSubCategory().getName(), is(equalTo("BudgetSubCategoryOne")));
     }
 
@@ -176,14 +197,14 @@ class TransactionServiceImplUnitTest {
         String description = "New Description";
         LocalDate date = LocalDate.now();
         ShortAccountDto accountDto = new ShortAccountDto();
-        accountDto.setId(4L);
+        accountDto.setId(UUID.randomUUID());
         BudgetDto budgetDto = new BudgetDto();
-        budgetDto.setId(2L);
+        budgetDto.setId(UUID.randomUUID());
         TransactionCategoryDto transactionCategoryDto = new TransactionCategoryDto();
-        transactionCategoryDto.setId(6L);
+        transactionCategoryDto.setId(UUID.randomUUID());
 
         TransactionDto transactionDto = new TransactionDto();
-        transactionDto.setId(1L);
+        transactionDto.setId(UUID.randomUUID());
         transactionDto.setAmount(amount);
         transactionDto.setDescription(description);
         transactionDto.setDate(date);
@@ -192,7 +213,7 @@ class TransactionServiceImplUnitTest {
         transactionDto.setTransactionCategory(transactionCategoryDto);
 
         Transaction transaction = new Transaction();
-        transaction.setId(1L);
+        transaction.setId(UUID.randomUUID());
 
         String userId = "TestUserId";
 
@@ -236,7 +257,7 @@ class TransactionServiceImplUnitTest {
     void updateTransaction_GivenTransactionNotFound_ThenThrowNotFoundException() {
 
         TransactionDto transactionDto = new TransactionDto();
-        transactionDto.setId(1L);
+        transactionDto.setId(UUID.randomUUID());
 
         when(this.transactionRepository.findByIdAndTenantId(eq(transactionDto.getId()), anyString()))
                 .thenReturn(Mono.empty());
@@ -244,7 +265,7 @@ class TransactionServiceImplUnitTest {
         Throwable throwable = assertThrows(NoSuchElementException.class,
                 () -> this.transactionService.updateTransaction(SecurityTestUtil.getTestJwt(), transactionDto).block());
 
-        assertThat(throwable.getMessage(), is(equalTo("Transaction with id 1 was not found")));
+        assertThat(throwable.getMessage(), is(equalTo(String.format("Transaction with id %s was not found", transactionDto.getId()))));
     }
 
 }

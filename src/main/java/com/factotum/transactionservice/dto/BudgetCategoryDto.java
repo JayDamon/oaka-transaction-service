@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import java.util.Set;
+import java.util.UUID;
 
 @Data
 @ToString
@@ -17,7 +18,7 @@ import java.util.Set;
 public class BudgetCategoryDto {
 
     @JsonProperty("id")
-    private Integer id;
+    private UUID id;
 
     @JsonProperty("type")
     private String typeName;

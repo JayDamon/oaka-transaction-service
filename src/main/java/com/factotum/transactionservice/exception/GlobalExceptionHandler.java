@@ -1,5 +1,6 @@
 package com.factotum.transactionservice.exception;
 
+import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.web.reactive.error.ErrorWebExceptionHandler;
 import org.springframework.context.annotation.Configuration;
@@ -13,7 +14,6 @@ import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.ServerWebInputException;
 import reactor.core.publisher.Mono;
 
-import javax.validation.ConstraintViolationException;
 import java.util.NoSuchElementException;
 
 @Slf4j

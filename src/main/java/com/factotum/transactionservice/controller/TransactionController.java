@@ -9,18 +9,27 @@ import com.factotum.transactionservice.repository.TransactionCategoryRepository;
 import com.factotum.transactionservice.repository.TransactionRepository;
 import com.factotum.transactionservice.sender.TransactionChangeSender;
 import com.factotum.transactionservice.service.TransactionService;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.util.Set;
+import java.util.UUID;
 
 @Slf4j
 @RestController
@@ -62,7 +71,7 @@ public class TransactionController {
     @PatchMapping("/{id}")
     Mono<TransactionDto> updateTransaction(
             JwtAuthenticationToken jwt,
-            @PathVariable(name = "id") long id,
+            @PathVariable(name = "id") UUID id,
             @RequestBody Mono<TransactionDto> transaction) {
 
         return transaction
@@ -71,7 +80,7 @@ public class TransactionController {
                     if (t.getId() == null)
                         throw new IllegalArgumentException("Body must contain a valid transaction id");
 
-                    if (t.getId() != id)
+                    if (!t.getId().equals(id))
                         throw new IllegalArgumentException("Transaction id must match the body, but does not");
 
                     return t;
@@ -91,7 +100,7 @@ public class TransactionController {
             @RequestParam(name = "year") int year,
             @RequestParam(name = "month") int month,
             @RequestParam(name = "budgetType") BudgetType budgetType,
-            @RequestParam(name = "budgetIds") Set<Long> budgetIds) {
+            @RequestParam(name = "budgetIds") Set<UUID> budgetIds) {
 
         if (BudgetType.INCOME.equals(budgetType)) {
             return this.transactionRepository.getIncomeTransactionSummary(month, year, budgetIds, jwt.getToken().getClaimAsString("sub"))

@@ -2,15 +2,16 @@ package com.factotum.transactionservice.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.UUID;
 
 @Data
 @ToString
@@ -20,7 +21,7 @@ import java.time.LocalDate;
 public class TransactionDto {
 
     @JsonProperty("id")
-    private Long id;
+    private UUID id;
 
     @JsonProperty("amount")
     @NotNull

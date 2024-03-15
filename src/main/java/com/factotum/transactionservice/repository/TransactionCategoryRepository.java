@@ -7,8 +7,10 @@ import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
 
+import java.util.UUID;
+
 @Repository
-public interface TransactionCategoryRepository extends ReactiveCrudRepository<TransactionCategory, Long> {
+public interface TransactionCategoryRepository extends ReactiveCrudRepository<TransactionCategory, UUID> {
 
     @Query("SELECT * FROM transaction_category tc " +
             "INNER JOIN transaction_sub_category bsc ON bsc.transaction_sub_category_id = tc.transaction_sub_category_id")
