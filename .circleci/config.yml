@@ -10,6 +10,7 @@ workflows:
             branches:
               only:
                 - main
+                - restore-k8s
 
 jobs:
   build-and-test:
@@ -37,14 +38,14 @@ jobs:
           name: Setup VirtualEnv
           command: |
             echo 'export IMAGE_NAME=moneymaker-transaction-service' >> $BASH_ENV
-            echo 'export DOCKER_REPOSITORY=cloud.canister.io:5000/jaymond87' >> $BASH_ENV
+            echo 'export DOCKER_REPOSITORY=trance0302' >> $BASH_ENV
       - run:
           name: setup semantic-release
           command: |
             npm set prefix=/home/circleci/npm && echo 'export PATH=$HOME/circleci/npm/bin:$PATH' >> /home/circleci/.bashrc
             npm install -g semantic-release @semantic-release/{git,changelog,exec} semantic-release-plus @semantic-release-plus/docker
       - setup_remote_docker:
-          version: 19.03.13
+          version: docker23
       - run:
           name: Prepare Release
           command: |
