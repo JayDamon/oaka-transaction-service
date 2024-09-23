@@ -1,5 +1,21 @@
 # Semantic Versioning Changelog
 
+# [2.0.0](https://github.com/JayDamon/transaction-service/compare/v1.13.0...v2.0.0) (2024-09-23)
+
+
+* Local docker setup and spring upgrade ([#17](https://github.com/JayDamon/transaction-service/issues/17)) ([552b695](https://github.com/JayDamon/transaction-service/commit/552b69596fb02002c28a8b5cea64aa6d2dfb06cf))
+
+
+### Bug Fixes
+
+* add github login for semantic release ([5bbfb65](https://github.com/JayDamon/transaction-service/commit/5bbfb65bc64618bad923bee9f330849d96f0a74f))
+* Run ci ([#18](https://github.com/JayDamon/transaction-service/issues/18)) ([60b6efb](https://github.com/JayDamon/transaction-service/commit/60b6efb5cc42d01a504a85683331c7c3d67a83b5))
+
+
+### BREAKING CHANGES
+
+* Upgrade to spring boot 3.0 and spring cloud 2022
+
 # [1.13.0](https://github.com/JayDamon/transaction-service/compare/v1.12.2...v1.13.0) (2022-01-17)
 
 
