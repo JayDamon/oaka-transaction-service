@@ -5,7 +5,6 @@ import com.factotum.transactionservice.dto.TransactionDto;
 import com.factotum.transactionservice.dto.TransactionTypeTotal;
 import com.factotum.transactionservice.enumeration.BudgetType;
 import com.factotum.transactionservice.model.Transaction;
-import com.factotum.transactionservice.repository.TransactionCategoryRepository;
 import com.factotum.transactionservice.repository.TransactionRepository;
 import com.factotum.transactionservice.sender.TransactionChangeSender;
 import com.factotum.transactionservice.service.TransactionService;
@@ -15,15 +14,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -39,17 +30,14 @@ public class TransactionController {
 
     private final TransactionService transactionService;
     private final TransactionRepository transactionRepository;
-    private final TransactionCategoryRepository transactionCategoryRepository;
     private final TransactionChangeSender transactionChangeSender;
 
     public TransactionController(
             TransactionService transactionService,
             TransactionRepository transactionRepository,
-            TransactionCategoryRepository transactionCategoryRepository,
             TransactionChangeSender transactionChangeSender) {
         this.transactionService = transactionService;
         this.transactionRepository = transactionRepository;
-        this.transactionCategoryRepository = transactionCategoryRepository;
         this.transactionChangeSender = transactionChangeSender;
     }
 
@@ -87,11 +75,6 @@ public class TransactionController {
                 })
                 .flatMap(t -> this.transactionService.updateTransaction(jwt.getToken(), t))
                 .map(t -> new ModelMapper().map(t, TransactionDto.class));
-    }
-
-    @GetMapping("/categories")
-    public Flux<TransactionCategoryDto> getTransactionCategories() {
-        return transactionCategoryRepository.queryAll();
     }
 
     @GetMapping("/total")

@@ -1,5 +1,6 @@
 package com.factotum.transactionservice.dto;
 
+import com.factotum.transactionservice.message.PersonalFinanceCategory;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotNull;
@@ -44,6 +45,6 @@ public class TransactionDto {
     private BudgetDto budget;
 
     @JsonProperty("category")
-    private TransactionCategoryDto transactionCategory;
+    private PersonalFinanceCategory personalFinanceCategory;
 
 }

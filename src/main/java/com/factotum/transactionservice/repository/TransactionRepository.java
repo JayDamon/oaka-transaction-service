@@ -17,10 +17,10 @@ import java.util.UUID;
 public interface TransactionRepository extends ReactiveCrudRepository<Transaction, UUID> {
 
     Mono<Transaction> findByIdAndTenantId(UUID id, String tenantId);
+    Mono<Transaction> findByPlaidTransactionIdAndTenantId(String plaidTransactionId, String tenantId);
+    Mono<Void> deleteByPlaidTransactionIdAndTenantId(String plaidTransactionId, String tenantId);
 
     @Query("SELECT * FROM transaction t " +
-            "LEFT JOIN transaction_category tc ON tc.transaction_category_id = t.transaction_category_id " +
-            "LEFT JOIN transaction_sub_category bsg ON bsg.transaction_sub_category_id = tc.transaction_sub_category_id " +
             "WHERE t.tenant_id = :tenantId " +
             "ORDER BY transaction_date DESC")
     Flux<TransactionDto> findAllByOrderByDateDesc(@Param("tenantId") String tenantId);

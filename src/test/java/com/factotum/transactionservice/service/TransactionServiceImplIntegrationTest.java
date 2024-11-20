@@ -22,11 +22,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.greaterThanOrEqualTo;
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.not;
-import static org.hamcrest.Matchers.nullValue;
+import static org.hamcrest.Matchers.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -143,10 +139,8 @@ class TransactionServiceImplIntegrationTest {
             assertThat(dto.getBudget().getFrequencyTypeName(), is(not(nullValue())));
             assertThat(dto.getBudget().getAmount(), is(not(nullValue())));
             assertThat(dto.getBudget().getInUse(), is(not(nullValue())));
-            assertThat(dto.getTransactionCategory().getId(), is(not(nullValue())));
-            assertThat(dto.getTransactionCategory().getName(), is(not(nullValue())));
-            assertThat(dto.getTransactionCategory().getBudgetSubCategory().getId(), is(not(nullValue())));
-            assertThat(dto.getTransactionCategory().getBudgetSubCategory().getName(), is(not(nullValue())));
+            assertThat(dto.getPersonalFinanceCategory().getPrimary(), is(not(nullValue())));
+            assertThat(dto.getPersonalFinanceCategory().getDetailed(), is(not(nullValue())));
         }
 
     }

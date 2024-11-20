@@ -18,10 +18,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.not;
-import static org.hamcrest.Matchers.nullValue;
+import static org.hamcrest.Matchers.*;
 
 @DataR2dbcTest
 @AutoConfigureEmbeddedDatabase
@@ -72,8 +69,7 @@ class TransactionRepositoryIntegrationTest {
                         1,
                         2017,
                         new HashSet<>(List.of(UUID.fromString("33c31199-202a-4443-8f09-417ea8acd7d3"))),
-                        "5809b48e-b705-4b3e-be9f-16ce0380cb45"
-                )
+                        "5809b48e-b705-4b3e-be9f-16ce0380cb45")
                 .block();
         assertThat(summary, is(not(nullValue())));
 

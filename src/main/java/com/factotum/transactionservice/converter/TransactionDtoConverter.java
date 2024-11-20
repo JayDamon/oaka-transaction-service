@@ -1,10 +1,12 @@
 package com.factotum.transactionservice.converter;
 
 import com.factotum.transactionservice.dto.BudgetDto;
-import com.factotum.transactionservice.dto.BudgetSubCategoryDto;
 import com.factotum.transactionservice.dto.ShortAccountDto;
-import com.factotum.transactionservice.dto.TransactionCategoryDto;
 import com.factotum.transactionservice.dto.TransactionDto;
+import com.factotum.transactionservice.message.PersonalFinanceCategory;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.r2dbc.spi.Row;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.convert.converter.Converter;
@@ -17,6 +19,13 @@ import java.util.UUID;
 @Slf4j
 @ReadingConverter
 public class TransactionDtoConverter implements Converter<Row, TransactionDto> {
+
+    private ObjectMapper objectMapper;
+
+    public TransactionDtoConverter(ObjectMapper objectMapper) {
+        this.objectMapper = objectMapper;
+    }
+
     @Override
     public TransactionDto convert(Row source) {
 
@@ -30,16 +39,14 @@ public class TransactionDtoConverter implements Converter<Row, TransactionDto> {
             budget.setId(budgetId);
         }
 
-        BudgetSubCategoryDto budgetSubCategory = new BudgetSubCategoryDto(
-                source.get("transaction_sub_category_id", UUID.class),
-                source.get("sub_category_name", String.class)
-        );
-
-        TransactionCategoryDto transactionCategory = new TransactionCategoryDto(
-                source.get("transaction_category_id", UUID.class),
-                source.get("category_name", String.class),
-                budgetSubCategory
-        );
+        PersonalFinanceCategory personalFinanceCategory = null;
+        try {
+            if (source.get("personal_finance_category") != null) {
+                personalFinanceCategory = this.objectMapper.readValue(source.get("personal_finance_category", String.class), new TypeReference<>() {});
+            }
+        } catch (JsonProcessingException e) {
+            log.error("Failed to parse personal_finance_category {}", source.get("personal_finance_category"), e);
+        }
 
         return new TransactionDto(
                 source.get("transaction_id", UUID.class),
@@ -48,7 +55,7 @@ public class TransactionDtoConverter implements Converter<Row, TransactionDto> {
                 source.get("transaction_date", LocalDate.class),
                 account,
                 budget,
-                transactionCategory
+                personalFinanceCategory
         );
     }
 }

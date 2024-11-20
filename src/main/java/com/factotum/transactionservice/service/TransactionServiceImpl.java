@@ -97,7 +97,7 @@ public class TransactionServiceImpl implements TransactionService {
         if (transaction.getDate() != null) t.setDate(transaction.getDate());
         if (transaction.getAccount() != null) t.setAccountId(transaction.getAccount().getId());
         if (transaction.getBudget() != null) t.setBudgetId(transaction.getBudget().getId());
-        if (transaction.getTransactionCategory() != null) t.setTransactionCategory(transaction.getTransactionCategory().getId());
+//        if (transaction.getTransactionCategory() != null) t.setTransactionCategory(transaction.getTransactionCategory().getId());
 
         return Mono.just(t);
     }

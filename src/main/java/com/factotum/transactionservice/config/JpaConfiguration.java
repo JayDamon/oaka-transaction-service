@@ -1,8 +1,7 @@
 package com.factotum.transactionservice.config;
 
-import com.factotum.transactionservice.converter.BudgetSummaryConverter;
-import com.factotum.transactionservice.converter.TransactionCategoryConverter;
-import com.factotum.transactionservice.converter.TransactionDtoConverter;
+import com.factotum.transactionservice.converter.*;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.r2dbc.spi.ConnectionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -27,6 +26,13 @@ public class JpaConfiguration extends AbstractR2dbcConfiguration {
     private ConnectionFactory connectionFactory;
 
     @Bean
+    public ObjectMapper objectMapper() {
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.findAndRegisterModules();
+        return objectMapper;
+    }
+
+    @Bean
     @Profile({"test"})
     public ConnectionFactoryInitializer initializer(@Qualifier("connectionFactory") ConnectionFactory connectionFactory) {
         ConnectionFactoryInitializer initializer = new ConnectionFactoryInitializer();
@@ -48,7 +54,19 @@ public class JpaConfiguration extends AbstractR2dbcConfiguration {
     @Override
     @NonNull
     protected List<Object> getCustomConverters() {
-        return List.of(new BudgetSummaryConverter(), new TransactionDtoConverter(), new TransactionCategoryConverter());
+        return List.of(
+                new BudgetSummaryConverter(),
+                new TransactionDtoConverter(this.objectMapper()),
+                new TransactionCategoryConverter(),
+                new PersonalFinanceCategoryConverter(this.objectMapper()),
+                new PersonalFinanceCategoryJsonWriter(this.objectMapper()),
+                new TransactionCounterPartyListConverter(this.objectMapper()),
+                new TransactionCounterPartyListJsonWriter(this.objectMapper()),
+                new LocationConverter(this.objectMapper()),
+                new LocationJsonWriter(this.objectMapper()),
+                new PaymentMetaConverter(this.objectMapper()),
+                new PaymentMetaJsonWriter(this.objectMapper())
+        );
     }
 
 }

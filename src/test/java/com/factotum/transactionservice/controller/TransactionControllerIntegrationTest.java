@@ -399,23 +399,6 @@ class TransactionControllerIntegrationTest {
                 .expectStatus().isBadRequest();
     }
 
-    // getTransactionCategories
-    @Test
-    @WithMockUser
-    void getTransactionCategories_GivenCategoriesExist_ThenReturnAllCategories() {
-
-        webTestClient.get().uri(URI + "/categories")
-                .exchange()
-                .expectStatus().isOk()
-                .expectBody()
-                .jsonPath("$[0].id").exists()
-                .jsonPath("$[0].name").exists()
-                .jsonPath("$[0].subCategory").exists()
-                .jsonPath("$[0].subCategory.id").exists()
-                .jsonPath("$[0].subCategory.name").exists();
-
-    }
-
     // getTransactionTotal
     @Test
     @WithMockUser
