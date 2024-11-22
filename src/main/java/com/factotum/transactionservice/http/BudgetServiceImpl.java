@@ -21,7 +21,7 @@ public class BudgetServiceImpl implements BudgetService {
         return webClientBuilder
                 .build()
                 .get()
-                .uri("lb://moneymaker-budget-service/v1/budgets")
+                .uri("lb://budget-service/v1/budgets")
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwt.getTokenValue())
                 .retrieve()
                 .bodyToFlux(BudgetDto.class);

@@ -1,6 +1,6 @@
 spring:
   application:
-    name: moneymaker-transaction-service
+    name: transaction-service
 
 ---
 

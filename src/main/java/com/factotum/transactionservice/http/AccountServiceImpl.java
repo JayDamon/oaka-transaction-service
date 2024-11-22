@@ -23,7 +23,7 @@ public class AccountServiceImpl implements AccountService {
 
         return webClient
                 .get()
-                .uri("lb://moneymaker-account-service/v1/accounts")
+                .uri("lb://account-service/v1/accounts")
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwt.getTokenValue())
                 .retrieve().bodyToFlux(ShortAccountDto.class);
     }
