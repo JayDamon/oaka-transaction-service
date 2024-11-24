@@ -1,5 +1,12 @@
 # Semantic Versioning Changelog
 
+# [2.1.0](https://github.com/JayDamon/transaction-service/compare/v2.0.0...v2.1.0) (2024-11-24)
+
+
+### Features
+
+* Rename application ([422d05e](https://github.com/JayDamon/transaction-service/commit/422d05ea2fd87786582f771aaf3c553996e1ae73))
+
 # [2.0.0](https://github.com/JayDamon/transaction-service/compare/v1.13.0...v2.0.0) (2024-09-23)
 
 
